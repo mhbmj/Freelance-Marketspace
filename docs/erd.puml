@@ -1,0 +1,159 @@
+@startuml
+' ============================================================================
+' Freelance Marketplace - Entity Relationship Diagram (ERD)
+' Course: Software Engineering Lab
+' Team: Mahtab (Mahtab Moravej)
+' ============================================================================
+
+!theme plain
+skinparam roundcorner 8
+skinparam linetype ortho
+skinparam shadowing false
+skinparam classFontSize 12
+skinparam classFontName "Segoe UI", Arial, sans-serif
+skinparam classAttributeFontSize 11
+skinparam ArrowColor #2c3e50
+skinparam ArrowThickness 1.5
+
+entity "users" as users {
+    * **id** : SERIAL <<PK>>
+    --
+    * first_name : VARCHAR(100)
+    * last_name : VARCHAR(100)
+    * email : VARCHAR(255) <<UNIQUE>>
+    phone_number : VARCHAR(20)
+    * password_hash : VARCHAR(255)
+    * status : VARCHAR(20) [ACTIVE, INACTIVE, SUSPENDED]
+    * is_deleted : BOOLEAN = FALSE
+    * created_at : TIMESTAMPTZ
+    * updated_at : TIMESTAMPTZ
+}
+
+entity "admins" as admins {
+    * **user_id** : INT <<PK, FK>>
+    --
+    * role_title : VARCHAR(100)
+    * granted_at : TIMESTAMPTZ
+    granted_by : INT <<FK>>
+}
+
+entity "user_profiles" as user_profiles {
+    * **user_id** : INT <<PK, FK>>
+    --
+    professional_title : VARCHAR(150)
+    bio : TEXT
+    location : VARCHAR(150)
+    * created_at : TIMESTAMPTZ
+    * updated_at : TIMESTAMPTZ
+}
+
+entity "portfolios" as portfolios {
+    * **id** : SERIAL <<PK>>
+    --
+    * user_id : INT <<FK>>
+    * title : VARCHAR(200)
+    description : TEXT
+    project_url : VARCHAR(500)
+    * created_at : TIMESTAMPTZ
+}
+
+entity "certificates" as certificates {
+    * **id** : SERIAL <<PK>>
+    --
+    * user_id : INT <<FK>>
+    * title : VARCHAR(200)
+    * issuing_organization : VARCHAR(200)
+    * issue_date : DATE
+    credential_url : VARCHAR(500)
+    credential_id : VARCHAR(100)
+    * created_at : TIMESTAMPTZ
+}
+
+entity "categories" as categories {
+    * **id** : SERIAL <<PK>>
+    --
+    * name : VARCHAR(100) <<UNIQUE>>
+    description : TEXT
+    * created_at : TIMESTAMPTZ
+}
+
+entity "skills" as skills {
+    * **id** : SERIAL <<PK>>
+    --
+    * name : VARCHAR(100) <<UNIQUE>>
+    description : TEXT
+    * created_at : TIMESTAMPTZ
+}
+
+entity "user_skills" as user_skills {
+    * **user_id** : INT <<PK, FK>>
+    * **skill_id** : INT <<PK, FK>>
+    --
+    years_of_experience : INT
+    * created_at : TIMESTAMPTZ
+}
+
+entity "projects" as projects {
+    * **id** : SERIAL <<PK>>
+    --
+    * employer_id : INT <<FK>>
+    * title : VARCHAR(255)
+    * description : TEXT
+    * pricing_type : VARCHAR(20) [FIXED_PRICE, HOURLY]
+    * budget : NUMERIC(12, 2)
+    deadline : TIMESTAMPTZ
+    * status : VARCHAR(20) [DRAFT, OPEN, IN_PROGRESS, COMPLETED, CANCELLED]
+    * is_deleted : BOOLEAN = FALSE
+    * created_at : TIMESTAMPTZ
+    * updated_at : TIMESTAMPTZ
+}
+
+entity "project_categories" as project_categories {
+    * **project_id** : INT <<PK, FK>>
+    * **category_id** : INT <<PK, FK>>
+    --
+    * created_at : TIMESTAMPTZ
+}
+
+entity "project_skills" as project_skills {
+    * **project_id** : INT <<PK, FK>>
+    * **skill_id** : INT <<PK, FK>>
+    --
+    * is_required : BOOLEAN = TRUE
+    * created_at : TIMESTAMPTZ
+}
+
+entity "proposals" as proposals {
+    * **id** : SERIAL <<PK>>
+    --
+    * project_id : INT <<FK>>
+    * freelancer_id : INT <<FK>>
+    * bid_amount : NUMERIC(12, 2)
+    estimated_duration : INT
+    * cover_letter : TEXT
+    * status : VARCHAR(20) [PENDING, ACCEPTED, REJECTED, WITHDRAWN]
+    * created_at : TIMESTAMPTZ
+    * updated_at : TIMESTAMPTZ
+}
+
+' Relationships & Cardinalities
+users ||--o| admins : "has role (1:0..1)"
+users ||--o| user_profiles : "has profile (1:0..1)"
+users ||--o{ portfolios : "presents (1:0..N)"
+users ||--o{ certificates : "earns (1:0..N)"
+
+users ||--o{ user_skills : "possesses (1:0..N)"
+skills ||--o{ user_skills : "associated with (1:0..N)"
+
+users ||--o{ projects : "creates as employer (1:0..N)"
+
+projects ||--o{ project_categories : "classified in (1:1..N)"
+categories ||--o{ project_categories : "contains (1:0..N)"
+
+projects ||--o{ project_skills : "requires (1:1..N)"
+skills ||--o{ project_skills : "needed for (1:0..N)"
+
+projects ||--o{ proposals : "receives (1:0..N)"
+users ||--o{ proposals : "submits as freelancer (1:0..N)"
+
+@enduml
