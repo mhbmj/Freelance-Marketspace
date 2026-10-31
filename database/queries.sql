@@ -51,3 +51,13 @@ FROM projects p
 JOIN project_skills ps ON p.id = ps.project_id
 JOIN skills s ON ps.skill_id = s.id
 ORDER BY p.id, ps.is_required DESC;
+
+-- Query 5: Case-insensitive skill search (Recognizes 'python', 'PYTHON', 'Python' via ILIKE)
+SELECT
+    p.id AS project_id,
+    p.title AS project_title,
+    s.name AS matched_skill
+FROM projects p
+JOIN project_skills ps ON p.id = ps.project_id
+JOIN skills s ON ps.skill_id = s.id
+WHERE s.name ILIKE 'python';
