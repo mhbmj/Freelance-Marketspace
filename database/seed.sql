@@ -4,13 +4,13 @@ TRUNCATE TABLE proposals, project_skills, project_categories, projects,
                user_profiles, admins, users
 RESTART IDENTITY CASCADE;
 
--- 1. Users
+-- 1. Users (Passwords hashed using pgcrypto bcrypt)
 INSERT INTO users (first_name, last_name, email, phone_number, password_hash, status) VALUES
-('امید', 'شمس', 'admin@market.ir', '09121111111', 'hash_admin_123', 'ACTIVE'),
-('سارا', 'احمدی', 'sara@gmail.com', '09122222222', 'hash_sara_123', 'ACTIVE'),
-('علی', 'رضایی', 'ali@gmail.com', '09123333333', 'hash_ali_123', 'ACTIVE'),
-('مریم', 'حسینی', 'maryam@gmail.com', '09124444444', 'hash_maryam_123', 'ACTIVE'),
-('رضا', 'محمدی', 'reza@gmail.com', '09125555555', 'hash_reza_123', 'ACTIVE');
+('امید', 'شمس', 'admin@market.ir', '09121111111', crypt('AdminPass@123', gen_salt('bf')), 'ACTIVE'),
+('سارا', 'احمدی', 'sara@gmail.com', '09122222222', crypt('SaraPass@123', gen_salt('bf')), 'ACTIVE'),
+('علی', 'رضایی', 'ali@gmail.com', '09123333333', crypt('AliPass@123', gen_salt('bf')), 'ACTIVE'),
+('مریم', 'حسینی', 'maryam@gmail.com', '09124444444', crypt('MaryamPass@123', gen_salt('bf')), 'ACTIVE'),
+('رضا', 'محمدی', 'reza@gmail.com', '09125555555', crypt('RezaPass@123', gen_salt('bf')), 'ACTIVE');
 
 -- 2. Admins
 INSERT INTO admins (user_id, role_title) VALUES
