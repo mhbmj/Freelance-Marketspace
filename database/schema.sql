@@ -1,3 +1,5 @@
+
+-- Enable pgcrypto extension for password hashing (bcrypt)
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- 1. Users
@@ -12,6 +14,7 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE UNIQUE INDEX idx_users_email_lower ON users (LOWER(email));
 
 -- 2. Admins
 CREATE TABLE admins (
@@ -53,18 +56,20 @@ CREATE TABLE certificates (
 -- 6. Categories
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(50) NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE UNIQUE INDEX idx_categories_name_lower ON categories (LOWER(name));
 
 -- 7. Skills
 CREATE TABLE skills (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(50) NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE UNIQUE INDEX idx_skills_name_lower ON skills (LOWER(name));
 
 -- 8. User Skills (Many-to-Many)
 CREATE TABLE user_skills (
