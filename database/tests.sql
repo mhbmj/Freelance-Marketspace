@@ -34,3 +34,16 @@ WHERE project_id = 1 AND freelancer_id = 4;
 SELECT id, title, status
 FROM projects
 WHERE id = 1;
+
+-- Test 9: Password Hashing & Verification via pgcrypto (Positive & Negative Test)
+-- 9.1: Correct password test (Returns user record)
+SELECT id, email, first_name, last_name
+FROM users
+WHERE email = 'sara@gmail.com'
+  AND password_hash = crypt('SaraPass@123', password_hash);
+
+-- 9.2: Wrong password test (Returns empty / 0 rows)
+SELECT id, email
+FROM users
+WHERE email = 'sara@gmail.com'
+  AND password_hash = crypt('WrongPassword', password_hash);
