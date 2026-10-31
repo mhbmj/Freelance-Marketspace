@@ -47,3 +47,14 @@ SELECT id, email
 FROM users
 WHERE email = 'sara@gmail.com'
   AND password_hash = crypt('WrongPassword', password_hash);
+
+-- Test 10: Case-Insensitive Skill Handling (Uppercase/Lowercase)
+-- 10.1: Case-insensitive search finds 'Python' when searching with all-uppercase 'PYTHON'
+SELECT id, name
+FROM skills
+WHERE name ILIKE 'PYTHON';
+
+-- 10.2: Duplicate skill rejection regardless of casing (Expect Error)
+-- 'Python' already exists; inserting lowercase 'python' must fail:
+INSERT INTO skills (name, description)
+VALUES ('python', 'تلاش برای درج مهارت تکراری با حروف کوچک');
