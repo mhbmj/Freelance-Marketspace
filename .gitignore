@@ -32,3 +32,6 @@ Thumbs.db
 all_content.txt
 read_files.py
 test.txt
+*.zip
+*.pdf
+.claude/
