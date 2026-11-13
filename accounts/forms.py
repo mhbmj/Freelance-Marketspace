@@ -71,22 +71,22 @@ class SignupForm(forms.ModelForm):
         widgets = {
             'first_name': forms.TextInput(attrs={
                 'class': 'form-input',
-                'placeholder': 'مثال: سارا',
+                'placeholder': 'مثال: مهتاب',
                 'required': True
             }),
             'last_name': forms.TextInput(attrs={
                 'class': 'form-input',
-                'placeholder': 'مثال: احمدی',
+                'placeholder': 'مثال: مروج',
                 'required': True
             }),
             'email': forms.EmailInput(attrs={
                 'class': 'form-input',
-                'placeholder': 'example@email.com',
+                'placeholder': 'mahtabmj96@gmail.com',
                 'required': True
             }),
             'phone_number': forms.TextInput(attrs={
                 'class': 'form-input',
-                'placeholder': '۰۹۱۲XXXXXXX (اختیاری)',
+                'placeholder': '۰۹۲۲۴۲۹۴۸۳۳ (اختیاری)',
             }),
         }
 

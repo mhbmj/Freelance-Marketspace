@@ -15,11 +15,11 @@ class AuthenticationTests(TestCase):
         self.client = Client()
         self.user_password = 'ValidPassword123'
         self.user = User.objects.create_user(
-            first_name='سارا',
-            last_name='احمدی',
-            email='sara@gmail.com',
+            first_name='مهتاب',
+            last_name='مروج',
+            email='mahtabmj96@gmail.com',
             password=self.user_password,
-            phone_number='09122222222'
+            phone_number='09224294833'
         )
 
     # ------------------------------------------------------------------------
@@ -53,7 +53,7 @@ class AuthenticationTests(TestCase):
         duplicate_data = {
             'first_name': 'تست',
             'last_name': 'تکراری',
-            'email': 'sara@gmail.com',  # قبلاً در setUp ثبت شده است
+            'email': 'mahtabmj96@gmail.com',  # قبلاً در setUp ثبت شده است
             'password': 'Password123',
             'password_confirm': 'Password123'
         }
@@ -80,12 +80,12 @@ class AuthenticationTests(TestCase):
     def test_login_successful_and_redirect_to_welcome(self):
         """ورود موفق با ایمیل و رمز صحیح و انتقال به صفحه خوش‌آمدید"""
         login_data = {
-            'email': 'sara@gmail.com',
+            'email': 'mahtabmj96@gmail.com',
             'password': self.user_password
         }
         response = self.client.post(reverse('login'), login_data, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'خوش آمدید، سارا احمدی!')
+        self.assertContains(response, 'خوش آمدید، مهتاب مروج!')
 
         # بررسی حفظ سشن
         self.assertTrue('_auth_user_id' in self.client.session)
@@ -94,7 +94,7 @@ class AuthenticationTests(TestCase):
     def test_login_invalid_password_shows_generic_error(self):
         """ورود ناموفق با رمز اشتباه بدون افشای اینکه کدام بخش اشتباه است"""
         login_data = {
-            'email': 'sara@gmail.com',
+            'email': 'mahtabmj96@gmail.com',
             'password': 'WrongPassword999'
         }
         response = self.client.post(reverse('login'), login_data)
@@ -120,7 +120,7 @@ class AuthenticationTests(TestCase):
     def test_logout_terminates_session(self):
         """دکمه خروج، سشن را پایان می‌دهد"""
         # ورود ابتدا
-        self.client.login(email='sara@gmail.com', password=self.user_password)
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
         # سپس خروج
         response = self.client.post(reverse('logout'), follow=True)
         self.assertEqual(response.status_code, 200)

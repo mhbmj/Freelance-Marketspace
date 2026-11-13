@@ -1,6 +1,6 @@
 -- Test 1: Duplicate email (Expect Error)
 INSERT INTO users (first_name, last_name, email, password_hash)
-VALUES ('کاربر', 'تستی', 'sara@gmail.com', 'pass123');
+VALUES ('کاربر', 'تستی', 'mahtabmj96@gmail.com', 'pass123');
 
 -- Test 2: Invalid Foreign Key (Expect Error)
 INSERT INTO projects (employer_id, title, description, pricing_type, budget, status)
@@ -39,13 +39,13 @@ WHERE id = 1;
 -- 9.1: Correct password test (Returns user record)
 SELECT id, email, first_name, last_name
 FROM users
-WHERE email = 'sara@gmail.com'
-  AND password_hash = crypt('SaraPass@123', password_hash);
+WHERE email = 'mahtabmj96@gmail.com'
+  AND password_hash = crypt('MahtabPass@123', password_hash);
 
 -- 9.2: Wrong password test (Returns empty / 0 rows)
 SELECT id, email
 FROM users
-WHERE email = 'sara@gmail.com'
+WHERE email = 'mahtabmj96@gmail.com'
   AND password_hash = crypt('WrongPassword', password_hash);
 
 -- Test 10: Case-Insensitive Skill Handling (Uppercase/Lowercase)

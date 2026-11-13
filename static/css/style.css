@@ -1,35 +1,50 @@
 /* ==========================================================================
-   Freelance Marketplace - Pink Theme Stylesheet (استایل تم صورتی)
-   Software Engineering Lab - Assignment 03
+   Freelance Marketplace - Minimal Pastel Theme (صورتی کمرنگ و زرد پاستیلی)
+   Font: Vazirmatn
    Author: Mahtab Moravej
    ========================================================================== */
 
 :root {
-    --primary-pink: #ec4899;        /* Tailwind Pink-500 */
-    --primary-hover: #db2777;       /* Tailwind Pink-600 */
-    --primary-dark: #be185d;        /* Tailwind Pink-700 */
-    --primary-light: #fce7f3;       /* Tailwind Pink-100 */
-    --pink-gradient: linear-gradient(135deg, #f43f5e 0%, #ec4899 50%, #d946ef 100%);
-    --bg-gradient: linear-gradient(135deg, #fff1f2 0%, #fdf2f8 50%, #fae8ff 100%);
-    --text-dark: #1f2937;
-    --text-muted: #6b7280;
-    --border-color: #fbcfe8;        /* Soft pink border */
+    /* Pastel Pink & Pastel Yellow Palette */
+    --pastel-pink: #f472b6;         /* Pink 400 */
+    --pastel-pink-hover: #ec4899;   /* Pink 500 */
+    --pastel-pink-soft: #fdf2f8;    /* Pink 50 */
+    --pastel-pink-light: #fce7f3;   /* Pink 100 */
+    --pastel-pink-border: #fbcfe8;  /* Pink 200 */
+
+    --pastel-yellow: #fef08a;       /* Yellow 200 */
+    --pastel-yellow-hover: #fde047; /* Yellow 300 */
+    --pastel-yellow-soft: #fffbeb;  /* Amber/Yellow 50 */
+    --pastel-yellow-light: #fef9c3; /* Yellow 100 */
+    --pastel-yellow-border: #fef08a;
+
+    --bg-gradient: linear-gradient(135deg, #fffdf8 0%, #fdf2f8 45%, #fefce8 100%);
+    --button-gradient: linear-gradient(135deg, #f472b6 0%, #fb7185 100%);
+    --top-accent: linear-gradient(90deg, #fbcfe8 0%, #fef08a 100%);
+
+    --text-main: #372f35;
+    --text-muted: #7b6f77;
+    --border-card: #f2e7ec;
+    --border-input: #ebe0e5;
+
     --card-bg: #ffffff;
-    --danger: #ef4444;
-    --danger-bg: #fee2e2;
-    --success: #10b981;
-    --success-bg: #d1fae5;
-    --radius-lg: 16px;
-    --radius-md: 10px;
-    --shadow-soft: 0 10px 25px -5px rgba(236, 72, 153, 0.15), 0 8px 10px -6px rgba(236, 72, 153, 0.1);
-    --shadow-hover: 0 20px 30px -10px rgba(236, 72, 153, 0.25);
+    --danger: #dc2626;
+    --danger-bg: #fff1f2;
+    --danger-border: #fecdd3;
+    --success: #059669;
+    --success-bg: #f0fdf4;
+    --success-border: #bbf7d0;
+
+    --radius-card: 18px;
+    --radius-element: 10px;
+    --shadow-minimal: 0 10px 30px -8px rgba(244, 114, 182, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Vazirmatn", Tahoma, sans-serif;
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
@@ -41,36 +56,38 @@ body {
     align-items: center;
     padding: 24px 16px;
     direction: rtl;
-    color: var(--text-dark);
+    color: var(--text-main);
+    line-height: 1.6;
 }
 
-/* Container */
+/* Wrapper */
 .auth-wrapper {
     width: 100%;
     max-width: 440px;
     margin: auto;
 }
 
-/* Card */
+/* Minimal Card */
 .auth-card {
     background: var(--card-bg);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-soft);
-    padding: 36px 32px;
-    border: 1px solid var(--border-color);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-minimal);
+    padding: 40px 34px;
+    border: 1px solid var(--border-card);
     position: relative;
     overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    backdrop-filter: blur(10px);
 }
 
+/* Subtle Dual Accent Bar (Pink & Yellow Pastel) */
 .auth-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 6px;
-    background: var(--pink-gradient);
+    height: 4px;
+    background: var(--top-accent);
 }
 
 /* Header */
@@ -79,70 +96,67 @@ body {
     margin-bottom: 28px;
 }
 
-.logo-badge {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 16px;
-    background: var(--pink-gradient);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 26px;
-    box-shadow: 0 6px 15px rgba(236, 72, 153, 0.35);
-}
-
 .auth-title {
     font-size: 22px;
     font-weight: 700;
-    color: #831843; /* Pink 900 */
-    margin-bottom: 8px;
+    color: var(--text-main);
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
 }
 
 .auth-subtitle {
     font-size: 13px;
     color: var(--text-muted);
-    line-height: 1.5;
+    font-weight: 400;
 }
 
-/* Alerts & Messages */
+/* Minimal Tag Badge */
+.minimal-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    background: var(--pastel-yellow-light);
+    border: 1px solid var(--pastel-yellow-border);
+    color: #854d0e;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 20px;
+    margin-bottom: 14px;
+}
+
+/* Alerts */
 .alert {
-    padding: 12px 16px;
-    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    border-radius: var(--radius-element);
     font-size: 13px;
     margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
     line-height: 1.5;
-    animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.25s ease-out;
 }
 
 .alert-danger {
     background-color: var(--danger-bg);
-    color: #991b1b;
-    border: 1px solid #fecaca;
+    color: #9f1239;
+    border: 1px solid var(--danger-border);
 }
 
 .alert-success {
     background-color: var(--success-bg);
     color: #065f46;
-    border: 1px solid #a7f3d0;
+    border: 1px solid var(--success-border);
 }
 
 .alert-info {
-    background-color: #fdf2f8;
-    color: #831843;
-    border: 1px solid #fbcfe8;
+    background-color: var(--pastel-yellow-soft);
+    color: #854d0e;
+    border: 1px solid var(--pastel-yellow-border);
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-6px); }
+    from { opacity: 0; transform: translateY(-4px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Forms */
+/* Form Groups */
 .form-group {
     margin-bottom: 18px;
 }
@@ -150,8 +164,8 @@ body {
 .form-label {
     display: block;
     font-size: 13px;
-    font-weight: 600;
-    color: #4b5563;
+    font-weight: 500;
+    color: #554951;
     margin-bottom: 6px;
 }
 
@@ -161,32 +175,33 @@ body {
     align-items: center;
 }
 
+/* Inputs */
 .form-input {
     width: 100%;
     padding: 12px 14px;
     font-size: 14px;
-    border: 1.5px solid #f3d2e2;
-    border-radius: var(--radius-md);
-    background-color: #fffafc;
-    color: var(--text-dark);
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-element);
+    background-color: #fdfbfc;
+    color: var(--text-main);
     outline: none;
     transition: all 0.2s ease;
 }
 
 .form-input:focus {
     background-color: #ffffff;
-    border-color: var(--primary-pink);
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+    border-color: var(--pastel-pink);
+    box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.18);
 }
 
 .form-input::placeholder {
-    color: #9ca3af;
+    color: #a89fa5;
     font-size: 13px;
 }
 
 /* Password Toggle Icon */
 .input-with-toggle {
-    padding-left: 44px; /* Space for the eye icon on left in RTL */
+    padding-left: 42px;
 }
 
 .password-toggle-btn {
@@ -197,20 +212,20 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    color: #9ca3af;
+    color: #9f939b;
     padding: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 4px;
-    transition: color 0.2s ease;
+    transition: color 0.15s ease;
 }
 
 .password-toggle-btn:hover {
-    color: var(--primary-pink);
+    color: var(--pastel-pink);
 }
 
-/* Actions Row (Remember / Forgot) */
+/* Extra row */
 .form-extra {
     display: flex;
     justify-content: flex-end;
@@ -220,29 +235,29 @@ body {
 }
 
 .link-pink {
-    color: var(--primary-pink);
+    color: var(--pastel-pink-hover);
     text-decoration: none;
     font-weight: 600;
     transition: color 0.15s ease;
 }
 
 .link-pink:hover {
-    color: var(--primary-dark);
+    color: #be185d;
     text-decoration: underline;
 }
 
-/* Submit Button */
+/* Buttons */
 .btn-pink {
     width: 100%;
     padding: 12px 20px;
-    background: var(--pink-gradient);
+    background: var(--button-gradient);
     color: white;
     border: none;
-    border-radius: var(--radius-md);
-    font-size: 15px;
+    border-radius: var(--radius-element);
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+    box-shadow: 0 4px 14px rgba(244, 114, 182, 0.28);
     transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
     display: flex;
     align-items: center;
@@ -252,40 +267,40 @@ body {
 
 .btn-pink:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(236, 72, 153, 0.4);
-    opacity: 0.96;
+    box-shadow: 0 6px 18px rgba(244, 114, 182, 0.38);
+    opacity: 0.98;
 }
 
 .btn-pink:active {
     transform: translateY(1px);
-    box-shadow: 0 2px 6px rgba(236, 72, 153, 0.3);
+    box-shadow: 0 2px 6px rgba(244, 114, 182, 0.2);
 }
 
 .btn-outline-pink {
-    background: transparent;
-    color: var(--primary-pink);
-    border: 1.5px solid var(--primary-pink);
+    background: var(--pastel-yellow-soft);
+    color: #854d0e;
+    border: 1px solid var(--pastel-yellow-border);
     box-shadow: none;
 }
 
 .btn-outline-pink:hover {
-    background: var(--primary-light);
-    color: var(--primary-dark);
-    border-color: var(--primary-dark);
+    background: var(--pastel-yellow-light);
+    color: #713f12;
+    border-color: #fde047;
     transform: translateY(-1px);
 }
 
-/* Card Footer Links */
+/* Footer Links */
 .auth-footer {
     text-align: center;
     margin-top: 24px;
     padding-top: 18px;
-    border-top: 1px dashed #fbcfe8;
+    border-top: 1px dashed var(--border-card);
     font-size: 13px;
     color: var(--text-muted);
 }
 
-/* Row Columns for First & Last Name */
+/* Form Row for First & Last Name */
 .form-row {
     display: flex;
     gap: 12px;
@@ -295,70 +310,57 @@ body {
     flex: 1;
 }
 
-/* Welcome Page Special Design */
+/* Welcome Page (Minimal) */
 .welcome-card {
     text-align: center;
-    padding: 42px 32px;
-}
-
-.avatar-badge {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 20px;
-    background: var(--pink-gradient);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 34px;
-    box-shadow: 0 8px 20px rgba(236, 72, 153, 0.35);
+    padding: 42px 34px;
 }
 
 .user-badge-tag {
     display: inline-block;
-    padding: 4px 14px;
+    padding: 3px 14px;
     border-radius: 20px;
-    background: var(--primary-light);
-    color: var(--primary-dark);
+    background: var(--pastel-yellow-light);
+    border: 1px solid var(--pastel-yellow-border);
+    color: #854d0e;
     font-size: 12px;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .user-info-box {
-    background: #fdf2f8;
-    border-radius: var(--radius-md);
-    padding: 16px;
-    border: 1px solid #fbcfe8;
+    background: #fffdfd;
+    border-radius: var(--radius-element);
+    padding: 18px 20px;
+    border: 1px solid #f5e9ee;
     text-align: right;
-    margin: 20px 0 24px;
+    margin: 22px 0 24px;
     font-size: 13px;
-    line-height: 1.9;
+    line-height: 2;
 }
 
-/* Development helper box (for password reset link in dev environment) */
+/* Development Helper Box */
 .dev-helper-box {
-    margin-top: 18px;
-    padding: 12px;
-    background-color: #fff1f2;
-    border: 1px dashed #fda4af;
-    border-radius: var(--radius-md);
+    margin-top: 16px;
+    padding: 12px 14px;
+    background-color: var(--pastel-yellow-soft);
+    border: 1px dashed #fde047;
+    border-radius: var(--radius-element);
     font-size: 12px;
-    color: #9f1239;
+    color: #854d0e;
     word-break: break-all;
     line-height: 1.6;
 }
 
 .dev-helper-box a {
-    color: var(--primary-dark);
+    color: #be185d;
     font-weight: 700;
 }
 
 /* Responsive */
 @media (max-width: 480px) {
     .auth-card {
-        padding: 28px 20px;
+        padding: 30px 22px;
     }
     .form-row {
         flex-direction: column;

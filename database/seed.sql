@@ -7,7 +7,7 @@ RESTART IDENTITY CASCADE;
 -- 1. Users (Passwords hashed using pgcrypto bcrypt)
 INSERT INTO users (first_name, last_name, email, phone_number, password_hash, status) VALUES
 ('امید', 'شمس', 'admin@market.ir', '09121111111', crypt('AdminPass@123', gen_salt('bf')), 'ACTIVE'),
-('سارا', 'احمدی', 'sara@gmail.com', '09122222222', crypt('SaraPass@123', gen_salt('bf')), 'ACTIVE'),
+('مهتاب', 'مروج', 'mahtabmj96@gmail.com', '09224294833', crypt('MahtabPass@123', gen_salt('bf')), 'ACTIVE'),
 ('علی', 'رضایی', 'ali@gmail.com', '09123333333', crypt('AliPass@123', gen_salt('bf')), 'ACTIVE'),
 ('مریم', 'حسینی', 'maryam@gmail.com', '09124444444', crypt('MaryamPass@123', gen_salt('bf')), 'ACTIVE'),
 ('رضا', 'محمدی', 'reza@gmail.com', '09125555555', crypt('RezaPass@123', gen_salt('bf')), 'ACTIVE');

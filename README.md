@@ -62,9 +62,9 @@ python manage.py migrate
 python manage.py seed_users
 ```
 کاربران پیش‌فرض ایجادشده:
-* **ایمیل:** `sara@gmail.com` | **رمز عبور:** `SaraPass@123`
-* **ایمیل:** `ali@gmail.com`  | **رمز عبور:** `AliPass@123`
-* **ایمیل:** `maryam@gmail.com` | **رمز عبور:** `MaryamPass@123`
+* **نام:** مهتاب مروج | **ایمیل:** `mahtabmj96@gmail.com` | **موبایل:** `09224294833` | **رمز عبور:** `MahtabPass@123`
+* **نام:** علی رضایی | **ایمیل:** `ali@gmail.com` | **رمز عبور:** `AliPass@123`
+* **نام:** مریم حسینی | **ایمیل:** `maryam@gmail.com` | **رمز عبور:** `MaryamPass@123`
 
 ### ۳. اجرای سرور توسعه
 ```bash
