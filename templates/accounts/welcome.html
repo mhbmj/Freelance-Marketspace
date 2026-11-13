@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}خوش آمدید | سامانه بازار کار فریلنسری{% endblock %}
+
+{% block content %}
+<div class="auth-card welcome-card">
+    <div class="avatar-badge">🌸</div>
+
+    <span class="user-badge-tag">وضعیت حساب: {{ user.get_status_display }}</span>
+
+    <h1 class="auth-title" style="font-size: 24px;">
+        خوش آمدید، {{ user.full_name }}!
+    </h1>
+    <p class="auth-subtitle">
+        شما با موفقیت وارد سامانه بازار کار فریلنسری (Freelance Marketplace) شدید.
+    </p>
+
+    <!-- پیام‌های سامانه -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" style="margin-top: 18px;">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- جعبه مشخصات کاربر لاگین شده -->
+    <div class="user-info-box">
+        <p><strong>👤 شناسه کاربری (ID):</strong> {{ user.id }}</p>
+        <p><strong>📧 آدرس ایمیل:</strong> {{ user.email }}</p>
+        {% if user.phone_number %}
+            <p><strong>📱 شماره موبایل:</strong> {{ user.phone_number }}</p>
+        {% endif %}
+        <p><strong>📅 تاریخ عضویت:</strong> {{ user.created_at|date:"Y/m/d - H:i" }}</p>
+        <p><strong>🔒 نوع نشست (Session):</strong> فعال و اعتبارسنجی‌شده</p>
+    </div>
+
+    <!-- دکمه خروج از حساب (پایان سشن) -->
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-pink" style="background: linear-gradient(135deg, #f43f5e, #be185d);">
+            خروج از حساب کاربری (Logout)
+        </button>
+    </form>
+</div>
+{% endblock %}

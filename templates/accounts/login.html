@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}ورود به سامانه | بازار کار فریلنسری{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <div class="auth-header">
+        <div class="logo-badge">🌸</div>
+        <h1 class="auth-title">ورود به حساب کاربری</h1>
+        <p class="auth-subtitle">سامانه بازار کار فریلنسری (Freelance Marketplace)</p>
+    </div>
+
+    <!-- پیام‌های موفقیت یا خطا -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'info' %}alert-info{% else %}alert-danger{% endif %}">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <span>{{ error }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}" novalidate>
+        {% csrf_token %}
+
+        <!-- فیلد ایمیل -->
+        <div class="form-group">
+            <label for="email" class="form-label">آدرس ایمیل</label>
+            <div class="input-wrapper">
+                {{ form.email }}
+            </div>
+            {% if form.email.errors %}
+                <small style="color: var(--danger); font-size: 12px; margin-top: 4px; display: block;">
+                    {{ form.email.errors.0 }}
+                </small>
+            {% endif %}
+        </div>
+
+        <!-- فیلد رمز عبور همراه با دکمه چشم برای نمایش/مخفی‌سازی -->
+        <div class="form-group">
+            <label for="password" class="form-label">رمز عبور</label>
+            <div class="input-wrapper">
+                {{ form.password }}
+                <button type="button" class="password-toggle-btn" data-target="password" title="نمایش/مخفی‌کردن رمز عبور" aria-label="نمایش/مخفی‌کردن رمز عبور">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </button>
+            </div>
+            {% if form.password.errors %}
+                <small style="color: var(--danger); font-size: 12px; margin-top: 4px; display: block;">
+                    {{ form.password.errors.0 }}
+                </small>
+            {% endif %}
+        </div>
+
+        <!-- لینک فراموشی رمز عبور -->
+        <div class="form-extra">
+            <a href="{% url 'forgot_password' %}" class="link-pink">رمز عبور را فراموش کرده‌اید؟</a>
+        </div>
+
+        <!-- دکمه ورود -->
+        <button type="submit" class="btn-pink">
+            ورود به حساب کاربری
+        </button>
+    </form>
+
+    <!-- لینک ثبت‌نام -->
+    <div class="auth-footer">
+        حساب کاربری ندارید؟
+        <a href="{% url 'signup' %}" class="link-pink">ایجاد حساب جدید</a>
+    </div>
+</div>
+{% endblock %}
