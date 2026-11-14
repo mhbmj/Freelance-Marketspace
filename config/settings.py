@@ -4,13 +4,24 @@ Software Engineering Lab - Assignment 03
 Author: Mahtab Moravej
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# بارگذاری تنظیمات محیطی از فایل .env در صورت وجود
+env_file = BASE_DIR / '.env'
+if env_file.exists():
+    with open(env_file, encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                k, v = line.split('=', 1)
+                os.environ.setdefault(k.strip(), v.strip())
+
 # Security settings
-SECRET_KEY = 'django-insecure-8$zj1tgs7s@hdg26(94q@z(m@&@x!m2i%yk(9p3aznzc#$ab_#'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-8$zj1tgs7s@hdg26(94q@z(m@&@x!m2i%yk(9p3aznzc#$ab_#')
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
@@ -54,12 +65,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database
-# Default: SQLite for seamless standalone running and testing
+# Database: PostgreSQL (متصل مستقیم به پایگاه داده ۱۲ جدوله freelance-marketspace)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'freelance-marketspace'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
