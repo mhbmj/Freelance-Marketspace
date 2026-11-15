@@ -32,7 +32,14 @@ class User(AbstractBaseUser):
     first_name = models.CharField('نام', max_length=50)
     last_name = models.CharField('نام خانوادگی', max_length=50)
     email = models.EmailField('ایمیل', max_length=100, unique=True)
+    username = models.CharField('نام کاربری', max_length=50, unique=True, null=True, blank=True)
     phone_number = models.CharField('شماره موبایل', max_length=20, blank=True, null=True)
+
+    ROLE_CHOICES = [
+        ('FREELANCER', 'فریلنسر هستم'),
+        ('EMPLOYER', 'کارفرما هستم'),
+    ]
+    role = models.CharField('نقش کاربر', max_length=20, choices=ROLE_CHOICES, default='FREELANCER', null=True, blank=True)
 
     # اتصال فیلد password جنگو به ستون password_hash در جدول users
     password = models.CharField('رمز عبور هش‌شده', max_length=255, db_column='password_hash')

@@ -44,13 +44,30 @@ class LoginForm(forms.Form):
         return cleaned_data
 
 
+def validate_password_strength(password):
+    """اعتبارسنجی قدرت رمز عبور و رد رمزهای بسیار ساده"""
+    if len(password) < 8:
+        raise forms.ValidationError('رمز عبور باید حداقل ۸ کاراکتر باشد.')
+    if password.isdigit():
+        raise forms.ValidationError('رمز عبور نمی‌تواند فقط از اعداد تشکیل شده باشد. لطفاً از ترکیب حروف و اعداد استفاده کنید.')
+    if password.isalpha():
+        raise forms.ValidationError('رمز عبور باید شامل حداقل یک عدد باشد.')
+
+    common_weak = [
+        '12345678', 'password', 'password123', 'qwerty123', '11111111',
+        'admin123', '123456789', 'letmein123', 'pass1234'
+    ]
+    if password.lower() in common_weak:
+        raise forms.ValidationError('این رمز عبور بسیار ساده و قابل حدس است. لطفاً رمز قوی‌تری انتخاب کنید.')
+
+
 class SignupForm(forms.ModelForm):
     """فرم ثبت‌نام و ایجاد حساب کاربری جدید با هش امن PBKDF2"""
     password = forms.CharField(
         label='رمز عبور',
         widget=forms.PasswordInput(attrs={
             'class': 'form-input input-with-toggle',
-            'placeholder': 'حداقل ۶ کاراکتر',
+            'placeholder': 'حداقل ۸ کاراکتر ترکیبی',
             'id': 'password',
             'required': True
         })
@@ -104,8 +121,11 @@ class SignupForm(forms.ModelForm):
         if password and password_confirm:
             if password != password_confirm:
                 self.add_error('password_confirm', 'رمز عبور و تکرار آن یکسان نیستند.')
-            elif len(password) < 6:
-                self.add_error('password', 'رمز عبور باید حداقل ۶ کاراکتر باشد.')
+            else:
+                try:
+                    validate_password_strength(password)
+                except forms.ValidationError as e:
+                    self.add_error('password', e.message)
 
         return cleaned_data
 
@@ -163,7 +183,47 @@ class ResetPasswordForm(forms.Form):
         if p1 and p2:
             if p1 != p2:
                 self.add_error('new_password_confirm', 'رمز عبور جدید و تکرار آن یکسان نیستند.')
-            elif len(p1) < 6:
-                self.add_error('new_password', 'رمز عبور جدید باید حداقل ۶ کاراکتر باشد.')
+            else:
+                try:
+                    validate_password_strength(p1)
+                except forms.ValidationError as e:
+                    self.add_error('new_password', e.message)
 
         return cleaned_data
+
+
+class RoleSelectionForm(forms.Form):
+    """فرم انتخاب نام کاربری و نقش کاربر بعد از ثبت‌نام (مطابق تصویر پونیشا/سایت‌های فریلنسری)"""
+    username = forms.CharField(
+        label='نام کاربری',
+        max_length=50,
+        widget=forms.TextInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'مثال: ali012',
+            'id': 'username',
+            'dir': 'ltr',
+            'required': True
+        })
+    )
+    role = forms.ChoiceField(
+        choices=[('FREELANCER', 'فریلنسر هستم'), ('EMPLOYER', 'کارفرما هستم')],
+        widget=forms.HiddenInput(attrs={'id': 'selected-role-input'}),
+        initial='FREELANCER'
+    )
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
+    def clean_username(self):
+        import re
+        username = self.cleaned_data.get('username', '').strip()
+        if not re.match(r'^[a-zA-Z0-9_]+$', username):
+            raise forms.ValidationError('نام کاربری فقط می‌تواند شامل حروف انگلیسی، اعداد و زیرخط باشد.')
+
+        qs = User.objects.filter(username__iexact=username)
+        if self.user:
+            qs = qs.exclude(pk=self.user.pk)
+        if qs.exists():
+            raise forms.ValidationError('این نام کاربری قبلاً انتخاب شده است.')
+        return username

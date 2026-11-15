@@ -119,3 +119,36 @@ DEFAULT_FROM_EMAIL = 'noreply@freelancemarket.ir'
 PASSWORD_RESET_TIMEOUT = 1800
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Cache configuration (Redis if running, fallback to LocMemCache)
+import socket
+
+def _is_redis_listening(host='127.0.0.1', port=6379):
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(0.3)
+        res = s.connect_ex((host, port))
+        s.close()
+        return res == 0
+    except Exception:
+        return False
+
+if _is_redis_listening():
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://127.0.0.1:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            },
+            "TIMEOUT": 600,
+        }
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "freelance-rate-limit",
+            "TIMEOUT": 600,
+        }
+    }

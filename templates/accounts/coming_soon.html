@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}به زودی | سامانه بازار کار فریلنسری{% endblock %}
+
+{% block content %}
+<div class="auth-card" style="text-align: center; padding: 46px 32px;">
+    <span class="user-badge-tag">در دست توسعه</span>
+
+    <h1 class="auth-title" style="font-size: 26px; margin-bottom: 12px;">
+        به زودی...
+    </h1>
+
+    <p class="auth-subtitle" style="font-size: 14px; line-height: 1.8; margin-bottom: 24px;">
+        این بخش از سامانه بازار کار فریلنسری در فازهای بعدی مهندسی نرم‌افزار راه‌اندازی و ارائه خواهد شد.
+    </p>
+
+    <div class="alert alert-info" style="text-align: center; justify-content: center;">
+        قابلیت‌های ثبت و مدیریت پروژه‌ها، ارسال و پذیرش پیشنهادها به زودی در دسترس قرار می‌گیرند.
+    </div>
+
+    <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 10px;">
+        <a href="{% url 'welcome' %}" class="btn-pink" style="text-decoration: none;">
+            بازگشت به حساب کاربری
+        </a>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-pink btn-outline-pink">
+                خروج از حساب کاربری
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

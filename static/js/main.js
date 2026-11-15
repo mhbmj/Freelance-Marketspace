@@ -58,4 +58,56 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    // Password strength evaluator (سبز و قرمز)
+    function setupPasswordStrength(inputId) {
+        const input = document.getElementById(inputId);
+        const container = document.getElementById('strength-container');
+        const bar = document.getElementById('strength-bar');
+        const text = document.getElementById('strength-text');
+
+        if (!input || !container || !bar || !text) return;
+
+        input.addEventListener('input', function () {
+            const val = this.value;
+            if (!val || val.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+
+            let score = 0;
+            if (val.length >= 8) score++;
+            if (val.length >= 12) score++;
+            if (/[0-9]/.test(val) && /[a-zA-Z]/.test(val)) score++;
+            if (/[^a-zA-Z0-9]/.test(val) || (/[A-Z]/.test(val) && /[a-z]/.test(val))) score++;
+
+            // رد و ضعیف اعلام کردن رمزهای بسیار ساده
+            const common = ['12345678', 'password', 'password123', 'qwerty123', '11111111', '123456789'];
+            if (common.includes(val.toLowerCase()) || /^\d+$/.test(val) || /^[a-zA-Z]+$/.test(val)) {
+                if (val.length < 12) score = 1;
+            }
+
+            bar.className = 'strength-bar-fill';
+            text.className = 'strength-status-text';
+
+            if (score <= 1) {
+                bar.classList.add('weak');
+                text.classList.add('weak');
+                text.textContent = 'ضعیف و غیرقابل‌قبول (قرمز)';
+            } else if (score === 2) {
+                bar.classList.add('fair');
+                text.classList.add('fair');
+                text.textContent = 'متوسط';
+            } else {
+                bar.classList.add('strong');
+                text.classList.add('strong');
+                text.textContent = 'قوی و مطمئن (سبز)';
+            }
+        });
+    }
+
+    setupPasswordStrength('password');
+    setupPasswordStrength('new_password');
 });

@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
+from django.core.cache import cache
 
 User = get_user_model()
 
@@ -12,12 +13,14 @@ class AuthenticationTests(TestCase):
     """مجموعه آزمون‌های جامع احراز هویت، ثبت‌نام و بازیابی رمز عبور"""
 
     def setUp(self):
+        cache.clear()
         self.client = Client()
         self.user_password = 'ValidPassword123'
         self.user = User.objects.create_user(
             first_name='مهتاب',
             last_name='مروج',
             email='mahtabmj96@gmail.com',
+            username='mahtab_test',
             password=self.user_password,
             phone_number='09224294833'
         )
@@ -48,6 +51,18 @@ class AuthenticationTests(TestCase):
         self.assertTrue(created_user.password.startswith('pbkdf2_sha256$'))
         self.assertTrue(created_user.check_password('StrongPassword456'))
 
+    def test_role_selection_after_signup(self):
+        """تکمیل نام کاربری و نقش فریلنسر/کارفرما بعد از ثبت‌نام مطابق پونیشا"""
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+        response = self.client.post(reverse('select_role'), {
+            'username': 'mhbmj',
+            'role': 'FREELANCER'
+        }, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.username, 'mhbmj')
+        self.assertEqual(self.user.role, 'FREELANCER')
+
     def test_signup_duplicate_email_rejected(self):
         """جلوگیری از ثبت‌نام با ایمیل تکراری"""
         duplicate_data = {
@@ -67,12 +82,38 @@ class AuthenticationTests(TestCase):
             'first_name': 'مهدی',
             'last_name': 'کریمی',
             'email': 'mehdi@gmail.com',
-            'password': 'Password123',
+            'password': 'StrongPass123',
             'password_confirm': 'DifferentPassword456'
         }
         response = self.client.post(reverse('signup'), mismatch_data)
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response.context['form'], 'password_confirm', 'رمز عبور و تکرار آن یکسان نیستند.')
+
+    def test_signup_weak_password_rejected(self):
+        """رد رمزهای عبور بسیار ساده و ناامن (فقط عدد، کمتر از ۸ کاراکتر یا رمزهای ساده)"""
+        # ۱. رمز فقط شامل اعداد
+        weak_data = {
+            'first_name': 'تست',
+            'last_name': 'ضعیف',
+            'email': 'weak@gmail.com',
+            'password': '12345678',
+            'password_confirm': '12345678'
+        }
+        res = self.client.post(reverse('signup'), weak_data)
+        self.assertEqual(res.status_code, 200)
+        self.assertFormError(res.context['form'], 'password', 'رمز عبور نمی‌تواند فقط از اعداد تشکیل شده باشد. لطفاً از ترکیب حروف و اعداد استفاده کنید.')
+
+        # ۲. رمز کمتر از ۸ کاراکتر
+        short_data = {
+            'first_name': 'تست',
+            'last_name': 'کوتاه',
+            'email': 'short@gmail.com',
+            'password': 'a1b2',
+            'password_confirm': 'a1b2'
+        }
+        res_short = self.client.post(reverse('signup'), short_data)
+        self.assertEqual(res_short.status_code, 200)
+        self.assertFormError(res_short.context['form'], 'password', 'رمز عبور باید حداقل ۸ کاراکتر باشد.')
 
     # ------------------------------------------------------------------------
     # ۲. آزمون‌های ورود (Login) و حفظ نشست (Session)
@@ -116,6 +157,21 @@ class AuthenticationTests(TestCase):
         response = self.client.get(reverse('welcome'))
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login/', response.url)
+
+    def test_welcome_page_does_not_show_user_id_and_has_coming_soon_button(self):
+        """بررسی عدم نمایش شناسه کاربری (ID) و وجود دکمه ورود به سامانه"""
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+        response = self.client.get(reverse('welcome'))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'شناسه کاربری (ID):')
+        self.assertContains(response, 'ورود به سامانه')
+
+    def test_coming_soon_page_authenticated(self):
+        """دسترسی به صفحه به زودی پس از ورود به سامانه"""
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+        response = self.client.get(reverse('coming_soon'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'به زودی...')
 
     def test_logout_terminates_session(self):
         """دکمه خروج، سشن را پایان می‌دهد"""
@@ -163,3 +219,75 @@ class AuthenticationTests(TestCase):
         used_link_response = self.client.get(reset_url)
         self.assertEqual(used_link_response.status_code, 200)
         self.assertContains(used_link_response, 'لینک نامعتبر یا منقضی شده')
+
+    # ------------------------------------------------------------------------
+    # ۴. آزمون‌های محدودیت نرخ درخواست (Rate Limit - HTTP 429)
+    # ------------------------------------------------------------------------
+    def test_login_rate_limit_triggered_after_5_failed_password_attempts(self):
+        """قفل شدن ورود و دریافت خطای ۴۲۹ پس از ۵ بار تلاش با رمز عبور اشتباه"""
+        login_url = reverse('login')
+        payload = {
+            'email': 'mahtabmj96@gmail.com',
+            'password': 'WrongPassword123'
+        }
+
+        # ۴ بار تلاش ناموفق با رمز عبور اشتباه (کد ۲۰۰ با خطای فرم)
+        for i in range(4):
+            response = self.client.post(login_url, payload)
+            self.assertEqual(response.status_code, 200)
+
+        # تلاش پنجم با رمز عبور اشتباه -> دریافت خطای ۴۲۹ (Too Many Requests)
+        response_5th = self.client.post(login_url, payload)
+        self.assertEqual(response_5th.status_code, 429)
+        self.assertContains(response_5th, 'خطای ۴۲۹', status_code=429)
+        self.assertContains(response_5th, '۵ بار متوالی رمز عبور را اشتباه وارد کردید', status_code=429)
+
+        # تلاش‌های بعدی تا قبل از انقضای زمان نیز باید ۴۲۹ برگردانند
+        response_6th = self.client.post(login_url, payload)
+        self.assertEqual(response_6th.status_code, 429)
+
+    def test_login_success_resets_rate_limit_counter(self):
+        """ورود موفق با رمز صحیح، شمارنده تلاش‌های ناموفق قبلی را صفر می‌کند"""
+        login_url = reverse('login')
+
+        # ۳ بار تلاش با رمز اشتباه
+        for _ in range(3):
+            res = self.client.post(login_url, {
+                'email': 'mahtabmj96@gmail.com',
+                'password': 'WrongPassword123'
+            })
+            self.assertEqual(res.status_code, 200)
+
+        # ورود با رمز صحیح -> موفق و ریست شمارنده
+        success_res = self.client.post(login_url, {
+            'email': 'mahtabmj96@gmail.com',
+            'password': self.user_password
+        }, follow=True)
+        self.assertEqual(success_res.status_code, 200)
+
+        # خروج
+        self.client.post(reverse('logout'))
+
+        # اکنون کاربر نباید قفل باشد (تلاش مجدد با رمز اشتباه نباید ۴۲۹ بدهد)
+        retry_res = self.client.post(login_url, {
+            'email': 'mahtabmj96@gmail.com',
+            'password': 'WrongAgain'
+        })
+        self.assertEqual(retry_res.status_code, 200)
+
+    def test_forgot_password_rate_limit_triggers_429(self):
+        """محدودیت نرخ برای بازیابی رمز عبور: درخواست بیش از ۵ بار با خطای ۴۲۹ مواجه می‌شود"""
+        forgot_url = reverse('forgot_password')
+        payload = {'email': 'mahtabmj96@gmail.com'}
+
+        # ۵ بار ارسال درخواست
+        for _ in range(5):
+            res = self.client.post(forgot_url, payload)
+            self.assertEqual(res.status_code, 302)  # ریدایرکت موفق به password_reset_done
+
+        # درخواست ششم -> بلاک با خطای ۴۲۹
+        res_6th = self.client.post(forgot_url, payload)
+        self.assertEqual(res_6th.status_code, 429)
+        self.assertContains(res_6th, 'خطای ۴۲۹', status_code=429)
+        self.assertContains(res_6th, 'بیش از حد مجاز', status_code=429)
+

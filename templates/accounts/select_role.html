@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}تکمیل حساب کاربری | سامانه فریلنسری{% endblock %}
+
+{% block content %}
+<div class="auth-card" style="max-width: 480px; padding: 38px 30px;">
+    <div class="auth-header" style="text-align: right; margin-bottom: 22px;">
+        <span class="user-badge-tag">مرحله نهایی ثبت‌نام</span>
+        <h1 class="auth-title" style="font-size: 24px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">
+            ایجاد حساب کاربری
+        </h1>
+        <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.7;">
+            از اینکه به پلتفرم فریلنسری پیوستید خوشحالیم. برای تکمیل حساب کاربری موارد زیر را وارد نمایید:
+        </p>
+    </div>
+
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <span>{{ error }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'select_role' %}" id="role-selection-form" novalidate>
+        {% csrf_token %}
+        {{ form.role }}
+
+        <!-- فیلد نام کاربری -->
+        <div class="form-group" style="margin-bottom: 14px;">
+            <label for="username" class="form-label">
+                نام کاربری
+            </label>
+            <div class="input-wrapper">
+                {{ form.username }}
+            </div>
+            {% if form.username.errors %}
+                <small style="color: var(--danger); font-size: 12px; margin-top: 5px; display: block;">
+                    {{ form.username.errors.0 }}
+                </small>
+            {% endif %}
+        </div>
+
+        <!-- راهنمای نام کاربری با پس‌زمینه زرد پاستیلی ملایم -->
+        <div class="guidance-box" style="background: var(--pastel-yellow-soft); border: 1px solid var(--pastel-yellow-border); border-radius: 10px; padding: 12px 14px; font-size: 12px; color: #713f12; line-height: 1.8; margin-bottom: 24px;">
+            <p style="margin-bottom: 3px;">• امکان تغییر نام کاربری وجود نخواهد داشت</p>
+            <p style="margin-bottom: 3px;">• نام کاربری شما باید انگلیسی و منحصر به فرد باشد</p>
+            <p style="margin-bottom: 3px;">• نام کاربری درست می‌تواند شامل اعداد، حروف و بدون سیمبل (!@#$%^&*) باشد</p>
+            <p style="color: #a16207; margin-top: 4px; font-weight: 600;">مثال نام کاربری درست: ali012</p>
+        </div>
+
+        <!-- دو کارت انتخاب نقش (فریلنسر / کارفرما) با استایل صورتی و زرد پاستیلی -->
+        <div style="display: flex; gap: 14px; margin-bottom: 26px;">
+            <!-- کارت فریلنسر -->
+            <div class="role-card selected" id="card-freelancer" onclick="selectRole('FREELANCER')">
+                <div class="role-icon">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </div>
+                <div class="role-text">فریلنسر هستم</div>
+            </div>
+
+            <!-- کارت کارفرما -->
+            <div class="role-card" id="card-employer" onclick="selectRole('EMPLOYER')">
+                <div class="role-icon">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                </div>
+                <div class="role-text">کارفرما هستم</div>
+            </div>
+        </div>
+
+        <!-- دکمه ادامه صورتی پاستیلی -->
+        <button type="submit" class="btn-pink" style="padding: 13px; font-size: 15px;">
+            ادامه
+        </button>
+    </form>
+</div>
+
+<style>
+/* استایل کارت‌های نقش هماهنگ با تم صورتی و زرد پاستیلی */
+.role-card {
+    flex: 1;
+    border: 2px solid #f0e4ea;
+    border-radius: 12px;
+    padding: 22px 14px;
+    text-align: center;
+    cursor: pointer;
+    background: #ffffff;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.role-card:hover {
+    border-color: #fbcfe8;
+    background: #fffcfd;
+}
+
+.role-card.selected {
+    border-color: #f472b6;
+    background: #fff9fb;
+    box-shadow: 0 4px 14px rgba(244, 114, 182, 0.22);
+}
+
+.role-card .role-icon {
+    color: #6b7280;
+    transition: color 0.2s ease;
+}
+
+.role-card.selected .role-icon {
+    color: #ec4899;
+}
+
+.role-card .role-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.role-card.selected .role-text {
+    color: #be185d;
+}
+</style>
+
+<script>
+function selectRole(roleValue) {
+    document.getElementById('selected-role-input').value = roleValue;
+    const cardFreelancer = document.getElementById('card-freelancer');
+    const cardEmployer = document.getElementById('card-employer');
+
+    if (roleValue === 'FREELANCER') {
+        cardFreelancer.classList.add('selected');
+        cardEmployer.classList.remove('selected');
+    } else {
+        cardEmployer.classList.add('selected');
+        cardFreelancer.classList.remove('selected');
+    }
+}
+</script>
+{% endblock %}

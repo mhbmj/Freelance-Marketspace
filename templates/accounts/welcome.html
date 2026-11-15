@@ -22,9 +22,14 @@
         {% endfor %}
     {% endif %}
 
-    <!-- جعبه مشخصات کاربر لاگین شده -->
+    <!-- جعبه مشخصات کاربر لاگین شده (بدون نمایش شناسه کاربری ID) -->
     <div class="user-info-box">
-        <p><strong>شناسه کاربری (ID):</strong> {{ user.id }}</p>
+        {% if user.username %}
+            <p><strong>نام کاربری:</strong> <span dir="ltr">{{ user.username }}</span></p>
+        {% endif %}
+        {% if user.role %}
+            <p><strong>نقش در سامانه:</strong> {{ user.get_role_display }}</p>
+        {% endif %}
         <p><strong>آدرس ایمیل:</strong> {{ user.email }}</p>
         {% if user.phone_number %}
             <p><strong>شماره موبایل:</strong> {{ user.phone_number }}</p>
@@ -33,12 +38,17 @@
         <p><strong>نوع نشست (Session):</strong> فعال و اعتبارسنجی‌شده</p>
     </div>
 
-    <!-- دکمه خروج از حساب (پایان سشن) -->
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit" class="btn-pink">
-            خروج از حساب کاربری
-        </button>
-    </form>
+    <!-- دکمه‌های ورود به سامانه و خروج -->
+    <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
+        <a href="{% url 'coming_soon' %}" class="btn-pink" style="text-decoration: none;">
+            ورود به سامانه
+        </a>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-pink btn-outline-pink">
+                خروج از حساب کاربری
+            </button>
+        </form>
+    </div>
 </div>
 {% endblock %}

@@ -357,6 +357,62 @@ body {
     font-weight: 700;
 }
 
+/* Password Strength Meter */
+.password-strength-container {
+    margin-top: 8px;
+    animation: fadeIn 0.25s ease-out;
+}
+
+.strength-bar-track {
+    width: 100%;
+    height: 6px;
+    background: #f1e6eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.strength-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 4px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-bar-fill.weak {
+    width: 30%;
+    background-color: #ef4444; /* قرمز: ضعیف */
+}
+
+.strength-bar-fill.fair {
+    width: 60%;
+    background-color: #f59e0b; /* نارنجی/زرد: متوسط */
+}
+
+.strength-bar-fill.strong {
+    width: 100%;
+    background-color: #10b981; /* سبز: قوی */
+}
+
+.strength-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11.5px;
+}
+
+.strength-label-text {
+    color: var(--text-muted);
+}
+
+.strength-status-text {
+    font-weight: 700;
+}
+
+.strength-status-text.weak { color: #dc2626; }
+.strength-status-text.fair { color: #d97706; }
+.strength-status-text.strong { color: #059669; }
+
 /* Responsive */
 @media (max-width: 480px) {
     .auth-card {

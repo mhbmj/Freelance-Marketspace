@@ -10,21 +10,48 @@ from django.contrib import messages
 from django.conf import settings
 
 from .models import User
-from .forms import LoginForm, SignupForm, ForgotPasswordForm, ResetPasswordForm
+from .forms import LoginForm, SignupForm, ForgotPasswordForm, ResetPasswordForm, RoleSelectionForm
+from .rate_limit import (
+    is_login_rate_limited,
+    record_login_failed_attempt,
+    reset_login_attempts,
+    check_forgot_password_rate_limit,
+)
 
 
 def login_view(request):
-    """صفحه ورود به سامانه"""
+    """صفحه ورود با محدودیت نرخ درخواست برای رمز عبور اشتباه (Rate Limit - HTTP 429)"""
     if request.user.is_authenticated:
         return redirect('welcome')
 
     if request.method == 'POST':
+        email = request.POST.get('email', '').strip().lower()
+
+        # ۱. بررسی اینکه آیا کاربر قبلاً به دلیل ۵ بار اشتباه در رمز عبور قفل شده است
+        if is_login_rate_limited(email):
+            return render(request, 'accounts/429.html', {
+                'message': 'به دلیل ۵ بار ورود رمز عبور اشتباه، دسترسی شما موقتاً مسدود شده است.',
+                'wait_minutes': 5
+            }, status=429)
+
         form = LoginForm(request.POST)
         if form.is_valid():
             user = form.cleaned_data['user']
+            reset_login_attempts(email)  # ریست شمارنده در ورود موفق
             login(request, user)  # حفظ وضعیت سشن کاربر
             messages.success(request, f'خوش آمدید، {user.full_name}!')
+            if not user.username:
+                return redirect('select_role')
             return redirect('welcome')
+        else:
+            # فقط در صورتی که کاربر در سیستم وجود داشته باشد و رمز اشتباه زده شود (کنترل Rate Limit فقط برای پسورد)
+            if email and User.objects.filter(email=email).exists():
+                attempts = record_login_failed_attempt(email)
+                if attempts >= 5:
+                    return render(request, 'accounts/429.html', {
+                        'message': 'شما ۵ بار متوالی رمز عبور را اشتباه وارد کردید. دسترسی به مدت ۵ دقیقه مسدود گردید.',
+                        'wait_minutes': 5
+                    }, status=429)
     else:
         form = LoginForm()
 
@@ -32,7 +59,7 @@ def login_view(request):
 
 
 def signup_view(request):
-    """صفحه ثبت‌نام و ایجاد حساب کاربری جدید"""
+    """صفحه ثبت‌نام و هدایت به تکمیل نام کاربری و نقش فریلنسر/کارفرما"""
     if request.user.is_authenticated:
         return redirect('welcome')
 
@@ -40,23 +67,50 @@ def signup_view(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save()  # رمز به شکل هش امن PBKDF2 ذخیره می‌شود
-            messages.success(
-                request,
-                'حساب کاربری شما با موفقیت ایجاد شد! اکنون می‌توانید با ایمیل و رمز عبور خود وارد شوید.'
-            )
-            return redirect('login')
+            login(request, user)  # لاگین خودکار بعد از ثبت‌نام
+            return redirect('select_role')  # هدایت مستقیم به صفحه انتخاب نام کاربری و نقش
     else:
         form = SignupForm()
 
     return render(request, 'accounts/signup.html', {'form': form})
 
 
+@login_required
+def select_role_view(request):
+    """صفحه تکمیل حساب کاربری و انتخاب نقش فریلنسر / کارفرما مطابق پونیشا"""
+    user = request.user
+    if request.method == 'POST':
+        form = RoleSelectionForm(request.POST, user=user)
+        if form.is_valid():
+            user.username = form.cleaned_data['username']
+            user.role = form.cleaned_data['role']
+            user.save()
+            messages.success(request, 'حساب کاربری شما با موفقیت تکمیل شد!')
+            return redirect('welcome')
+    else:
+        form = RoleSelectionForm(user=user, initial={
+            'username': user.username or '',
+            'role': user.role or 'FREELANCER',
+        })
+
+    return render(request, 'accounts/select_role.html', {'form': form, 'user': user})
+
+
 def forgot_password_view(request):
-    """درخواست بازیابی رمز عبور با پیام امن و بدون افشای ایمیل"""
+    """درخواست بازیابی رمز عبور با محدودیت نرخ درخواست (Rate Limit - HTTP 429) و پیام امن"""
     if request.user.is_authenticated:
         return redirect('welcome')
 
     if request.method == 'POST':
+        email = request.POST.get('email', '').strip().lower()
+
+        # بررسی محدودیت نرخ ۵ بار درخواست برای بازیابی رمز عبور
+        if email and check_forgot_password_rate_limit(request, email):
+            return render(request, 'accounts/429.html', {
+                'message': 'تعداد درخواست‌های بازیابی رمز عبور بیش از حد مجاز (۵ درخواست) بوده است.',
+                'wait_minutes': 5
+            }, status=429)
+
         form = ForgotPasswordForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
@@ -127,6 +181,7 @@ def reset_password_confirm_view(request, uidb64, token):
             # ذخیره امن رمز عبور جدید با الگوریتم PBKDF2
             user.set_password(new_password)
             user.save()
+            reset_login_attempts(user.email)  # رفع قفل احتمالی حساب
             messages.success(
                 request,
                 'رمز عبور شما با موفقیت تغییر کرد! اکنون می‌توانید با رمز جدید وارد شوید.'
@@ -142,6 +197,14 @@ def reset_password_confirm_view(request, uidb64, token):
 def welcome_view(request):
     """صفحه موقت خوش‌آمدید پس از ورود موفق با حفظ وضعیت نشست"""
     return render(request, 'accounts/welcome.html', {
+        'user': request.user
+    })
+
+
+@login_required
+def coming_soon_view(request):
+    """صفحه موقت به زودی برای فازهای بعدی پلتفرم"""
+    return render(request, 'accounts/coming_soon.html', {
         'user': request.user
     })
 

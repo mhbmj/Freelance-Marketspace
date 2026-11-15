@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}خطای ۴۲۹ | محدودیت درخواست | سامانه فریلنسری{% endblock %}
+
+{% block content %}
+<div class="auth-card" style="text-align: center;">
+    <div class="auth-header">
+        <span class="minimal-badge" style="background: var(--danger-bg); border-color: var(--danger-border); color: #9f1239;">
+            خطای ۴۲۹ - Too Many Requests
+        </span>
+        <h1 class="auth-title">دسترسی موقتاً محدود شد</h1>
+        <p class="auth-subtitle">
+            {{ message|default:"تعداد تلاش‌های ناموفق شما بیش از حد مجاز بوده است." }}
+        </p>
+    </div>
+
+    <div class="alert alert-danger" style="text-align: right;">
+        <strong>علت محدودیت:</strong>
+        <p style="margin-top: 6px; font-size: 13px;">
+            به منظور ارتقای امنیت سامانه و جلوگیری از حملات Brute-Force، امکان ورود پس از ۵ بار تلاش ناموفق به مدت <strong>{{ wait_minutes|default:"۵" }} دقیقه</strong> مسدود می‌گردد.
+        </p>
+    </div>
+
+    <div class="user-info-box" style="text-align: center;">
+        <p style="font-size: 13px; color: var(--text-muted);">
+            لطفاً پس از اتمام زمان اعلام‌شده مجدداً تلاش نمایید.
+        </p>
+    </div>
+
+    <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
+        <a href="{% url 'login' %}" class="btn-pink btn-outline-pink" style="text-decoration: none;">
+            بازگشت به صفحه ورود
+        </a>
+        <a href="{% url 'forgot_password' %}" class="link-pink" style="font-size: 13px; margin-top: 6px;">
+            فراموشی رمز عبور
+        </a>
+    </div>
+</div>
+{% endblock %}
