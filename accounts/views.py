@@ -175,7 +175,7 @@ def onboarding_skills_view(request):
 
 @login_required
 def dashboard_view(request):
-    """داشبورد اصلی پلتفرم فریلنسری با نمایش پروژه‌ها و مهارت‌های کاربر"""
+    """داشبورد اصلی پلتفرم فریلنسری منطبق با ساختار پونیشا و تم پاستلی"""
     user = request.user
     user_skills = UserSkill.objects.filter(user=user).select_related('skill')
 
@@ -186,11 +186,33 @@ def dashboard_view(request):
     if query:
         projects = projects.filter(title__icontains=query)
 
+    # تب فعال (پروژه‌های من / پیشنهادات / محصولات)
+    active_tab = request.GET.get('tab', 'my_projects')
+
+    # محاسبه اینیشیال آواتار (مانند MA در پونیشا)
+    initials = "MA"
+    if user.first_name and user.last_name:
+        initials = (user.first_name[0] + user.last_name[0]).upper()
+
+    # محاسبه درصد تکمیل پروفایل
+    profile_percent = 30
+    if user.username:
+        profile_percent += 20
+    if user_skills.exists():
+        profile_percent += 30
+    if user.phone_number:
+        profile_percent += 20
+
     return render(request, 'accounts/dashboard.html', {
         'user': user,
         'user_skills': user_skills,
         'projects': projects,
         'query': query,
+        'active_tab': active_tab,
+        'user_initials': initials,
+        'profile_percent': profile_percent,
+        'remaining_proposals': 5,
+        'remaining_days': 0,
     })
 
 

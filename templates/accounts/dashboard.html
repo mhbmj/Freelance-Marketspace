@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
 
-{% block title %}داشبورد فریلنسری | سامانه بازار کار فریلنسری{% endblock %}
+{% block title %}داشبورد کاربری | سامانه بازار کار فریلنسری{% endblock %}
 
 {% block content %}
-<div class="dashboard-container" style="width: 100%; max-width: 860px; margin: auto;">
+<div class="dashboard-wrapper" style="width: 100%; max-width: 1140px; margin: 0 auto; direction: rtl;">
 
-    <!-- نوار ناوبری بالای داشبورد -->
-    <header class="dashboard-header">
+    <!-- نوار ناوبری بالایی هماهنگ با تم پاستلی -->
+    <header class="dashboard-header" style="margin-bottom: 20px;">
         <div style="display: flex; align-items: center; gap: 12px;">
             <div class="logo-box">🌸</div>
             <div>
                 <h1 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0;">بازار کار فریلنسری</h1>
-                <span style="font-size: 12px; color: var(--text-muted);">پلتفرم جامع مهندسی نرم‌افزار (MVP)</span>
+                <span style="font-size: 11.5px; color: var(--text-muted);">پلتفرم فریلنسینگ مهندسی نرم‌افزار (MVP)</span>
             </div>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
             <span class="user-badge-tag" style="margin: 0;">
                 نقش: {{ user.get_role_display|default:"فریلنسر" }}
             </span>
@@ -28,277 +28,268 @@
         </div>
     </header>
 
-    <!-- پیام‌های سامانه -->
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-success" style="margin-top: 16px;">
-                <span>{{ message }}</span>
-            </div>
-        {% endfor %}
-    {% endif %}
+    <!-- ساختار گرید دو ستونه داشبورد مطابق پونیشا -->
+    <div class="ponisha-dashboard-layout">
 
-    <!-- بنر خوش‌آمدگویی کاربر -->
-    <section class="profile-banner-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-            <div>
-                <h2 style="font-size: 21px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
-                    سلام، {{ user.full_name }} عزیز! 👋
-                </h2>
-                <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
-                    به داشبورد خود خوش آمدید. می‌توانید پروژه‌های باز را بررسی کرده و پیشنهاد همکاری ارسال نمایید.
-                </p>
-                <div style="display: flex; gap: 16px; margin-top: 10px; font-size: 12.5px; color: #554951;">
-                    <span>📧 <strong>ایمیل:</strong> {{ user.email }}</span>
-                    {% if user.username %}
-                        <span>👤 <strong>نام کاربری:</strong> <span dir="ltr">@{{ user.username }}</span></span>
-                    {% endif %}
-                    {% if user.phone_number %}
-                        <span>📱 <strong>موبایل:</strong> {{ user.phone_number }}</span>
+        <!-- ستون فرعی / سایدبار راست (Sidebar Column) -->
+        <aside class="sidebar-column">
+
+            <!-- کارت پروفایل کاربر (مشابه پونیشا) -->
+            <div class="ponisha-card user-profile-widget">
+                <div class="avatar-circle-initials">
+                    {{ user_initials|default:"MA" }}
+                </div>
+                <div class="user-display-username">
+                    {{ user.full_name }}
+                </div>
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;" dir="ltr">
+                    @{{ user.username|default:"mahtabmrj" }}
+                </div>
+                <div class="user-follow-stats">
+                    ۰ دنبال شونده • ۰ دنبال کننده
+                </div>
+            </div>
+
+            <!-- ویجت درصد تکمیل پروفایل -->
+            <div class="ponisha-card completion-widget">
+                <div class="completion-header">
+                    <span>تکمیل پروفایل</span>
+                    <span>{{ profile_percent|default:30 }}٪</span>
+                </div>
+                <div class="completion-bar-track">
+                    <div class="completion-bar-fill" style="width: {{ profile_percent|default:30 }}%;"></div>
+                </div>
+                <div>
+                    <a href="{% url 'onboarding_skills' %}" class="completion-link">
+                        <span>عکس پروفایل خود را وارد کنید</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- ویجت وضعیت عضویت (عضویت عادی) -->
+            <div class="ponisha-card membership-widget">
+                <div class="membership-title">
+                    عضویت عادی
+                </div>
+                <div class="membership-row">
+                    <span>روزهای باقی‌مانده</span>
+                    <span>{{ remaining_days|default:0 }}</span>
+                </div>
+                <div class="membership-row">
+                    <span>پیشنهادهای باقی‌مانده</span>
+                    <span>{{ remaining_proposals|default:5 }}</span>
+                </div>
+                <button type="button" class="btn-upgrade-membership" onclick="alert('قابلیت ارتقای عضویت به زودی اضافه خواهد شد!')">
+                    <span>ارتقای عضویت</span>
+                    <span>🚀</span>
+                </button>
+            </div>
+
+            <!-- منوی سایدبار مطابق اسکرین‌شات پونیشا -->
+            <div class="ponisha-card">
+                <nav class="sidebar-nav-menu">
+                    <a href="{% url 'dashboard' %}" class="sidebar-nav-item active">
+                        <div class="nav-item-content">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                            <span>اتاق کار (پروژه‌های من)</span>
+                        </div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </a>
+
+                    <a href="#projects-section" class="sidebar-nav-item">
+                        <div class="nav-item-content">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            <span>اطلاعیه‌ها</span>
+                        </div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </a>
+
+                    <a href="{% url 'coming_soon' %}" class="sidebar-nav-item">
+                        <div class="nav-item-content">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <span>پیام‌ها</span>
+                        </div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </a>
+
+                    <a href="{% url 'onboarding_skills' %}" class="sidebar-nav-item">
+                        <div class="nav-item-content">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <span>کلینیک پروفایل</span>
+                        </div>
+                        <span class="nav-badge-new">جدید</span>
+                    </a>
+
+                    <a href="{% url 'onboarding_categories' %}" class="sidebar-nav-item">
+                        <div class="nav-item-content">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                            <span>پروفایل برجسته</span>
+                        </div>
+                        <span class="nav-badge-new">جدید</span>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- جعبه مهارت‌های من -->
+            <div class="ponisha-card" style="padding: 18px 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="font-size: 13px; font-weight: 700; color: var(--text-main);">مهارت‌های من</span>
+                    <a href="{% url 'onboarding_skills' %}" class="link-pink" style="font-size: 11.5px;">ویرایش ✏️</a>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                    {% if user_skills %}
+                        {% for us in user_skills %}
+                            <span class="user-skill-pill" style="font-size: 11px; padding: 3px 10px;">
+                                {{ us.skill.name }}
+                            </span>
+                        {% endfor %}
+                    {% else %}
+                        <span style="font-size: 11.5px; color: var(--text-muted);">
+                            مهارتی ثبت نشده است. <a href="{% url 'onboarding_skills' %}" class="link-pink">انتخاب مهارت</a>
+                        </span>
                     {% endif %}
                 </div>
             </div>
 
-            <div>
-                <a href="{% url 'onboarding_skills' %}" class="btn-edit-skills">
-                    ویرایش مهارت‌ها ✏️
+        </aside>
+
+        <!-- ستون اصلی داشبورد (Main Content Column) -->
+        <main class="main-content-column">
+
+            <!-- کارت بنر راهنما مطابق پونیشا -->
+            <div class="welcome-announcement-card" id="announcement-banner">
+                <button type="button" class="announcement-close-btn" onclick="document.getElementById('announcement-banner').style.display='none';" title="بستن اعلان">
+                    ✕
+                </button>
+                <div class="announcement-title">
+                    به داشبورد خوش آمدید! 👋
+                </div>
+                <p class="announcement-text">
+                    از بخش‌های مختلف داشبورد می‌توانید به پروفایل، اطلاعیه‌ها، تنظیمات و ... دسترسی داشته باشید و وضعیت پروژه‌ها را در هر مرحله پیگیری کنید.
+                </p>
+                <ul class="announcement-list">
+                    <li>در ابتدا شما از طریق گزینه "ثبت سریع پروژه" پروژه خود را در سایت ثبت می‌کنید.</li>
+                    <li>پروژه شما با نشان "در انتظار تایید" در مرحله بررسی توسط پشتیبان سایت است.</li>
+                    <li>پروژه شما با نشان "باز" در سایت نمایش داده می‌شود و متخصصین می‌توانند پیشنهادهای خود را برای شما ارسال کنند.</li>
+                </ul>
+            </div>
+
+            <!-- تب‌های پروژه‌های من / پیشنهادات / محصولات -->
+            <div class="dashboard-tabs-bar">
+                <a href="?tab=my_projects" class="tab-btn {% if active_tab == 'my_projects' %}active{% endif %}">
+                    پروژه‌های من
+                </a>
+                <a href="?tab=proposals" class="tab-btn {% if active_tab == 'proposals' %}active{% endif %}">
+                    پیشنهادات
+                </a>
+                <a href="?tab=products" class="tab-btn {% if active_tab == 'products' %}active{% endif %}">
+                    محصولات
                 </a>
             </div>
-        </div>
 
-        <!-- مهارت‌های من -->
-        <div style="margin-top: 22px; padding-top: 16px; border-top: 1px dashed var(--border-card);">
-            <div style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 10px;">
-                مهارت‌های تخصصی من:
-            </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                {% if user_skills %}
-                    {% for us in user_skills %}
-                        <span class="user-skill-pill">
-                            {{ us.skill.name }}
-                        </span>
-                    {% endfor %}
-                {% else %}
-                    <span style="font-size: 12px; color: var(--text-muted);">
-                        هنوز مهارتی ثبت نشده است. <a href="{% url 'onboarding_skills' %}" class="link-pink">افزودن مهارت‌ها</a>
-                    </span>
-                {% endif %}
-            </div>
-        </div>
-    </section>
-
-    <!-- بخش پروژه‌های باز و مرتبط -->
-    <section style="margin-top: 26px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
-            <h3 style="font-size: 18px; font-weight: 700; color: var(--text-main);">
-                📋 فرصت‌های کاری و پروژه‌های باز
-            </h3>
-
-            <!-- سرچ در پروژه‌ها -->
-            <form method="get" action="{% url 'dashboard' %}" style="display: flex; gap: 8px;">
-                <input type="text" name="q" value="{{ query }}" placeholder="جستجو در پروژه‌ها..." class="form-input" style="width: 220px; padding: 8px 12px; font-size: 12.5px;">
-                <button type="submit" class="btn-pink" style="width: auto; padding: 8px 14px; font-size: 12.5px;">
-                    بیاب
-                </button>
-            </form>
-        </div>
-
-        <div class="projects-grid">
-            {% if projects %}
-                {% for proj in projects %}
-                    <div class="project-card">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                            <h4 class="project-title">{{ proj.title }}</h4>
-                            <span class="badge-pricing">
-                                {% if proj.pricing_type == 'FIXED_PRICE' %}
-                                    قیمت ثابت: {{ proj.budget|floatformat:0 }} تومان
-                                {% else %}
-                                    ساعتی: {{ proj.budget|floatformat:0 }} ت/ساعت
-                                {% endif %}
-                            </span>
-                        </div>
-
-                        <p class="project-desc">
-                            {{ proj.description|truncatewords:28 }}
-                        </p>
-
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; pt: 10px; border-top: 1px solid #f7eff3; font-size: 12px; color: var(--text-muted);">
-                            <span>کارفرما: {{ proj.employer.full_name }}</span>
-                            <button class="btn-bid" onclick="alert('قابلیت ارسال پیشنهاد در فاز بعدی فعال خواهد شد!')">
-                                ارسال پیشنهاد همکاری 🚀
-                            </button>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="empty-projects-box">
-                    <p>هیچ پروژه بازی در این لحظه یافت نشد.</p>
+            <!-- کارت وضعیت خالی / اقدام اولیه (Empty State Card مطابق پونیشا) -->
+            <div class="empty-state-card">
+                <div class="empty-state-icon">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                        <path d="M9 14h6"></path>
+                        <path d="M9 10h6"></path>
+                    </svg>
                 </div>
-            {% endif %}
-        </div>
-    </section>
+                <div class="empty-state-title">
+                    تا بحال پروژه‌ای انجام نداده‌اید!
+                </div>
+                <p class="empty-state-subtitle">
+                    بین هزاران پروژه، بر اساس مهارت‌هایتان پروژه مورد نظرتان را پیدا و برای آن پیشنهاد ارسال کنید.
+                </p>
+                <a href="#projects-section" class="btn-view-projects">
+                    مشاهده پروژه‌ها
+                </a>
+            </div>
+
+            <!-- بخش جدیدترین پروژه‌های ثبت‌شده با اتصال واقعی به دیتابیس -->
+            <div id="projects-section" style="margin-top: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                    <h3 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0;">
+                        جدیدترین پروژه‌های ثبت‌شده
+                    </h3>
+                    <a href="#projects-section" class="link-pink" style="font-size: 13px; font-weight: 700;">
+                        ← مشاهده همه پروژه‌ها
+                    </a>
+                </div>
+
+                <!-- سرچ‌بار پروژه‌ها -->
+                <form method="get" action="{% url 'dashboard' %}" style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <input type="text" name="q" value="{{ query }}" placeholder="جستجو در عنوان پروژه‌ها..." class="form-input" style="padding: 10px 14px; font-size: 13px;">
+                    <button type="submit" class="btn-pink" style="width: auto; padding: 10px 18px; font-size: 13px;">
+                        بیاب
+                    </button>
+                </form>
+
+                <div class="projects-grid">
+                    {% if projects %}
+                        {% for proj in projects %}
+                            <div class="project-card">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px;">
+                                    <h4 class="project-title">{{ proj.title }}</h4>
+                                    <span class="badge-pricing">
+                                        {% if proj.pricing_type == 'FIXED_PRICE' %}
+                                            قیمت ثابت: {{ proj.budget|floatformat:0 }} تومان
+                                        {% else %}
+                                            ساعتی: {{ proj.budget|floatformat:0 }} ت/ساعت
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                                <p class="project-desc">
+                                    {{ proj.description }}
+                                </p>
+
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px solid #f7eff3; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; gap: 10px;">
+                                    <span>👤 کارفرما: <strong>{{ proj.employer.full_name }}</strong></span>
+                                    <button class="btn-bid" onclick="alert('قابلیت ارسال پیشنهاد در فاز بعدی فعال خواهد شد!')">
+                                        ارسال پیشنهاد همکاری 🚀
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-projects-box">
+                            <p>پروژه‌ای مطابق با جستجوی شما یافت نشد.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </main>
+
+    </div>
 
 </div>
-
-<style>
-.dashboard-header {
-    background: #ffffff;
-    border-radius: 14px;
-    padding: 16px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid var(--border-card);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
-}
-
-.logo-box {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: var(--button-gradient);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-}
-
-.btn-logout {
-    background: var(--pastel-yellow-soft);
-    border: 1px solid var(--pastel-yellow-border);
-    color: #854d0e;
-    padding: 6px 14px;
-    border-radius: 8px;
-    font-size: 12.5px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-logout:hover {
-    background: #fee2e2;
-    border-color: #fca5a5;
-    color: #991b1b;
-}
-
-.profile-banner-card {
-    background: #ffffff;
-    border-radius: var(--radius-card);
-    padding: 28px;
-    margin-top: 20px;
-    border: 1px solid var(--border-card);
-    box-shadow: var(--shadow-minimal);
-    position: relative;
-    overflow: hidden;
-}
-
-.profile-banner-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--top-accent);
-}
-
-.btn-edit-skills {
-    display: inline-block;
-    padding: 8px 16px;
-    border-radius: 8px;
-    background: #fdf2f8;
-    border: 1px solid #fbcfe8;
-    color: #be185d;
-    font-size: 12px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s ease;
-}
-
-.btn-edit-skills:hover {
-    background: #fce7f3;
-    transform: translateY(-1px);
-}
-
-.user-skill-pill {
-    padding: 4px 12px;
-    border-radius: 16px;
-    background: #fff0f6;
-    border: 1px solid #f472b6;
-    color: #be185d;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.projects-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-.project-card {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 20px 22px;
-    border: 1px solid #f1e4ea;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-    transition: all 0.2s ease;
-}
-
-.project-card:hover {
-    border-color: #fbcfe8;
-    box-shadow: 0 6px 18px rgba(244, 114, 182, 0.12);
-    transform: translateY(-2px);
-}
-
-.project-title {
-    font-size: 15.5px;
-    font-weight: 700;
-    color: var(--text-main);
-}
-
-.badge-pricing {
-    padding: 4px 10px;
-    background: var(--pastel-yellow-light);
-    border: 1px solid var(--pastel-yellow-border);
-    color: #854d0e;
-    font-size: 11.5px;
-    font-weight: 700;
-    border-radius: 6px;
-    white-space: nowrap;
-}
-
-.project-desc {
-    font-size: 13px;
-    color: #554951;
-    line-height: 1.7;
-    margin-top: 4px;
-}
-
-.btn-bid {
-    background: var(--button-gradient);
-    color: #ffffff;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-.btn-bid:hover {
-    opacity: 0.92;
-    transform: translateY(-1px);
-}
-
-.empty-projects-box {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 36px;
-    text-align: center;
-    border: 1px dashed var(--border-card);
-    font-size: 13px;
-    color: var(--text-muted);
-}
-</style>
 {% endblock %}

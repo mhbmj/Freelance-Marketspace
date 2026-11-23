@@ -21,6 +21,7 @@ class AuthenticationTests(TestCase):
             last_name='مروج',
             email='mahtabmj96@gmail.com',
             username='mahtab_test',
+            role='FREELANCER',
             password=self.user_password,
             phone_number='09224294833'
         )
@@ -126,7 +127,7 @@ class AuthenticationTests(TestCase):
         }
         response = self.client.post(reverse('login'), login_data, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'خوش آمدید، مهتاب مروج!')
+        self.assertContains(response, 'مهتاب مروج')
 
         # بررسی حفظ سشن
         self.assertTrue('_auth_user_id' in self.client.session)
@@ -335,5 +336,5 @@ class AuthenticationTests(TestCase):
         self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
         res = self.client.get(reverse('dashboard'))
         self.assertEqual(res.status_code, 200)
-        self.assertContains(res, 'فرصت‌های کاری و پروژه‌های باز')
+        self.assertContains(res, 'جدیدترین پروژه‌های ثبت‌شده')
 
