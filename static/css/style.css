@@ -485,13 +485,13 @@ body {
 }
 
 .user-profile-widget {
-    padding: 24px 20px 20px;
+    padding: 26px 20px 22px;
     text-align: center;
 }
 
 .avatar-circle-initials {
-    width: 68px;
-    height: 68px;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
     background: #9ca3af;
     color: #ffffff;
@@ -505,34 +505,35 @@ body {
 }
 
 .user-display-username {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 16.5px;
+    font-weight: 800;
     color: var(--text-main);
     margin-bottom: 6px;
 }
 
 .user-follow-stats {
-    font-size: 12px;
+    font-size: 12.5px;
     color: var(--text-muted);
+    line-height: 1.6;
 }
 
 /* Completion Widget */
 .completion-widget {
-    padding: 18px 20px;
+    padding: 22px 20px;
 }
 
 .completion-header {
     display: flex;
     justify-content: space-between;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    margin-bottom: 10px;
     color: var(--text-main);
 }
 
 .completion-bar-track {
     width: 100%;
-    height: 6px;
+    height: 7px;
     background: #f1e6eb;
     border-radius: 4px;
     overflow: hidden;
@@ -547,10 +548,10 @@ body {
 }
 
 .completion-link {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--pastel-pink-hover);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -563,12 +564,12 @@ body {
 
 /* Membership Widget */
 .membership-widget {
-    padding: 20px;
+    padding: 22px 20px;
 }
 
 .membership-title {
-    font-size: 14.5px;
-    font-weight: 700;
+    font-size: 15px;
+    font-weight: 800;
     color: var(--text-main);
     margin-bottom: 14px;
 }
@@ -576,25 +577,25 @@ body {
 .membership-row {
     display: flex;
     justify-content: space-between;
-    font-size: 12.5px;
+    font-size: 13px;
     color: var(--text-muted);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .membership-row span:last-child {
-    font-weight: 700;
+    font-weight: 800;
     color: var(--text-main);
 }
 
 .btn-upgrade-membership {
     width: 100%;
-    padding: 9px;
-    margin-top: 12px;
+    padding: 11px 16px;
+    margin-top: 14px;
     border: 1.5px solid var(--pastel-pink-border);
     background: var(--pastel-pink-soft);
     color: #be185d;
     border-radius: var(--radius-element);
-    font-size: 12.5px;
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
     display: flex;
@@ -1839,4 +1840,115 @@ body {
 .btn-slider-action:hover {
     background: linear-gradient(135deg, #fef9c3 0%, #fde047 100%);
     transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   User Offcanvas Drawer / Sidebar (سایدبار کشویی پروفایل کاربر مطابق عکس ۱۴ و ۱۵)
+   ========================================================================== */
+.user-drawer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(30, 20, 25, 0.35);
+    backdrop-filter: blur(4px);
+    z-index: 1990;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.user-drawer-backdrop.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.user-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 380px;
+    max-width: 90vw;
+    height: 100vh;
+    background: #ffffff;
+    z-index: 2000;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.16);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    direction: rtl;
+    padding: 24px 22px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.user-drawer.open {
+    transform: translateX(0);
+}
+
+.user-drawer-close-btn {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    transition: color 0.15s ease;
+}
+
+.user-drawer-close-btn:hover {
+    color: var(--text-main);
+}
+
+/* Role Switcher Tabs (فریلنسر / کارفرما) */
+.drawer-role-tabs {
+    display: flex;
+    background: #fdf2f8;
+    border: 1px solid var(--border-card);
+    border-radius: 12px;
+    padding: 5px;
+    gap: 6px;
+}
+
+.drawer-role-tab {
+    flex: 1;
+    padding: 10px 14px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.drawer-role-tab.active {
+    background: #ffffff;
+    color: #be185d;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive Top Navbar */
+@media (max-width: 960px) {
+    .top-navbar-container {
+        padding: 0 14px;
+        height: 60px;
+    }
+
+    .top-nav-right .nav-dropdown-wrapper,
+    .top-nav-right .nav-divider,
+    .top-nav-right a:not(.nav-brand-logo) {
+        display: none;
+    }
+
+    .btn-quick-project {
+        padding: 7px 12px;
+        font-size: 12px;
+    }
 }

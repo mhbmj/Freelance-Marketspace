@@ -203,38 +203,13 @@
                     <span style="font-size: 10px;">▾</span>
                 </a>
 
-                <!-- منوی آبشاری آواتار کاربر -->
-                <div class="user-menu-wrapper">
+                <!-- آواتار کاربر با کلیک برای باز کردن سایدبار کشویی مطابق عکس ۱۴ و ۱۵ -->
+                <div class="user-menu-wrapper" onclick="toggleUserDrawer(true)" style="cursor: pointer;" title="مشاهده حساب کاربری و سایدبار">
                     <div style="display: flex; align-items: center; gap: 4px;">
                         <div class="avatar-header-circle">
                             {{ user_initials|default:"MA" }}
                         </div>
                         <span style="font-size: 11px; color: #9ca3af;">▾</span>
-                    </div>
-
-                    <div class="user-dropdown-menu">
-                        <div class="user-dropdown-header">
-                            <div style="font-weight: 700; color: var(--text-main);">{{ user.full_name }}</div>
-                            <div style="font-size: 11.5px; color: var(--text-muted);" dir="ltr">@{{ user.username|default:"mahtabmrj" }}</div>
-                            <div style="margin-top: 4px;">
-                                <span class="minimal-badge" style="margin: 0; font-size: 10px; padding: 2px 8px;">
-                                    {{ user.get_role_display|default:"فریلنسر" }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <a href="{% url 'dashboard' %}" class="user-dropdown-item">داشبورد من</a>
-                        <a href="{% url 'onboarding_skills' %}" class="user-dropdown-item">ویرایش مهارت‌ها</a>
-                        <a href="{% url 'coming_soon' %}" class="user-dropdown-item">تنظیمات حساب</a>
-
-                        <div style="border-top: 1px solid #f3e8ee; margin-top: 6px; padding-top: 6px;">
-                            <form method="post" action="{% url 'logout' %}" style="margin: 0;">
-                                {% csrf_token %}
-                                <button type="submit" class="user-dropdown-item" style="width: 100%; border: none; background: none; text-align: right; color: #dc2626; cursor: pointer;">
-                                    خروج از حساب
-                                </button>
-                            </form>
-                        </div>
                     </div>
                 </div>
 
@@ -687,4 +662,6 @@
     </footer>
 
 </div>
+
+{% include 'includes/user_drawer.html' %}
 {% endblock %}

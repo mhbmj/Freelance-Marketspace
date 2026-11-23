@@ -1,0 +1,231 @@
+<!-- سایدبار کشویی (Offcanvas Drawer) پروفایل کاربر مطابق اسکرین‌شات‌های پونیشا -->
+<div class="user-drawer-backdrop" id="user-drawer-backdrop" onclick="toggleUserDrawer(false)"></div>
+
+<div class="user-drawer" id="user-drawer">
+    <!-- هدر سایدبار با دکمه بستن -->
+    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 6px; margin-bottom: 6px;">
+        <span style="font-size: 14.5px; font-weight: 800; color: var(--text-main);">حساب کاربری</span>
+        <button type="button" class="user-drawer-close-btn" onclick="toggleUserDrawer(false)" title="بستن منو" aria-label="بستن">
+            ✕
+        </button>
+    </div>
+
+    <!-- سوئیچر نقش کاربر: فریلنسر / کارفرما -->
+    <div class="drawer-role-tabs">
+        <button type="button" class="drawer-role-tab {% if user.role != 'EMPLOYER' %}active{% endif %}" onclick="switchDrawerRole('FREELANCER')">
+            فریلنسر
+        </button>
+        <button type="button" class="drawer-role-tab {% if user.role == 'EMPLOYER' %}active{% endif %}" onclick="switchDrawerRole('EMPLOYER')">
+            کارفرما
+        </button>
+    </div>
+
+    <!-- کارت مشخصات کاربر با فضای کافی -->
+    <div class="ponisha-card user-profile-widget">
+        <div class="avatar-circle-initials">
+            {{ user_initials|default:"MA" }}
+        </div>
+        <div class="user-display-username">
+            {{ user.username|default:"mahtabmrj" }}
+        </div>
+        <div class="user-follow-stats">
+            ۰ دنبال شونده • ۰ دنبال کننده
+        </div>
+    </div>
+
+    <!-- ویجت درصد تکمیل پروفایل -->
+    <div class="ponisha-card completion-widget">
+        <div class="completion-header">
+            <span>تکمیل پروفایل</span>
+            <span>{{ profile_percent|default:30 }}٪</span>
+        </div>
+        <div class="completion-bar-track">
+            <div class="completion-bar-fill" style="width: {{ profile_percent|default:30 }}%;"></div>
+        </div>
+        <div>
+            <a href="{% url 'onboarding_skills' %}" class="completion-link">
+                <span>عکس پروفایل خود را وارد کنید</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <!-- ویجت عضویت عادی با فضای باز برای دکمه -->
+    <div class="ponisha-card membership-widget">
+        <div class="membership-title">
+            عضویت عادی
+        </div>
+        <div class="membership-row">
+            <span>روزهای باقی‌مانده</span>
+            <span>۰</span>
+        </div>
+        <div class="membership-row">
+            <span>پیشنهادهای باقی‌مانده</span>
+            <span>۵</span>
+        </div>
+        <button type="button" class="btn-upgrade-membership" onclick="alert('قابلیت ارتقای عضویت در فازهای بعدی فعال خواهد شد!')">
+            <span>ارتقای عضویت</span>
+            <span>🚀</span>
+        </button>
+    </div>
+
+    <!-- فهرست کامل گزینه‌های سایدبار -->
+    <div class="ponisha-card" style="margin-bottom: 16px;">
+        <nav class="sidebar-nav-menu">
+            <!-- ۱. اتاق کار -->
+            <a href="{% url 'dashboard' %}" class="sidebar-nav-item">
+                <div class="nav-item-content">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                    <span>اتاق کار (پروژه‌های من)</span>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </a>
+
+            <!-- ۲. اطلاعیه‌ها -->
+            <a href="{% url 'dashboard' %}#projects-section" class="sidebar-nav-item">
+                <div class="nav-item-content">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span>اطلاعیه‌ها</span>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </a>
+
+            <!-- ۳. پیام‌ها -->
+            <a href="{% url 'coming_soon' %}" class="sidebar-nav-item">
+                <div class="nav-item-content">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>پیام‌ها</span>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </a>
+
+            <!-- ۴. کلینیک پروفایل -->
+            <a href="{% url 'onboarding_skills' %}" class="sidebar-nav-item">
+                <div class="nav-item-content">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    <span>کلینیک پروفایل</span>
+                </div>
+                <span class="nav-badge-new">جدید</span>
+            </a>
+
+            <!-- ۵. پروفایل برجسته -->
+            <a href="{% url 'onboarding_categories' %}" class="sidebar-nav-item">
+                <div class="nav-item-content">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    <span>پروفایل برجسته</span>
+                </div>
+                <span class="nav-badge-new">جدید</span>
+            </a>
+
+            <!-- ۶. حساب -->
+            <a href="{% url 'coming_soon' %}" class="sidebar-nav-item">
+                <div class="nav-item-content">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                    <span>حساب</span>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </a>
+
+            <!-- ۷. تنظیمات -->
+            <a href="{% url 'coming_soon' %}" class="sidebar-nav-item">
+                <div class="nav-item-content">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    <span>تنظیمات</span>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </a>
+
+            <!-- خط جداکننده -->
+            <div style="border-top: 1px solid #f1e4ea; margin: 4px 0;"></div>
+
+            <!-- ۸. پیدا کردن پروژه -->
+            <a href="{% url 'dashboard' %}#projects-section" class="sidebar-nav-item">
+                <div class="nav-item-content">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span>پیدا کردن پروژه</span>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+
+            <!-- ۹. پروفایل -->
+            <a href="{% url 'dashboard' %}" class="sidebar-nav-item">
+                <div class="nav-item-content">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>پروفایل</span>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+
+            <!-- خط جداکننده -->
+            <div style="border-top: 1px solid #f1e4ea; margin: 4px 0;"></div>
+
+            <!-- ۱۰. خروج -->
+            <form method="post" action="{% url 'logout' %}" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="sidebar-nav-item" style="width: 100%; border: none; background: none; text-align: right; color: #dc2626; cursor: pointer;">
+                    <div class="nav-item-content" style="color: #dc2626;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        <span>خروج</span>
+                    </div>
+                </button>
+            </form>
+        </nav>
+    </div>
+</div>
+
+<script>
+function toggleUserDrawer(isOpen) {
+    const backdrop = document.getElementById('user-drawer-backdrop');
+    const drawer = document.getElementById('user-drawer');
+    if (!backdrop || !drawer) return;
+
+    if (isOpen) {
+        backdrop.classList.add('open');
+        drawer.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    } else {
+        backdrop.classList.remove('open');
+        drawer.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+}
+
+function switchDrawerRole(role) {
+    const tabs = document.querySelectorAll('.drawer-role-tab');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+}
+</script>
