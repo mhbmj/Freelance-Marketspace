@@ -63,8 +63,13 @@ body {
 /* Wrapper */
 .auth-wrapper {
     width: 100%;
-    max-width: 440px;
+    max-width: 480px;
     margin: auto;
+}
+
+.auth-wrapper.wide,
+.auth-wrapper:has(.dashboard-container) {
+    max-width: 880px;
 }
 
 /* Minimal Card */

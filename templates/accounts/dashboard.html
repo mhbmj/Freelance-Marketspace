@@ -1,0 +1,304 @@
+{% extends 'base.html' %}
+
+{% block title %}داشبورد فریلنسری | سامانه بازار کار فریلنسری{% endblock %}
+
+{% block content %}
+<div class="dashboard-container" style="width: 100%; max-width: 860px; margin: auto;">
+
+    <!-- نوار ناوبری بالای داشبورد -->
+    <header class="dashboard-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="logo-box">🌸</div>
+            <div>
+                <h1 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0;">بازار کار فریلنسری</h1>
+                <span style="font-size: 12px; color: var(--text-muted);">پلتفرم جامع مهندسی نرم‌افزار (MVP)</span>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="user-badge-tag" style="margin: 0;">
+                نقش: {{ user.get_role_display|default:"فریلنسر" }}
+            </span>
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout" title="خروج از حساب">
+                    خروج
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <!-- پیام‌های سامانه -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" style="margin-top: 16px;">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- بنر خوش‌آمدگویی کاربر -->
+    <section class="profile-banner-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <h2 style="font-size: 21px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
+                    سلام، {{ user.full_name }} عزیز! 👋
+                </h2>
+                <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
+                    به داشبورد خود خوش آمدید. می‌توانید پروژه‌های باز را بررسی کرده و پیشنهاد همکاری ارسال نمایید.
+                </p>
+                <div style="display: flex; gap: 16px; margin-top: 10px; font-size: 12.5px; color: #554951;">
+                    <span>📧 <strong>ایمیل:</strong> {{ user.email }}</span>
+                    {% if user.username %}
+                        <span>👤 <strong>نام کاربری:</strong> <span dir="ltr">@{{ user.username }}</span></span>
+                    {% endif %}
+                    {% if user.phone_number %}
+                        <span>📱 <strong>موبایل:</strong> {{ user.phone_number }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <a href="{% url 'onboarding_skills' %}" class="btn-edit-skills">
+                    ویرایش مهارت‌ها ✏️
+                </a>
+            </div>
+        </div>
+
+        <!-- مهارت‌های من -->
+        <div style="margin-top: 22px; padding-top: 16px; border-top: 1px dashed var(--border-card);">
+            <div style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 10px;">
+                مهارت‌های تخصصی من:
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                {% if user_skills %}
+                    {% for us in user_skills %}
+                        <span class="user-skill-pill">
+                            {{ us.skill.name }}
+                        </span>
+                    {% endfor %}
+                {% else %}
+                    <span style="font-size: 12px; color: var(--text-muted);">
+                        هنوز مهارتی ثبت نشده است. <a href="{% url 'onboarding_skills' %}" class="link-pink">افزودن مهارت‌ها</a>
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- بخش پروژه‌های باز و مرتبط -->
+    <section style="margin-top: 26px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+            <h3 style="font-size: 18px; font-weight: 700; color: var(--text-main);">
+                📋 فرصت‌های کاری و پروژه‌های باز
+            </h3>
+
+            <!-- سرچ در پروژه‌ها -->
+            <form method="get" action="{% url 'dashboard' %}" style="display: flex; gap: 8px;">
+                <input type="text" name="q" value="{{ query }}" placeholder="جستجو در پروژه‌ها..." class="form-input" style="width: 220px; padding: 8px 12px; font-size: 12.5px;">
+                <button type="submit" class="btn-pink" style="width: auto; padding: 8px 14px; font-size: 12.5px;">
+                    بیاب
+                </button>
+            </form>
+        </div>
+
+        <div class="projects-grid">
+            {% if projects %}
+                {% for proj in projects %}
+                    <div class="project-card">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                            <h4 class="project-title">{{ proj.title }}</h4>
+                            <span class="badge-pricing">
+                                {% if proj.pricing_type == 'FIXED_PRICE' %}
+                                    قیمت ثابت: {{ proj.budget|floatformat:0 }} تومان
+                                {% else %}
+                                    ساعتی: {{ proj.budget|floatformat:0 }} ت/ساعت
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <p class="project-desc">
+                            {{ proj.description|truncatewords:28 }}
+                        </p>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; pt: 10px; border-top: 1px solid #f7eff3; font-size: 12px; color: var(--text-muted);">
+                            <span>کارفرما: {{ proj.employer.full_name }}</span>
+                            <button class="btn-bid" onclick="alert('قابلیت ارسال پیشنهاد در فاز بعدی فعال خواهد شد!')">
+                                ارسال پیشنهاد همکاری 🚀
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-projects-box">
+                    <p>هیچ پروژه بازی در این لحظه یافت نشد.</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+</div>
+
+<style>
+.dashboard-header {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--border-card);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.logo-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--button-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.btn-logout {
+    background: var(--pastel-yellow-soft);
+    border: 1px solid var(--pastel-yellow-border);
+    color: #854d0e;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    color: #991b1b;
+}
+
+.profile-banner-card {
+    background: #ffffff;
+    border-radius: var(--radius-card);
+    padding: 28px;
+    margin-top: 20px;
+    border: 1px solid var(--border-card);
+    box-shadow: var(--shadow-minimal);
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-banner-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--top-accent);
+}
+
+.btn-edit-skills {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: #fdf2f8;
+    border: 1px solid #fbcfe8;
+    color: #be185d;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-edit-skills:hover {
+    background: #fce7f3;
+    transform: translateY(-1px);
+}
+
+.user-skill-pill {
+    padding: 4px 12px;
+    border-radius: 16px;
+    background: #fff0f6;
+    border: 1px solid #f472b6;
+    color: #be185d;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.projects-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.project-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px 22px;
+    border: 1px solid #f1e4ea;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s ease;
+}
+
+.project-card:hover {
+    border-color: #fbcfe8;
+    box-shadow: 0 6px 18px rgba(244, 114, 182, 0.12);
+    transform: translateY(-2px);
+}
+
+.project-title {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.badge-pricing {
+    padding: 4px 10px;
+    background: var(--pastel-yellow-light);
+    border: 1px solid var(--pastel-yellow-border);
+    color: #854d0e;
+    font-size: 11.5px;
+    font-weight: 700;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.project-desc {
+    font-size: 13px;
+    color: #554951;
+    line-height: 1.7;
+    margin-top: 4px;
+}
+
+.btn-bid {
+    background: var(--button-gradient);
+    color: #ffffff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-bid:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+}
+
+.empty-projects-box {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 36px;
+    text-align: center;
+    border: 1px dashed var(--border-card);
+    font-size: 13px;
+    color: var(--text-muted);
+}
+</style>
+{% endblock %}

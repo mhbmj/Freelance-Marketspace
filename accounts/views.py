@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.conf import settings
 
-from .models import User
+from .models import User, Category, Skill, UserSkill, Project
 from .forms import LoginForm, SignupForm, ForgotPasswordForm, ResetPasswordForm, RoleSelectionForm
 from .rate_limit import (
     is_login_rate_limited,
@@ -40,9 +40,9 @@ def login_view(request):
             reset_login_attempts(email)  # ریست شمارنده در ورود موفق
             login(request, user)  # حفظ وضعیت سشن کاربر
             messages.success(request, f'خوش آمدید، {user.full_name}!')
-            if not user.username:
+            if not user.username or not user.role:
                 return redirect('select_role')
-            return redirect('welcome')
+            return redirect('dashboard')
         else:
             # فقط در صورتی که کاربر در سیستم وجود داشته باشد و رمز اشتباه زده شود (کنترل Rate Limit فقط برای پسورد)
             if email and User.objects.filter(email=email).exists():
@@ -61,7 +61,7 @@ def login_view(request):
 def signup_view(request):
     """صفحه ثبت‌نام و هدایت به تکمیل نام کاربری و نقش فریلنسر/کارفرما"""
     if request.user.is_authenticated:
-        return redirect('welcome')
+        return redirect('dashboard')
 
     if request.method == 'POST':
         form = SignupForm(request.POST)
@@ -85,8 +85,12 @@ def select_role_view(request):
             user.username = form.cleaned_data['username']
             user.role = form.cleaned_data['role']
             user.save()
-            messages.success(request, 'حساب کاربری شما با موفقیت تکمیل شد!')
-            return redirect('welcome')
+            if user.role == 'FREELANCER':
+                messages.success(request, 'لطفاً حوزه‌های فعالیت و تخصص‌های خود را مشخص نمایید.')
+                return redirect('onboarding_categories')
+            else:
+                messages.success(request, 'حساب کارفرما فعال گردید! به داشبورد خوش آمدید.')
+                return redirect('dashboard')
     else:
         form = RoleSelectionForm(user=user, initial={
             'username': user.username or '',
@@ -94,6 +98,82 @@ def select_role_view(request):
         })
 
     return render(request, 'accounts/select_role.html', {'form': form, 'user': user})
+
+
+@login_required
+def onboarding_categories_view(request):
+    """مرحله ۱ از ۲: انتخاب حوزه‌های فعالیت فریلنسر (Multi-select)"""
+    categories = Category.objects.all().order_by('id')
+    if request.method == 'POST':
+        selected_ids = request.POST.getlist('categories')
+        if not selected_ids:
+            messages.error(request, 'لطفاً حداقل یک حوزه فعالیت را انتخاب نمایید.')
+        else:
+            request.session['selected_categories'] = selected_ids
+            return redirect('onboarding_skills')
+
+    selected_ids = request.session.get('selected_categories', [])
+    return render(request, 'accounts/onboarding_categories.html', {
+        'categories': categories,
+        'selected_ids': [int(x) for x in selected_ids if str(x).isdigit()]
+    })
+
+
+@login_required
+def onboarding_skills_view(request):
+    """مرحله ۲ از ۲: انتخاب مهارت‌های تخصصی با باکس جستجوی زنده"""
+    skills = Skill.objects.all().order_by('name')
+    user = request.user
+
+    if request.method == 'POST':
+        selected_skill_ids = request.POST.getlist('skills')
+        if not selected_skill_ids:
+            messages.error(request, 'لطفاً حداقل یک مهارت را انتخاب کنید.')
+        else:
+            # ذخیره در دیتابیس در جدول user_skills
+            UserSkill.objects.filter(user=user).delete()
+            for s_id in selected_skill_ids:
+                try:
+                    skill_obj = Skill.objects.get(id=s_id)
+                    UserSkill.objects.create(user=user, skill=skill_obj, years_of_experience=1)
+                except Skill.DoesNotExist:
+                    pass
+
+            messages.success(request, 'مهارت‌های شما با موفقیت ثبت شد و حساب کاربری تکمیل گردید!')
+            return redirect('dashboard')
+
+    user_skills_ids = list(UserSkill.objects.filter(user=user).values_list('skill_id', flat=True))
+    return render(request, 'accounts/onboarding_skills.html', {
+        'skills': skills,
+        'user_skills_ids': user_skills_ids
+    })
+
+
+@login_required
+def dashboard_view(request):
+    """داشبورد اصلی پلتفرم فریلنسری با نمایش پروژه‌ها و مهارت‌های کاربر"""
+    user = request.user
+    user_skills = UserSkill.objects.filter(user=user).select_related('skill')
+
+    projects = Project.objects.filter(status='OPEN').order_by('-created_at')
+
+    # جستجوی زنده در پروژه‌ها
+    query = request.GET.get('q', '').strip()
+    if query:
+        projects = projects.filter(title__icontains=query)
+
+    return render(request, 'accounts/dashboard.html', {
+        'user': user,
+        'user_skills': user_skills,
+        'projects': projects,
+        'query': query,
+    })
+
+
+@login_required
+def welcome_view(request):
+    """ریدایرکت به داشبورد اصلی"""
+    return redirect('dashboard')
 
 
 def forgot_password_view(request):

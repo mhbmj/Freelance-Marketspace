@@ -291,3 +291,37 @@ class AuthenticationTests(TestCase):
         self.assertContains(res_6th, 'خطای ۴۲۹', status_code=429)
         self.assertContains(res_6th, 'بیش از حد مجاز', status_code=429)
 
+    # ------------------------------------------------------------------------
+    # ۵. آزمون‌های آنبوردینگ (دسته‌بندی، مهارت‌ها و داشبورد)
+    # ------------------------------------------------------------------------
+    def test_onboarding_categories_and_skills_flow(self):
+        """جریان کامل انتخاب دسته‌بندی، ثبت مهارت‌ها و ورود به داشبورد"""
+        from accounts.models import Category, Skill, UserSkill
+        cat = Category.objects.create(name='توسعه وب آزمایشی')
+        skill = Skill.objects.create(name='PythonTest')
+
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+
+        # ۱. ارسال دسته‌بندی
+        res_cat = self.client.post(reverse('onboarding_categories'), {
+            'categories': [cat.id]
+        }, follow=True)
+        self.assertEqual(res_cat.status_code, 200)
+
+        # ۲. ارسال مهارت‌ها
+        res_skill = self.client.post(reverse('onboarding_skills'), {
+            'skills': [skill.id]
+        }, follow=True)
+        self.assertEqual(res_skill.status_code, 200)
+        self.assertContains(res_skill, 'PythonTest')
+
+        # ۳. بررسی ذخیره در جدول user_skills
+        self.assertTrue(UserSkill.objects.filter(user=self.user, skill=skill).exists())
+
+    def test_dashboard_view_authenticated(self):
+        """مشاهده داشبورد فریلنسر با نمایش پروژه‌ها و مهارت‌ها"""
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+        res = self.client.get(reverse('dashboard'))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, 'فرصت‌های کاری و پروژه‌های باز')
+

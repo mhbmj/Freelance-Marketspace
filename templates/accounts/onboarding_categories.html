@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}انتخاب حوزه فعالیت | سامانه فریلنسری{% endblock %}
+
+{% block content %}
+<div class="auth-card" style="max-width: 520px; padding: 38px 30px;">
+    <div class="auth-header" style="text-align: right; margin-bottom: 22px;">
+        <span class="user-badge-tag">گام ۱ از ۲: حوزه‌های کاری</span>
+        <h1 class="auth-title" style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">
+            انتخاب حوزه‌های فعالیت
+        </h1>
+        <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.7;">
+            حوزه‌های تخصصی که در آن‌ها فعالیت می‌کنید را انتخاب نمایید (امکان انتخاب هم‌زمان چند حوزه وجود دارد):
+        </p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-info{% endif %}">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'onboarding_categories' %}" id="categories-form">
+        {% csrf_token %}
+
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 26px;">
+            {% for cat in categories %}
+                <label class="category-select-card {% if cat.id in selected_ids %}selected{% endif %}" id="cat-label-{{ cat.id }}">
+                    <input type="checkbox" name="categories" value="{{ cat.id }}" {% if cat.id in selected_ids %}checked{% endif %} style="display: none;" onchange="toggleCategoryCard({{ cat.id }}, this.checked)">
+
+                    <div style="display: flex; align-items: center; gap: 14px; width: 100%;">
+                        <div class="category-icon-box">
+                            {% if 'وب' in cat.name %}
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                </svg>
+                            {% elif 'موبایل' in cat.name %}
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                                </svg>
+                            {% else %}
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                            {% endif %}
+                        </div>
+
+                        <div style="flex: 1; text-align: right;">
+                            <div class="category-title">{{ cat.name }}</div>
+                            {% if cat.description %}
+                                <div class="category-desc">{{ cat.description }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="check-indicator">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </label>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn-pink" style="padding: 13px; font-size: 15px;">
+            مرحله بعد: انتخاب مهارت‌ها
+        </button>
+    </form>
+</div>
+
+<style>
+.category-select-card {
+    display: block;
+    border: 1.5px solid #f0e4ea;
+    border-radius: 12px;
+    padding: 16px 18px;
+    cursor: pointer;
+    background: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.category-select-card:hover {
+    border-color: #fbcfe8;
+    background: #fffcfd;
+    transform: translateY(-1px);
+}
+
+.category-select-card.selected {
+    border-color: #f472b6;
+    background: #fff9fb;
+    box-shadow: 0 4px 14px rgba(244, 114, 182, 0.18);
+}
+
+.category-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--pastel-yellow-soft);
+    border: 1px solid var(--pastel-yellow-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #854d0e;
+    transition: all 0.2s ease;
+}
+
+.category-select-card.selected .category-icon-box {
+    background: #fce7f3;
+    border-color: #fbcfe8;
+    color: #be185d;
+}
+
+.category-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 3px;
+}
+
+.category-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.check-indicator {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+    transition: all 0.2s ease;
+}
+
+.category-select-card.selected .check-indicator {
+    background: #f472b6;
+    border-color: #f472b6;
+    color: #ffffff;
+}
+</style>
+
+<script>
+function toggleCategoryCard(id, isChecked) {
+    const card = document.getElementById('cat-label-' + id);
+    if (isChecked) {
+        card.classList.add('selected');
+    } else {
+        card.classList.remove('selected');
+    }
+}
+</script>
+{% endblock %}

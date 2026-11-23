@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}انتخاب مهارت‌ها | سامانه فریلنسری{% endblock %}
+
+{% block content %}
+<div class="auth-card" style="max-width: 540px; padding: 38px 30px;">
+    <div class="auth-header" style="text-align: right; margin-bottom: 20px;">
+        <span class="user-badge-tag">گام ۲ از ۲: تخصص‌ها و مهارت‌ها</span>
+        <h1 class="auth-title" style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">
+            انتخاب مهارت‌های تخصصی
+        </h1>
+        <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.7;">
+            مهارت‌هایی که در آن‌ها تسلط دارید را انتخاب کنید. می‌توانید با تایپ در باکس زیر، مهارت‌ها را سریع‌تر فیلتر نمایید:
+        </p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-info{% endif %}">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- باکس جستجوی زنده در مهارت‌ها -->
+    <div class="form-group" style="margin-bottom: 18px;">
+        <div class="input-wrapper">
+            <input type="text" id="skill-search" class="form-input" placeholder="🔍 جستجو در مهارت‌ها (مثلاً Python، React، ...) ..." oninput="filterSkills(this.value)">
+        </div>
+    </div>
+
+    <form method="post" action="{% url 'onboarding_skills' %}" id="skills-form">
+        {% csrf_token %}
+
+        <!-- محفظه تگ‌ها و چیپ‌های مهارتی -->
+        <div class="skills-chips-wrapper" id="chips-container" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; min-height: 110px;">
+            {% for skill in skills %}
+                <label class="skill-chip {% if skill.id in user_skills_ids %}selected{% endif %}" id="skill-chip-{{ skill.id }}" data-skill-name="{{ skill.name|lower }}">
+                    <input type="checkbox" name="skills" value="{{ skill.id }}" {% if skill.id in user_skills_ids %}checked{% endif %} style="display: none;" onchange="toggleSkillChip({{ skill.id }}, this.checked)">
+                    <span class="skill-chip-text">{{ skill.name }}</span>
+                    <span class="chip-check-icon">✓</span>
+                </label>
+            {% endfor %}
+            <p id="no-skills-found" style="display: none; font-size: 13px; color: var(--text-muted); width: 100%; text-align: center; padding: 20px 0;">
+                مهارتی با این عنوان یافت نشد.
+            </p>
+        </div>
+
+        <button type="submit" class="btn-pink" style="padding: 13px; font-size: 15px;">
+            تکمیل ثبت‌نام و ورود به داشبورد
+        </button>
+    </form>
+</div>
+
+<style>
+.skill-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: #ffffff;
+    border: 1.5px solid #ebdbe2;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-main);
+    transition: all 0.18s ease;
+    user-select: none;
+}
+
+.skill-chip:hover {
+    border-color: #fbcfe8;
+    background: #fffcfd;
+    transform: translateY(-1px);
+}
+
+.skill-chip.selected {
+    background: #fff0f6;
+    border-color: #f472b6;
+    color: #be185d;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(244, 114, 182, 0.22);
+}
+
+.chip-check-icon {
+    font-size: 12px;
+    display: none;
+    color: #f472b6;
+}
+
+.skill-chip.selected .chip-check-icon {
+    display: inline-block;
+}
+</style>
+
+<script>
+function toggleSkillChip(id, isChecked) {
+    const chip = document.getElementById('skill-chip-' + id);
+    if (isChecked) {
+        chip.classList.add('selected');
+    } else {
+        chip.classList.remove('selected');
+    }
+}
+
+function filterSkills(query) {
+    const q = query.trim().toLowerCase();
+    const chips = document.querySelectorAll('.skill-chip');
+    let visibleCount = 0;
+
+    chips.forEach(chip => {
+        const name = chip.getAttribute('data-skill-name');
+        if (name.includes(q)) {
+            chip.style.display = 'inline-flex';
+            visibleCount++;
+        } else {
+            chip.style.display = 'none';
+        }
+    });
+
+    const noFound = document.getElementById('no-skills-found');
+    if (visibleCount === 0) {
+        noFound.style.display = 'block';
+    } else {
+        noFound.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}
