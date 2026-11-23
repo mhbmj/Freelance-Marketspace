@@ -9,8 +9,16 @@
     <header class="top-navbar" style="border-radius: 14px; margin-bottom: 24px;">
         <div class="top-navbar-container">
 
-            <!-- بخش راست نوار منو (بدون لوگو طبق درخواست کاربر) -->
+            <!-- بخش راست نوار منو -->
             <div class="top-nav-right">
+
+                <!-- لوگوی سامانه با لینک به صفحه اصلی -->
+                <a href="{% url 'home' %}" class="nav-brand-logo" title="صفحه اصلی">
+                    <span class="nav-logo-badge">✦</span>
+                    <span class="nav-brand-text">فریلنسـ‌مارکت</span>
+                </a>
+
+                <span class="nav-divider" style="height: 22px; margin: 0 4px;"></span>
 
                 <!-- منوی کارفرما هستم همراه با مگامنو ۴ گانه -->
                 <div class="nav-dropdown-wrapper">

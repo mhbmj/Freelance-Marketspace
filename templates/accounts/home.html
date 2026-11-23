@@ -1,0 +1,471 @@
+{% extends 'base.html' %}
+
+{% block title %}پلتفرم بازار کار فریلنسری | انجام سریع و با کیفیت کارها{% endblock %}
+
+{% block content %}
+<div class="home-page-container">
+
+    <!-- نوار منوی بالای صفحه اصلی -->
+    <header class="top-navbar" style="border-radius: 14px; margin-bottom: 24px;">
+        <div class="top-navbar-container">
+
+            <!-- منوهای سمت راست -->
+            <div class="top-nav-right">
+
+                <!-- لوگوی سامانه با لینک به صفحه اصلی -->
+                <a href="{% url 'home' %}" class="nav-brand-logo" title="صفحه اصلی">
+                    <span class="nav-logo-badge">✦</span>
+                    <span class="nav-brand-text">فریلنسـ‌مارکت</span>
+                </a>
+
+                <span class="nav-divider" style="height: 22px; margin: 0 4px;"></span>
+
+                <!-- کارفرما هستم -->
+                <div class="nav-dropdown-wrapper">
+                    <a href="javascript:void(0)" class="nav-link-btn">
+                        <span class="nav-dot"></span>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                        <span>کارفرما هستم</span>
+                        <span style="font-size: 11px; color: #9ca3af;">+</span>
+                    </a>
+
+                    <!-- مگامنوی کارفرما -->
+                    <div class="mega-menu-panel">
+                        <div class="mega-menu-grid">
+                            <a href="javascript:void(0)" class="mega-card highlight" onclick="alert('این صفحه در مراحل بعدی طراحی خواهد شد!')">
+                                <div class="mega-card-icon" style="background: var(--pastel-yellow-light); border-color: var(--pastel-yellow-border); color: #854d0e;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                        <line x1="12" y1="11" x2="12" y2="17"></line>
+                                        <line x1="9" y1="14" x2="15" y2="14"></line>
+                                    </svg>
+                                </div>
+                                <div class="mega-card-title">ثبت سریع پروژه</div>
+                                <div class="mega-card-desc">با ایجاد پروژه امکان همکاری با هزاران نیروی متخصص را خواهید داشت.</div>
+                            </a>
+
+                            <a href="javascript:void(0)" class="mega-card" onclick="alert('این صفحه در مراحل بعدی طراحی خواهد شد!')">
+                                <div class="mega-card-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="mega-card-title">مشاهده دسته‌بندی‌ها و مهارت‌ها</div>
+                                <div class="mega-card-desc">مهارت مورد نظر را جستجو کرده و پروژه و فریلنسرها را مشاهده کنید.</div>
+                            </a>
+
+                            <a href="javascript:void(0)" class="mega-card" onclick="alert('این صفحه در مراحل بعدی طراحی خواهد شد!')">
+                                <div class="mega-card-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                </div>
+                                <div class="mega-card-title">مشاهده تمام فریلنسرها</div>
+                                <div class="mega-card-desc">فریلنسرهای فعال در سامانه را مشاهده کرده و انتخاب نمایید.</div>
+                            </a>
+
+                            <a href="javascript:void(0)" class="mega-card" onclick="alert('این صفحه در مراحل بعدی طراحی خواهد شد!')">
+                                <div class="mega-card-icon">
+                                    <span class="badge-pro" style="padding: 2px 4px; font-size: 9px;">PRO</span>
+                                </div>
+                                <div class="mega-card-title">پلتفرم پرو</div>
+                                <div class="mega-card-desc">پروژه بساز، متمایز دیده شو، بدون کمیسیون پروژه رو تحویل بگیر.</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- فریلنسر هستم -->
+                <div class="nav-dropdown-wrapper">
+                    <a href="javascript:void(0)" class="nav-link-btn">
+                        <span class="nav-dot"></span>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        <span>فریلنسر هستم</span>
+                        <span style="font-size: 11px; color: #9ca3af;">+</span>
+                    </a>
+
+                    <!-- مگامنوی فریلنسر -->
+                    <div class="mega-menu-panel">
+                        <div class="mega-menu-grid">
+                            <a href="javascript:void(0)" class="mega-card highlight" onclick="alert('این صفحه در مراحل بعدی طراحی خواهد شد!')">
+                                <div class="mega-card-icon" style="background: var(--pastel-yellow-light); border-color: var(--pastel-yellow-border); color: #854d0e;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                </div>
+                                <div class="mega-card-title">شروع کار به‌عنوان فریلنسر</div>
+                                <div class="mega-card-desc">بین هزاران پروژه، بر اساس مهارت‌هایتان پروژه پیدا کرده و پیشنهاد بفرستید.</div>
+                            </a>
+
+                            <a href="{% url 'dashboard' %}" class="mega-card">
+                                <div class="mega-card-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="mega-card-title">مشاهده پروژه‌ها</div>
+                                <div class="mega-card-desc">بین پروژه‌های باز، موقعیت مورد نظر خود را یافته و پیشنهاد ارسال کنید.</div>
+                            </a>
+
+                            <a href="javascript:void(0)" class="mega-card" onclick="alert('این صفحه در مراحل بعدی طراحی خواهد شد!')">
+                                <div class="mega-card-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="14" width="7" height="7"></rect>
+                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                    </svg>
+                                </div>
+                                <div class="mega-card-title">مشاهده دسته‌بندی‌ها و مهارت‌ها</div>
+                                <div class="mega-card-desc">مهارت مورد نظر را جستجو کرده و پروژه و فریلنسرها را مشاهده کنید.</div>
+                            </a>
+
+                            <a href="javascript:void(0)" class="mega-card" onclick="alert('این صفحه در مراحل بعدی طراحی خواهد شد!')">
+                                <div class="mega-card-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                        <polyline points="21 15 16 10 5 21"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="mega-card-title">مشاهده نمونه‌کارها</div>
+                                <div class="mega-card-desc">تمامی نمونه کارهای فریلنسرها را مشاهده کرده و جستجو نمایید.</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- راهنما با منوی آبشاری -->
+                <div class="nav-dropdown-wrapper">
+                    <a href="javascript:void(0)" class="nav-link-btn">
+                        <span class="nav-dot" style="background: var(--accent-teal);"></span>
+                        <span>راهنما</span>
+                        <span style="font-size: 11px; color: #9ca3af;">▾</span>
+                    </a>
+
+                    <div class="help-dropdown-menu">
+                        <a href="javascript:void(0)" class="help-dropdown-item" onclick="alert('این صفحه در مراحل بعدی طراحی خواهد شد!')">
+                            راهنمای شروع به کار فریلنسرها
+                        </a>
+                        <a href="javascript:void(0)" class="help-dropdown-item" onclick="alert('این صفحه در مراحل بعدی طراحی خواهد شد!')">
+                            راهنمای شروع به کار کارفرمایان
+                        </a>
+                        <a href="javascript:void(0)" class="help-dropdown-item" onclick="alert('این صفحه در مراحل بعدی طراحی خواهد شد!')">
+                            تعرفه‌ها
+                        </a>
+                    </div>
+                </div>
+
+                <span class="nav-divider"></span>
+
+                <!-- پلتفرم پرو -->
+                <a href="javascript:void(0)" class="nav-link-btn" style="gap: 5px;" onclick="alert('این بخش به زودی اضافه خواهد شد!')">
+                    <span>پلتفرم پرو</span>
+                    <span class="badge-pro">PRO</span>
+                </a>
+
+                <!-- آیکون جستجو -->
+                <button type="button" class="nav-link-btn" style="border: none; background: none;" onclick="document.querySelector('.hero-search-input')?.focus();" title="جستجو">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- منوهای سمت چپ (وضعیت ورود یا مهمان) -->
+            <div class="top-nav-left">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn-quick-project">
+                        <span>داشبورد من</span>
+                    </a>
+
+                    <!-- منوی کاربر لاگین‌شده -->
+                    <div class="user-menu-wrapper">
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <div class="avatar-header-circle">
+                                {{ user_initials|default:"MA" }}
+                            </div>
+                            <span style="font-size: 11px; color: #9ca3af;">▾</span>
+                        </div>
+
+                        <div class="user-dropdown-menu">
+                            <div class="user-dropdown-header">
+                                <div style="font-weight: 700; color: var(--text-main);">{{ user.full_name }}</div>
+                                <div style="font-size: 11.5px; color: var(--text-muted);" dir="ltr">@{{ user.username|default:"mahtabmrj" }}</div>
+                            </div>
+                            <a href="{% url 'dashboard' %}" class="user-dropdown-item">داشبورد من</a>
+                            <a href="{% url 'onboarding_skills' %}" class="user-dropdown-item">ویرایش مهارت‌ها</a>
+                            <form method="post" action="{% url 'logout' %}" style="margin: 0; padding-top: 6px; border-top: 1px solid #f3e8ee;">
+                                {% csrf_token %}
+                                <button type="submit" class="user-dropdown-item" style="width: 100%; border: none; background: none; text-align: right; color: #dc2626; cursor: pointer;">
+                                    خروج از حساب
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- دکمه‌های ورود و ثبت‌نام برای کاربران مهمان -->
+                    <a href="{% url 'login' %}" class="btn-pink btn-outline-pink" style="padding: 8px 18px; font-size: 13px; width: auto; text-decoration: none;">
+                        ورود
+                    </a>
+                    <a href="{% url 'signup' %}" class="btn-pink" style="padding: 8px 18px; font-size: 13px; width: auto; text-decoration: none;">
+                        ثبت‌نام
+                    </a>
+                {% endif %}
+            </div>
+
+        </div>
+    </header>
+
+    <!-- ۱. بخش هیرو (Hero Section) مطابق اسکرین‌شات پونیشا با تم سفید و پاستلی -->
+    <section class="hero-section-card">
+        <!-- سمت محتوا و سرچ -->
+        <div class="hero-content-side">
+            <h1 class="hero-title">
+                انجام با کیفیت و سریع کار شما<br>
+                با <span class="highlight-teal">برترین متخصصان</span>
+            </h1>
+
+            <!-- باکس سرچ هیرو -->
+            <form method="get" action="{% url 'dashboard' %}" class="hero-search-wrapper">
+                <input type="text" name="q" class="hero-search-input" placeholder="جستجو مهارت، پروژه و متخصص ...">
+                <button type="submit" class="hero-search-btn">
+                    جستجو
+                </button>
+            </form>
+
+            <!-- نوار اعتماد کسب‌وکارها -->
+            <div class="hero-trust-bar">
+                <strong>مورد اعتماد کسب‌وکارها:</strong> دیجی‌کالا • اسنپ • همراه‌اول • کافه‌بازار • زرین‌پال
+            </div>
+        </div>
+
+        <!-- سمت تصویر هیرو -->
+        <div class="hero-image-side">
+            <div class="hero-image-frame">
+                <div style="padding: 34px 28px; text-align: center; background: linear-gradient(135deg, #fff7fa 0%, #fefce8 100%);">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--accent-teal-soft); border: 2px solid var(--accent-teal-border); color: var(--accent-teal); display: flex; align-items: center; justify-content: center; font-size: 38px; margin: 0 auto 18px;">
+                        👩‍💻
+                    </div>
+                    <div style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
+                        همکاری مطمئن با بهترین فریلنسرها
+                    </div>
+                    <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.8;">
+                        بیش از هزاران نیروی متخصص در رشته‌های برنامه‌نویسی، طراحی، هوش مصنوعی و سئو آماده شروع پروژه شما هستند.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ۲. ردیف ۸ دسته‌بندی سریع (Horizontal Quick Categories) -->
+    <section class="quick-categories-row">
+        <!-- ۱. توسعه نرم‌افزار -->
+        <a href="javascript:void(0)" class="quick-category-card" onclick="alert('فیلتر این دسته‌بندی در مرحله بعد اضافه خواهد شد!')">
+            <div class="quick-category-icon">💻</div>
+            <span class="quick-category-name">توسعه نرم‌افزار و آی‌تی</span>
+        </a>
+
+        <!-- ۲. محتوا و ترجمه -->
+        <a href="javascript:void(0)" class="quick-category-card" onclick="alert('فیلتر این دسته‌بندی در مرحله بعد اضافه خواهد شد!')">
+            <div class="quick-category-icon">📄</div>
+            <span class="quick-category-name">محتوا و ترجمه</span>
+        </a>
+
+        <!-- ۳. طراحی و خلاقیت -->
+        <a href="javascript:void(0)" class="quick-category-card" onclick="alert('فیلتر این دسته‌بندی در مرحله بعد اضافه خواهد شد!')">
+            <div class="quick-category-icon">🎨</div>
+            <span class="quick-category-name">طراحی و خلاقیت</span>
+        </a>
+
+        <!-- ۴. بازاریابی و فروش -->
+        <a href="javascript:void(0)" class="quick-category-card" onclick="alert('فیلتر این دسته‌بندی در مرحله بعد اضافه خواهد شد!')">
+            <div class="quick-category-icon">🎯</div>
+            <span class="quick-category-name">بازاریابی و فروش</span>
+        </a>
+
+        <!-- ۵. مالی و کسب‌وکار -->
+        <a href="javascript:void(0)" class="quick-category-card" onclick="alert('فیلتر این دسته‌بندی در مرحله بعد اضافه خواهد شد!')">
+            <div class="quick-category-icon">💼</div>
+            <span class="quick-category-name">مالی و کسب‌وکار</span>
+        </a>
+
+        <!-- ۶. مهندسی و معماری -->
+        <a href="javascript:void(0)" class="quick-category-card" onclick="alert('فیلتر این دسته‌بندی در مرحله بعد اضافه خواهد شد!')">
+            <div class="quick-category-icon">📐</div>
+            <span class="quick-category-name">مهندسی و معماری</span>
+        </a>
+
+        <!-- ۷. صداگذاری و موسیقی -->
+        <a href="javascript:void(0)" class="quick-category-card" onclick="alert('فیلتر این دسته‌بندی در مرحله بعد اضافه خواهد شد!')">
+            <div class="quick-category-icon">🎧</div>
+            <span class="quick-category-name">صداگذاری و موسیقی</span>
+        </a>
+
+        <!-- ۸. هوش مصنوعی -->
+        <a href="javascript:void(0)" class="quick-category-card" onclick="alert('فیلتر این دسته‌بندی در مرحله بعد اضافه خواهد شد!')">
+            <div class="quick-category-icon">🤖</div>
+            <span class="quick-category-name">هوش مصنوعی</span>
+        </a>
+    </section>
+
+    <!-- ۳. بخش جدیدترین پروژه‌های ثبت‌شده به صورت اسلایدر افقی (مطابق عکس ۹ پونیشا) -->
+    <section class="projects-slider-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+            <h3 style="font-size: 20px; font-weight: 800; color: var(--text-main); margin: 0;">
+                جدیدترین پروژه‌های ثبت‌شده
+            </h3>
+            <a href="{% url 'dashboard' %}" class="link-pink" style="font-size: 13.5px; font-weight: 700; text-decoration: none;">
+                ← مشاهده همه پروژه‌ها
+            </a>
+        </div>
+
+        <!-- ترک اسلایدر افقی با اسکرول نرم -->
+        <div class="slider-scroll-track">
+
+            <!-- کارت اول اسلایدر: پروژه خود را ثبت کنید (Action Card مطابق اسکرین‌شات) -->
+            <div class="slider-project-card slider-action-card">
+                <div class="slider-action-icon">
+                    📝
+                </div>
+                <div>
+                    <h4 class="slider-action-title">پروژه خود را ثبت کنید</h4>
+                    <p class="slider-action-desc">
+                        با ایجاد پروژه امکان همکاری با هزاران نیروی متخصص را خواهید داشت.
+                    </p>
+                </div>
+                <a href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'signup' %}{% endif %}" class="btn-slider-action">
+                    ثبت پروژه
+                </a>
+            </div>
+
+            <!-- کارت‌های پروژه‌های باز از پایگاه داده -->
+            {% if latest_projects %}
+                {% for proj in latest_projects %}
+                    <div class="slider-project-card">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 11px; color: var(--text-muted);">
+                                <span style="background: #fdfafc; border: 1px solid #f1e4ea; padding: 2px 8px; border-radius: 6px;">
+                                    {{ proj.created_at|timesince }} پیش
+                                </span>
+                                <span style="color: var(--accent-teal); font-weight: 700;">
+                                    {{ proj.get_pricing_type_display }}
+                                </span>
+                            </div>
+
+                            <h4 style="font-size: 14.5px; font-weight: 800; color: var(--text-main); line-height: 1.5; margin-bottom: 8px;">
+                                {{ proj.title }}
+                            </h4>
+
+                            <p style="font-size: 12px; color: #52474e; line-height: 1.7; margin-bottom: 12px;">
+                                {{ proj.description|truncatewords:16 }}
+                            </p>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #f9f2f5; font-size: 11.5px; margin-bottom: 12px;">
+                                <span style="color: var(--text-muted);">بودجه:</span>
+                                <span style="font-weight: 800; color: #854d0e;">{{ proj.budget|floatformat:0 }} تومان</span>
+                            </div>
+
+                            <a href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'login' %}{% endif %}" class="btn-pink" style="padding: 7px 12px; font-size: 12px; text-decoration: none;">
+                                ارسال پیشنهاد 🚀
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="slider-project-card" style="justify-content: center; text-align: center; color: var(--text-muted); font-size: 13px;">
+                    پروژه بازی یافت نشد.
+                </div>
+            {% endif %}
+
+        </div>
+    </section>
+
+    <!-- فوتر سایت -->
+    <footer class="site-footer">
+        <div class="footer-top-row">
+            <div class="footer-brand-links-side">
+                <div class="footer-brand-logo">
+                    <span class="footer-logo-badge">✦</span>
+                    <span class="footer-brand-name">فریلنسـ‌مارکت</span>
+                </div>
+                <div class="footer-nav-links">
+                    <a href="javascript:void(0)" class="footer-link-item" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">قوانین و مقررات</a>
+                    <a href="javascript:void(0)" class="footer-link-item" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">حریم شخصی</a>
+                    <a href="javascript:void(0)" class="footer-link-item" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">راهنما</a>
+                    <a href="javascript:void(0)" class="footer-link-item" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">وبلاگ</a>
+                    <a href="javascript:void(0)" class="footer-link-item" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">درباره ما</a>
+                </div>
+            </div>
+
+            <div>
+                <div class="trust-badge-card">
+                    <span class="trust-badge-label">مورد تایید</span>
+                    <div class="trust-badge-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            <polyline points="9 12 11 14 15 10"></polyline>
+                        </svg>
+                    </div>
+                    <span class="trust-badge-caption">ضمانت پرداخت امن</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom-row">
+            <div class="footer-copyright-text">
+                © تمام حقوق برای سامانه فریلنسری محفوظ است
+            </div>
+            <div class="footer-social-icons">
+                <a href="javascript:void(0)" class="social-icon-btn" title="تلگرام">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </a>
+                <a href="javascript:void(0)" class="social-icon-btn" title="اینستاگرام">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </a>
+                <a href="javascript:void(0)" class="social-icon-btn" title="ایکس (توییتر)">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                    </svg>
+                </a>
+                <a href="javascript:void(0)" class="social-icon-btn" title="لینکدین">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                        <rect x="2" y="9" width="4" height="12"></rect>
+                        <circle cx="4" cy="4" r="2"></circle>
+                    </svg>
+                </a>
+                <a href="javascript:void(0)" class="social-icon-btn" title="یوتیوب">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+{% endblock %}
