@@ -256,25 +256,33 @@
                     {% if projects %}
                         {% for proj in projects %}
                             <div class="project-card">
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px;">
+                                <div class="project-card-header">
                                     <h4 class="project-title">{{ proj.title }}</h4>
-                                    <span class="badge-pricing">
-                                        {% if proj.pricing_type == 'FIXED_PRICE' %}
-                                            قیمت ثابت: {{ proj.budget|floatformat:0 }} تومان
-                                        {% else %}
-                                            ساعتی: {{ proj.budget|floatformat:0 }} ت/ساعت
-                                        {% endif %}
-                                    </span>
+                                    <div class="badge-pricing">
+                                        <span>🏷️</span>
+                                        <span>
+                                            {% if proj.pricing_type == 'FIXED_PRICE' %}
+                                                قیمت ثابت:
+                                            {% else %}
+                                                نرخ ساعتی:
+                                            {% endif %}
+                                        </span>
+                                        <span class="pricing-amount">{{ proj.budget|floatformat:0 }} تومان</span>
+                                    </div>
                                 </div>
 
                                 <p class="project-desc">
                                     {{ proj.description }}
                                 </p>
 
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px solid #f7eff3; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; gap: 10px;">
-                                    <span>👤 کارفرما: <strong>{{ proj.employer.full_name }}</strong></span>
+                                <div class="project-card-footer">
+                                    <div class="employer-badge">
+                                        <span>👤</span>
+                                        <span>کارفرما: <strong>{{ proj.employer.full_name }}</strong></span>
+                                    </div>
                                     <button class="btn-bid" onclick="alert('قابلیت ارسال پیشنهاد در فاز بعدی فعال خواهد شد!')">
-                                        ارسال پیشنهاد همکاری 
+                                        <span>ارسال پیشنهاد همکاری</span>
+                                        <span>🚀</span>
                                     </button>
                                 </div>
                             </div>

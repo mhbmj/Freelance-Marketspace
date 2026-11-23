@@ -799,3 +799,156 @@ body {
     background: #047857;
     transform: translateY(-1px);
 }
+
+/* ==========================================================================
+   Skills Pills Widget in Sidebar (کادر قشنگ صورتی کمرنگ برای مهارت‌ها)
+   ========================================================================== */
+.user-skill-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: #fdf2f8;           /* صورتی بسیار ملایم پاستلی */
+    border: 1.5px solid #fbcfe8;   /* کادر صورتی کمرنگ */
+    color: #be185d;               /* رنگ نوشته زرشکی صورتی شکیل */
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(244, 114, 182, 0.12);
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.user-skill-pill:hover {
+    background: #fce7f3;
+    border-color: #f472b6;
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 10px rgba(244, 114, 182, 0.2);
+}
+
+/* ==========================================================================
+   Project Cards & Yellow Bid Button (کارت پروژه، قیمت زیبا و دکمه زرد)
+   ========================================================================== */
+.projects-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.project-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1.5px solid var(--border-card);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s ease;
+}
+
+.project-card:hover {
+    border-color: #fbcfe8;
+    box-shadow: 0 8px 24px rgba(244, 114, 182, 0.14);
+    transform: translateY(-2px);
+}
+
+.project-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.project-title {
+    font-size: 16.5px;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+/* Price Badge - قشنگ‌تر و هماهنگ با تم پاستلی */
+.badge-pricing {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: #fffdf2;
+    border: 1px solid var(--pastel-yellow-border);
+    color: #854d0e;
+    font-size: 12.5px;
+    font-weight: 600;
+    border-radius: 20px;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(234, 179, 8, 0.1);
+}
+
+.badge-pricing .pricing-amount {
+    font-weight: 800;
+    color: #713f12;
+}
+
+.project-desc {
+    font-size: 13.5px;
+    color: #4b3f46;
+    line-height: 1.85;
+    margin-bottom: 16px;
+}
+
+/* Card Footer */
+.project-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    border-top: 1px solid #fbf4f7;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.employer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    background: #fdfafc;
+    border: 1px solid #f5eaef;
+    padding: 5px 12px;
+    border-radius: 8px;
+}
+
+.employer-badge strong {
+    color: var(--text-main);
+}
+
+/* Button: دکمه زرد پاستلی ارسال پیشنهاد همکاری (بزرگ‌تر و جذاب‌تر) */
+.btn-bid {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
+    border: 1.5px solid #facc15;
+    color: #713f12;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(234, 179, 8, 0.28);
+    transition: all 0.2s ease;
+    text-decoration: none;
+    line-height: 1.4;
+}
+
+.btn-bid:hover {
+    background: linear-gradient(135deg, #fef9c3 0%, #fde047 100%);
+    box-shadow: 0 6px 20px rgba(234, 179, 8, 0.38);
+    transform: translateY(-2px);
+    color: #552f0a;
+}
+
+.btn-bid:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(234, 179, 8, 0.2);
+}
