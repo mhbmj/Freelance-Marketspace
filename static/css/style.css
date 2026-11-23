@@ -18,6 +18,13 @@
     --pastel-yellow-light: #fef9c3; /* Yellow 100 */
     --pastel-yellow-border: #fef08a;
 
+    /* Accent Teal/Cyan Palette (#18bead) برای نقاط مهم و ظریف */
+    --accent-teal: #18bead;
+    --accent-teal-hover: #14a092;
+    --accent-teal-dark: #0f8a7e;
+    --accent-teal-soft: rgba(24, 190, 173, 0.09);
+    --accent-teal-border: rgba(24, 190, 173, 0.28);
+
     --bg-gradient: linear-gradient(135deg, #fffdf8 0%, #fdf2f8 45%, #fefce8 100%);
     --button-gradient: linear-gradient(135deg, #f472b6 0%, #fb7185 100%);
     --top-accent: linear-gradient(90deg, #fbcfe8 0%, #fef08a 100%);
@@ -1261,4 +1268,207 @@ body {
     box-shadow: 0 6px 16px rgba(234, 179, 8, 0.32);
     transform: translateY(-1px);
     color: #552f0a;
+}
+
+
+/* ==========================================================================
+   Help Dropdown Menu (منوی آبشاری راهنما مطابق تصویر)
+   ========================================================================== */
+.help-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 220px;
+    background: #ffffff;
+    border: 1.5px solid var(--border-card);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    padding: 8px 0;
+    display: none;
+    z-index: 1050;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.nav-dropdown-wrapper:hover .help-dropdown-menu {
+    display: block;
+}
+
+.help-dropdown-item {
+    display: block;
+    padding: 11px 18px;
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    text-align: right;
+}
+
+.help-dropdown-item:hover {
+    background: var(--pastel-pink-soft);
+    color: #be185d;
+    padding-right: 22px;
+}
+
+/* ==========================================================================
+   Site Footer (فوتر سایت مطابق پونیشا - تم سفید مینیمال پاستلی)
+   ========================================================================== */
+.site-footer {
+    width: 100%;
+    background: #ffffff;
+    border: 1.5px solid var(--border-card);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-minimal);
+    padding: 32px 30px 22px;
+    margin-top: 40px;
+    direction: rtl;
+}
+
+.footer-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding-bottom: 24px;
+}
+
+.footer-brand-links-side {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.footer-brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.footer-logo-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--accent-teal-soft);
+    border: 1.5px solid var(--accent-teal-border);
+    color: var(--accent-teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.footer-brand-name {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.3px;
+}
+
+.footer-nav-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-link-item {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.footer-link-item:hover {
+    color: var(--accent-teal);
+}
+
+/* Trust Badge Card (مورد تایید) */
+.trust-badge-card {
+    position: relative;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px 22px 18px;
+    background: #ffffff;
+    text-align: center;
+    min-width: 130px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.trust-badge-label {
+    position: absolute;
+    top: -10px;
+    background: #ffffff;
+    padding: 0 10px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+.trust-badge-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--accent-teal-soft);
+    border: 1px solid var(--accent-teal-border);
+    color: var(--accent-teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.trust-badge-caption {
+    font-size: 11px;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+/* Footer Bottom Bar */
+.footer-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--border-card);
+}
+
+.footer-copyright-text {
+    font-size: 12.5px;
+    color: var(--text-muted);
+}
+
+.footer-social-icons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.social-icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.social-icon-btn:hover {
+    color: var(--accent-teal);
+    background: var(--accent-teal-soft);
+    transform: translateY(-2px);
 }
