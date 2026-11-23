@@ -20,12 +20,15 @@ from .rate_limit import (
 
 
 def login_view(request):
-    """صفحه ورود با محدودیت نرخ درخواست برای رمز عبور اشتباه (Rate Limit - HTTP 429)"""
+    """صفحه ورود با پشتیبانی از قابلیت 'مرا به خاطر بسپار' و محدودیت نرخ درخواست"""
     if request.user.is_authenticated:
-        return redirect('welcome')
+        return redirect('dashboard')
+
+    remembered_email = request.COOKIES.get('remembered_email', 'mahtabmj96@gmail.com')
 
     if request.method == 'POST':
         email = request.POST.get('email', '').strip().lower()
+        remember_me = request.POST.get('remember_me')
 
         # ۱. بررسی اینکه آیا کاربر قبلاً به دلیل ۵ بار اشتباه در رمز عبور قفل شده است
         if is_login_rate_limited(email):
@@ -39,10 +42,25 @@ def login_view(request):
             user = form.cleaned_data['user']
             reset_login_attempts(email)  # ریست شمارنده در ورود موفق
             login(request, user)  # حفظ وضعیت سشن کاربر
+
+            # قابلیت «مرا به خاطر بسپار»: تنظیم طول عمر نشست
+            if remember_me:
+                request.session.set_expiry(60 * 60 * 24 * 30)  # ذخیره ۳۰ روزه
+            else:
+                request.session.set_expiry(0)  # انقضا با بستن مرورگر
+
             messages.success(request, f'خوش آمدید، {user.full_name}!')
+
             if not user.username or not user.role:
-                return redirect('select_role')
-            return redirect('dashboard')
+                response = redirect('select_role')
+            else:
+                response = redirect('dashboard')
+
+            # ذخیره یا تمدید کوکی ایمیل برای پیشنهاد خودکار در ورودهای بعدی
+            if remember_me:
+                response.set_cookie('remembered_email', user.email, max_age=60 * 60 * 24 * 30)
+
+            return response
         else:
             # فقط در صورتی که کاربر در سیستم وجود داشته باشد و رمز اشتباه زده شود (کنترل Rate Limit فقط برای پسورد)
             if email and User.objects.filter(email=email).exists():
@@ -53,9 +71,15 @@ def login_view(request):
                         'wait_minutes': 5
                     }, status=429)
     else:
-        form = LoginForm()
+        initial_data = {}
+        if remembered_email:
+            initial_data['email'] = remembered_email
+        form = LoginForm(initial=initial_data)
 
-    return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'accounts/login.html', {
+        'form': form,
+        'remembered_email': remembered_email,
+    })
 
 
 def signup_view(request):

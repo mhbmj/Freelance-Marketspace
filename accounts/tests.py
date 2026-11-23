@@ -15,7 +15,7 @@ class AuthenticationTests(TestCase):
     def setUp(self):
         cache.clear()
         self.client = Client()
-        self.user_password = 'ValidPassword123'
+        self.user_password = 'msm*2002'
         self.user = User.objects.create_user(
             first_name='مهتاب',
             last_name='مروج',
@@ -131,6 +131,18 @@ class AuthenticationTests(TestCase):
         # بررسی حفظ سشن
         self.assertTrue('_auth_user_id' in self.client.session)
         self.assertEqual(int(self.client.session['_auth_user_id']), self.user.pk)
+
+    def test_remember_me_cookie_and_session_expiry(self):
+        """بررسی عملکرد تیک مرا به خاطر بسپار و تنظیم کوکی ایمیل و سشن ۳۰ روزه"""
+        login_url = reverse('login')
+        res = self.client.post(login_url, {
+            'email': 'mahtabmj96@gmail.com',
+            'password': self.user_password,
+            'remember_me': 'on'
+        }, follow=False)
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('remembered_email', res.cookies)
+        self.assertEqual(res.cookies['remembered_email'].value, 'mahtabmj96@gmail.com')
 
     def test_login_invalid_password_shows_generic_error(self):
         """ورود ناموفق با رمز اشتباه بدون افشای اینکه کدام بخش اشتباه است"""

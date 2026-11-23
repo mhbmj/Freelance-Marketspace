@@ -29,11 +29,17 @@
     <form method="post" action="{% url 'login' %}" novalidate>
         {% csrf_token %}
 
-        <!-- فیلد ایمیل -->
+        <!-- فیلد ایمیل با پیشنهاد خودکار -->
         <div class="form-group">
             <label for="email" class="form-label">آدرس ایمیل</label>
             <div class="input-wrapper">
-                {{ form.email }}
+                <input type="email" name="email" value="{{ form.email.value|default:remembered_email|default:'' }}" class="form-input" placeholder="example@email.com" id="email" autocomplete="username email" list="email-suggestions" required>
+                <datalist id="email-suggestions">
+                    <option value="mahtabmj96@gmail.com">
+                    {% if remembered_email and remembered_email != 'mahtabmj96@gmail.com' %}
+                        <option value="{{ remembered_email }}">
+                    {% endif %}
+                </datalist>
             </div>
             {% if form.email.errors %}
                 <small style="color: var(--danger); font-size: 12px; margin-top: 4px; display: block;">
@@ -46,7 +52,7 @@
         <div class="form-group">
             <label for="password" class="form-label">رمز عبور</label>
             <div class="input-wrapper">
-                {{ form.password }}
+                <input type="password" name="password" class="form-input input-with-toggle" placeholder="رمز عبور خود را وارد کنید" id="password" autocomplete="current-password" required>
                 <button type="button" class="password-toggle-btn" data-target="password" title="نمایش/مخفی‌کردن رمز عبور" aria-label="نمایش/مخفی‌کردن رمز عبور">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -61,8 +67,12 @@
             {% endif %}
         </div>
 
-        <!-- لینک فراموشی رمز عبور -->
-        <div class="form-extra">
+        <!-- چک‌باکس مرا به خاطر بسپار و لینک فراموشی رمز عبور -->
+        <div class="form-extra" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px;">
+            <label class="remember-me-label" style="display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--text-muted); cursor: pointer; user-select: none;">
+                <input type="checkbox" name="remember_me" id="remember_me" {% if remembered_email %}checked{% endif %} style="accent-color: var(--pastel-pink); width: 15px; height: 15px; cursor: pointer;">
+                <span>مرا به خاطر بسپار</span>
+            </label>
             <a href="{% url 'forgot_password' %}" class="link-pink">رمز عبور را فراموش کرده‌اید؟</a>
         </div>
 
