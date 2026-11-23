@@ -648,14 +648,14 @@ body {
     gap: 20px;
 }
 
-/* Welcome Announcement Banner */
+/* Welcome Announcement Banner (کارت اعلان سفید مینیمال پاستلی - بدون رنگ سبز) */
 .welcome-announcement-card {
-    background: #f0fdf4;
-    border: 1px solid #bbf7d0;
+    background: #ffffff;
+    border: 1.5px solid var(--border-card);
     border-radius: var(--radius-card);
     padding: 24px 26px;
     position: relative;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+    box-shadow: var(--shadow-minimal);
 }
 
 .announcement-close-btn {
@@ -665,25 +665,26 @@ body {
     background: transparent;
     border: none;
     font-size: 20px;
-    color: #6b7280;
+    color: #9ca3af;
     cursor: pointer;
     line-height: 1;
+    transition: color 0.15s ease;
 }
 
 .announcement-close-btn:hover {
-    color: #111827;
+    color: var(--text-main);
 }
 
 .announcement-title {
     font-size: 18px;
     font-weight: 800;
-    color: #065f46;
+    color: var(--text-main);
     margin-bottom: 10px;
 }
 
 .announcement-text {
     font-size: 13.5px;
-    color: #1e3a2f;
+    color: var(--text-muted);
     line-height: 1.8;
     margin-bottom: 14px;
 }
@@ -691,7 +692,7 @@ body {
 .announcement-list {
     list-style: none;
     font-size: 13px;
-    color: #1e3a2f;
+    color: var(--text-main);
     line-height: 2;
 }
 
@@ -704,7 +705,7 @@ body {
     content: '•';
     position: absolute;
     right: 0;
-    color: #059669;
+    color: var(--pastel-pink);
     font-weight: bold;
     font-size: 16px;
 }
@@ -744,21 +745,52 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-/* Empty State Card */
+/* Sub-tabs for Proposals (پیشنهادهای فعال، غیرفعال، همه) */
+.subtabs-nav-bar {
+    display: flex;
+    border-bottom: 2px solid #f0e4ea;
+    margin-bottom: 20px;
+    gap: 24px;
+    direction: rtl;
+}
+
+.subtab-item {
+    padding: 10px 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s ease;
+}
+
+.subtab-item:hover {
+    color: var(--text-main);
+}
+
+.subtab-item.active {
+    color: #be185d;
+    border-bottom-color: var(--pastel-pink);
+}
+
+/* Empty State Card (کارت سفید تمیز و شکیل - بدون رنگ سبز) */
 .empty-state-card {
-    background: #f0fdf4;
-    border: 1px solid #bbf7d0;
+    background: #ffffff;
+    border: 1.5px solid var(--border-card);
     border-radius: var(--radius-card);
     padding: 42px 24px;
     text-align: center;
+    box-shadow: var(--shadow-minimal);
 }
 
 .empty-state-icon {
     width: 60px;
     height: 60px;
     border-radius: 14px;
-    background: #dcfce7;
-    color: #059669;
+    background: #fdf2f8;
+    color: #be185d;
+    border: 1px solid #fbcfe8;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -769,13 +801,13 @@ body {
 .empty-state-title {
     font-size: 17px;
     font-weight: 800;
-    color: #065f46;
+    color: var(--text-main);
     margin-bottom: 8px;
 }
 
 .empty-state-subtitle {
     font-size: 13.5px;
-    color: #166534;
+    color: var(--text-muted);
     line-height: 1.7;
     max-width: 480px;
     margin: 0 auto 20px;
@@ -784,20 +816,54 @@ body {
 .btn-view-projects {
     display: inline-block;
     padding: 11px 26px;
-    background: #059669;
-    color: #ffffff;
-    border-radius: 8px;
+    background: linear-gradient(135deg, #fef08a 0%, #ffe86f 100%);
+    border: 1.5px solid #facc15;
+    color: #713f12;
+    border-radius: 10px;
     font-size: 13.5px;
     font-weight: 700;
     text-decoration: none;
-    border: none;
     cursor: pointer;
-    transition: background 0.15s ease, transform 0.1s ease;
+    box-shadow: 0 4px 12px rgba(234, 179, 8, 0.2);
+    transition: all 0.2s ease;
 }
 
 .btn-view-projects:hover {
-    background: #047857;
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #fef9c3 0%, #fde047 100%);
+    box-shadow: 0 6px 18px rgba(234, 179, 8, 0.32);
+    transform: translateY(-2px);
+    color: #552f0a;
+}
+
+/* Empty Tab Box (برای پیشنهادات و محصولات) */
+.empty-tab-box {
+    background: #ffffff;
+    border: 1.5px solid var(--border-card);
+    border-radius: var(--radius-card);
+    padding: 70px 24px;
+    text-align: center;
+    box-shadow: var(--shadow-minimal);
+}
+
+.dots-icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin: 0 auto 16px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.empty-tab-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
 }
 
 /* ==========================================================================
@@ -847,7 +913,7 @@ body {
 .project-card:hover {
     border-color: #fbcfe8;
     box-shadow: 0 8px 24px rgba(244, 114, 182, 0.14);
-    transform: translateY(-2px);
+
 }
 
 .project-card-header {
@@ -872,8 +938,8 @@ body {
     align-items: center;
     gap: 6px;
     padding: 6px 14px;
-    background: #fffdf2;
-    border: 1px solid var(--pastel-yellow-border);
+    background: #18bead17;
+    border: 1px solid 8aecfe0d;
     color: #854d0e;
     font-size: 12.5px;
     font-weight: 600;
@@ -928,8 +994,8 @@ body {
     justify-content: center;
     gap: 8px;
     padding: 10px 24px;
-    background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
-    border: 1.5px solid #facc15;
+    background: linear-gradient(135deg, #fef08a47 0%, #fffdb6 100%);
+    border: 1.5px solid #f6ff9e;
     color: #713f12;
     border-radius: 10px;
     font-size: 13.5px;

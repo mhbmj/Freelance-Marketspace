@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.conf import settings
 
-from .models import User, Category, Skill, UserSkill, Project
+from .models import User, Category, Skill, UserSkill, Project, Proposal
 from .forms import LoginForm, SignupForm, ForgotPasswordForm, ResetPasswordForm, RoleSelectionForm
 from .rate_limit import (
     is_login_rate_limited,
@@ -188,6 +188,13 @@ def dashboard_view(request):
 
     # تب فعال (پروژه‌های من / پیشنهادات / محصولات)
     active_tab = request.GET.get('tab', 'my_projects')
+    active_subtab = request.GET.get('subtab', 'active')
+
+    user_proposals = Proposal.objects.filter(freelancer=user).select_related('project')
+    if active_subtab == 'active':
+        user_proposals = user_proposals.filter(status__in=['PENDING', 'ACCEPTED'])
+    elif active_subtab == 'inactive':
+        user_proposals = user_proposals.filter(status__in=['REJECTED', 'WITHDRAWN'])
 
     # محاسبه اینیشیال آواتار (مانند MA در پونیشا)
     initials = "MA"
@@ -207,8 +214,10 @@ def dashboard_view(request):
         'user': user,
         'user_skills': user_skills,
         'projects': projects,
+        'user_proposals': user_proposals,
         'query': query,
         'active_tab': active_tab,
+        'active_subtab': active_subtab,
         'user_initials': initials,
         'profile_percent': profile_percent,
         'remaining_proposals': 5,

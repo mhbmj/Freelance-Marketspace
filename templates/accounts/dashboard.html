@@ -200,7 +200,7 @@
             </div>
 
             <!-- تب‌های پروژه‌های من / پیشنهادات / محصولات -->
-            <div class="dashboard-tabs-bar">
+            <div class="dashboard-tabs-bar" style="margin-bottom: 20px;">
                 <a href="?tab=my_projects" class="tab-btn {% if active_tab == 'my_projects' %}active{% endif %}">
                     پروژه‌های من
                 </a>
@@ -212,88 +212,146 @@
                 </a>
             </div>
 
-            <!-- کارت وضعیت خالی / اقدام اولیه (Empty State Card مطابق پونیشا) -->
-            <div class="empty-state-card">
-                <div class="empty-state-icon">
-                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                        <path d="M9 14h6"></path>
-                        <path d="M9 10h6"></path>
-                    </svg>
-                </div>
-                <div class="empty-state-title">
-                    تا بحال پروژه‌ای انجام نداده‌اید!
-                </div>
-                <p class="empty-state-subtitle">
-                    بین هزاران پروژه، بر اساس مهارت‌هایتان پروژه مورد نظرتان را پیدا و برای آن پیشنهاد ارسال کنید.
-                </p>
-                <a href="#projects-section" class="btn-view-projects">
-                    مشاهده پروژه‌ها
-                </a>
-            </div>
-
-            <!-- بخش جدیدترین پروژه‌های ثبت‌شده با اتصال واقعی به دیتابیس -->
-            <div id="projects-section" style="margin-top: 10px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
-                    <h3 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0;">
-                        جدیدترین پروژه‌های ثبت‌شده
-                    </h3>
-                    <a href="#projects-section" class="link-pink" style="font-size: 13px; font-weight: 700;">
-                        ← مشاهده همه پروژه‌ها
+            {% if active_tab == 'proposals' %}
+                <!-- ==================== تب پیشنهادات (مطابق تصویر ۴) ==================== -->
+                <!-- زیرتب‌های پیشنهادات بدون رنگ سبز -->
+                <div class="subtabs-nav-bar">
+                    <a href="?tab=proposals&subtab=active" class="subtab-item {% if active_subtab == 'active' %}active{% endif %}">
+                        پیشنهادهای فعال
+                    </a>
+                    <a href="?tab=proposals&subtab=inactive" class="subtab-item {% if active_subtab == 'inactive' %}active{% endif %}">
+                        پیشنهادهای غیرفعال
+                    </a>
+                    <a href="?tab=proposals&subtab=all" class="subtab-item {% if active_subtab == 'all' %}active{% endif %}">
+                        همه پیشنهادها
                     </a>
                 </div>
 
-                <!-- سرچ‌بار پروژه‌ها -->
-                <form method="get" action="{% url 'dashboard' %}" style="display: flex; gap: 8px; margin-bottom: 16px;">
-                    <input type="text" name="q" value="{{ query }}" placeholder="جستجو در عنوان پروژه‌ها..." class="form-input" style="padding: 10px 14px; font-size: 13px;">
-                    <button type="submit" class="btn-pink" style="width: auto; padding: 10px 18px; font-size: 13px;">
-                        جستجو
-                    </button>
-                </form>
-
-                <div class="projects-grid">
-                    {% if projects %}
-                        {% for proj in projects %}
+                {% if user_proposals %}
+                    <div class="projects-grid">
+                        {% for pr in user_proposals %}
                             <div class="project-card">
                                 <div class="project-card-header">
-                                    <h4 class="project-title">{{ proj.title }}</h4>
+                                    <h4 class="project-title">{{ pr.project.title }}</h4>
                                     <div class="badge-pricing">
-                                        <span>🏷️</span>
-                                        <span>
-                                            {% if proj.pricing_type == 'FIXED_PRICE' %}
-                                                قیمت ثابت:
-                                            {% else %}
-                                                نرخ ساعتی:
-                                            {% endif %}
-                                        </span>
-                                        <span class="pricing-amount">{{ proj.budget|floatformat:0 }} تومان</span>
+                                        <span>مبلغ پیشنهادی:</span>
+                                        <span class="pricing-amount">{{ pr.bid_amount|floatformat:0 }} تومان</span>
                                     </div>
                                 </div>
-
-                                <p class="project-desc">
-                                    {{ proj.description }}
-                                </p>
-
+                                <p class="project-desc">{{ pr.cover_letter }}</p>
                                 <div class="project-card-footer">
-                                    <div class="employer-badge">
-                                        <span>👤</span>
-                                        <span>کارفرما: <strong>{{ proj.employer.full_name }}</strong></span>
-                                    </div>
-                                    <button class="btn-bid" onclick="alert('قابلیت ارسال پیشنهاد در فاز بعدی فعال خواهد شد!')">
-                                        <span>ارسال پیشنهاد همکاری</span>
-                                        <span>🚀</span>
-                                    </button>
+                                    <span>وضعیت: <strong>{{ pr.get_status_display }}</strong></span>
+                                    <span>مدت تخمینی: {{ pr.estimated_duration|default:1 }} روز</span>
                                 </div>
                             </div>
                         {% endfor %}
-                    {% else %}
-                        <div class="empty-projects-box">
-                            <p>پروژه‌ای مطابق با جستجوی شما یافت نشد.</p>
+                    </div>
+                {% else %}
+                    <!-- کادر سفید بدون پیشنهاد مطابق اسکرین‌شات ۴ -->
+                    <div class="empty-tab-box">
+                        <div class="dots-icon-circle">
+                            <span>···</span>
                         </div>
-                    {% endif %}
+                        <p class="empty-tab-text">
+                            پیشنهادی با این وضعیت یافت نشد.
+                        </p>
+                    </div>
+                {% endif %}
+
+            {% elif active_tab == 'products' %}
+                <!-- ==================== تب محصولات (مطابق تصویر ۵) ==================== -->
+                <!-- کادر سفید محصولات دقیقا با متن پونیشا -->
+                <div class="empty-tab-box" style="padding: 95px 28px;">
+                    <h3 style="font-size: 15.5px; font-weight: 700; color: var(--text-main); line-height: 2.3; max-width: 620px; margin: 0 auto;">
+                        قابلیت مدیریت محصولات در نسخه اول داشبورد موجود نبود، اما به‌زودی در نسخه‌های جدید اضافه خواهد شد. مرسی از شکیبایی شما!
+                    </h3>
                 </div>
-            </div>
+
+            {% else %}
+                <!-- ==================== تب پروژه‌های من (پیش‌فرض) ==================== -->
+                <!-- کارت وضعیت خالی / اقدام اولیه با پس‌زمینه سفید -->
+                <div class="empty-state-card">
+                    <div class="empty-state-icon">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M9 14h6"></path>
+                            <path d="M9 10h6"></path>
+                        </svg>
+                    </div>
+                    <div class="empty-state-title">
+                        تا بحال پروژه‌ای انجام نداده‌اید!
+                    </div>
+                    <p class="empty-state-subtitle">
+                        بین هزاران پروژه، بر اساس مهارت‌هایتان پروژه مورد نظرتان را پیدا و برای آن پیشنهاد ارسال کنید.
+                    </p>
+                    <a href="#projects-section" class="btn-view-projects">
+                        مشاهده پروژه‌ها
+                    </a>
+                </div>
+
+                <!-- بخش جدیدترین پروژه‌های ثبت‌شده با اتصال واقعی به دیتابیس -->
+                <div id="projects-section" style="margin-top: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                        <h3 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0;">
+                            جدیدترین پروژه‌های ثبت‌شده
+                        </h3>
+                        <a href="#projects-section" class="link-pink" style="font-size: 13px; font-weight: 700;">
+                            ← مشاهده همه پروژه‌ها
+                        </a>
+                    </div>
+
+                    <!-- سرچ‌بار پروژه‌ها -->
+                    <form method="get" action="{% url 'dashboard' %}" style="display: flex; gap: 8px; margin-bottom: 16px;">
+                        <input type="text" name="q" value="{{ query }}" placeholder="جستجو در عنوان پروژه‌ها..." class="form-input" style="padding: 10px 14px; font-size: 13px;">
+                        <button type="submit" class="btn-pink" style="width: auto; padding: 10px 18px; font-size: 13px;">
+                            جستجو
+                        </button>
+                    </form>
+
+                    <div class="projects-grid">
+                        {% if projects %}
+                            {% for proj in projects %}
+                                <div class="project-card">
+                                    <div class="project-card-header">
+                                        <h4 class="project-title">{{ proj.title }}</h4>
+                                        <div class="badge-pricing">
+                                            <span>🏷️</span>
+                                            <span>
+                                                {% if proj.pricing_type == 'FIXED_PRICE' %}
+                                                    قیمت ثابت:
+                                                {% else %}
+                                                    نرخ ساعتی:
+                                                {% endif %}
+                                            </span>
+                                            <span class="pricing-amount">{{ proj.budget|floatformat:0 }} تومان</span>
+                                        </div>
+                                    </div>
+
+                                    <p class="project-desc">
+                                        {{ proj.description }}
+                                    </p>
+
+                                    <div class="project-card-footer">
+                                        <div class="employer-badge">
+                                            <span>👤</span>
+                                            <span>کارفرما: <strong>{{ proj.employer.full_name }}</strong></span>
+                                        </div>
+                                        <button class="btn-bid" onclick="alert('قابلیت ارسال پیشنهاد در فاز بعدی فعال خواهد شد!')">
+                                            <span>ارسال پیشنهاد همکاری</span>
+                                            <span>🚀</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="empty-projects-box">
+                                <p>پروژه‌ای مطابق با جستجوی شما یافت نشد.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
 
         </main>
 
