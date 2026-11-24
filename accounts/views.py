@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib import messages
 from django.conf import settings
+from django.db.models import Q
 
 from .models import User, Category, Skill, UserSkill, Project, Proposal
 from .forms import LoginForm, SignupForm, ForgotPasswordForm, ResetPasswordForm, RoleSelectionForm
@@ -34,9 +35,9 @@ def home_view(request):
 
 
 def login_view(request):
-    """صفحه ورود با پشتیبانی از قابلیت 'مرا به خاطر بسپار' و محدودیت نرخ درخواست"""
+    """صفحه ورود با پشتیبانی از قابلیت 'مرا به خاطر بسپار'، هدایت به صفحه اصلی و محدودیت نرخ درخواست"""
     if request.user.is_authenticated:
-        return redirect('dashboard')
+        return redirect('home')
 
     remembered_email = request.COOKIES.get('remembered_email', 'mahtabmj96@gmail.com')
 
@@ -63,12 +64,10 @@ def login_view(request):
             else:
                 request.session.set_expiry(0)  # انقضا با بستن مرورگر
 
-            messages.success(request, f'خوش آمدید، {user.full_name}!')
-
             if not user.username or not user.role:
                 response = redirect('select_role')
             else:
-                response = redirect('dashboard')
+                response = redirect('home')  # هدایت مستقیم به صفحه اصلی طبق درخواست کاربر
 
             # ذخیره یا تمدید کوکی ایمیل برای پیشنهاد خودکار در ورودهای بعدی
             if remember_me:
@@ -124,11 +123,9 @@ def select_role_view(request):
             user.role = form.cleaned_data['role']
             user.save()
             if user.role == 'FREELANCER':
-                messages.success(request, 'لطفاً حوزه‌های فعالیت و تخصص‌های خود را مشخص نمایید.')
                 return redirect('onboarding_categories')
             else:
-                messages.success(request, 'حساب کارفرما فعال گردید! به داشبورد خوش آمدید.')
-                return redirect('dashboard')
+                return redirect('home')
     else:
         form = RoleSelectionForm(user=user, initial={
             'username': user.username or '',
@@ -177,8 +174,7 @@ def onboarding_skills_view(request):
                 except Skill.DoesNotExist:
                     pass
 
-            messages.success(request, 'مهارت‌های شما با موفقیت ثبت شد و حساب کاربری تکمیل گردید!')
-            return redirect('dashboard')
+            return redirect('home')
 
     user_skills_ids = list(UserSkill.objects.filter(user=user).values_list('skill_id', flat=True))
     return render(request, 'accounts/onboarding_skills.html', {
@@ -243,6 +239,42 @@ def dashboard_view(request):
 def welcome_view(request):
     """ریدایرکت به داشبورد اصلی"""
     return redirect('dashboard')
+
+
+def projects_list_view(request):
+    """صفحه لیست تمام پروژه‌های باز با نوار افقی فیلتر و قابلیت جستجو"""
+    projects = Project.objects.filter(status='OPEN').select_related('employer').prefetch_related('projectskill_set__skill', 'projectcategory_set__category').order_by('-created_at')
+
+    # ۱. جستجو در عنوان و توضیحات پروژه
+    query = request.GET.get('q', '').strip()
+    if query:
+        projects = projects.filter(Q(title__icontains=query) | Q(description__icontains=query))
+
+    # ۲. فیلتر دسته‌بندی
+    category_id = request.GET.get('category', '').strip()
+    if category_id and category_id.isdigit():
+        projects = projects.filter(projectcategory__category_id=int(category_id))
+
+    # ۳. فیلتر نوع قیمت‌گذاری (ثابت یا ساعتی)
+    pricing_type = request.GET.get('pricing_type', '').strip()
+    if pricing_type in ['FIXED_PRICE', 'HOURLY']:
+        projects = projects.filter(pricing_type=pricing_type)
+
+    categories = Category.objects.all().order_by('id')
+
+    initials = "MA"
+    if request.user.is_authenticated and request.user.first_name and request.user.last_name:
+        initials = (request.user.first_name[0] + request.user.last_name[0]).upper()
+
+    return render(request, 'accounts/projects_list.html', {
+        'projects': projects,
+        'categories': categories,
+        'query': query,
+        'selected_category': int(category_id) if category_id and category_id.isdigit() else None,
+        'selected_pricing_type': pricing_type,
+        'total_count': projects.count(),
+        'user_initials': initials,
+    })
 
 
 def forgot_password_view(request):

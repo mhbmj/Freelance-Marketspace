@@ -108,7 +108,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Authentication URLs
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'welcome'
+LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
 
 # Email backend: prints password reset emails directly to console for development

@@ -109,7 +109,7 @@
                                 <div class="mega-card-desc">بین هزاران پروژه، بر اساس مهارت‌هایتان پروژه پیدا کرده و پیشنهاد بفرستید.</div>
                             </a>
 
-                            <a href="{% url 'dashboard' %}" class="mega-card">
+                            <a href="{% url 'projects_list' %}" class="mega-card">
                                 <div class="mega-card-icon">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
@@ -224,8 +224,8 @@
                 با <span class="highlight-teal">برترین متخصصان</span>
             </h1>
 
-            <!-- باکس سرچ هیرو -->
-            <form method="get" action="{% url 'dashboard' %}" class="hero-search-wrapper">
+            <!-- باکس سرچ هیرو متصل به صفحه پروژه‌ها -->
+            <form method="get" action="{% url 'projects_list' %}" class="hero-search-wrapper">
                 <input type="text" name="q" class="hero-search-input" placeholder="جستجو مهارت، پروژه و متخصص ...">
                 <button type="submit" class="hero-search-btn">
                     جستجو
@@ -313,7 +313,7 @@
             <h3 style="font-size: 20px; font-weight: 800; color: var(--text-main); margin: 0;">
                 جدیدترین پروژه‌های ثبت‌شده
             </h3>
-            <a href="{% url 'dashboard' %}" class="link-pink" style="font-size: 13.5px; font-weight: 700; text-decoration: none;">
+            <a href="{% url 'projects_list' %}" class="link-pink" style="font-size: 13.5px; font-weight: 700; text-decoration: none;">
                 ← مشاهده همه پروژه‌ها
             </a>
         </div>

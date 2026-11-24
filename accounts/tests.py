@@ -127,7 +127,7 @@ class AuthenticationTests(TestCase):
         }
         response = self.client.post(reverse('login'), login_data, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'مهتاب مروج')
+        self.assertContains(response, 'داشبورد من')
 
         # بررسی حفظ سشن
         self.assertTrue('_auth_user_id' in self.client.session)
@@ -321,12 +321,11 @@ class AuthenticationTests(TestCase):
         }, follow=True)
         self.assertEqual(res_cat.status_code, 200)
 
-        # ۲. ارسال مهارت‌ها
+        # ۲. ارسال مهارت‌ها و هدایت به صفحه اصلی
         res_skill = self.client.post(reverse('onboarding_skills'), {
             'skills': [skill.id]
         }, follow=True)
         self.assertEqual(res_skill.status_code, 200)
-        self.assertContains(res_skill, 'PythonTest')
 
         # ۳. بررسی ذخیره در جدول user_skills
         self.assertTrue(UserSkill.objects.filter(user=self.user, skill=skill).exists())
@@ -337,4 +336,35 @@ class AuthenticationTests(TestCase):
         res = self.client.get(reverse('dashboard'))
         self.assertEqual(res.status_code, 200)
         self.assertContains(res, 'جدیدترین پروژه‌های ثبت‌شده')
+
+    # ------------------------------------------------------------------------
+    # ۶. آزمون‌های صفحه لیست پروژه‌ها و جستجو (/projects/)
+    # ------------------------------------------------------------------------
+    def test_projects_list_view_and_search(self):
+        """مشاهده صفحه اختصاصی پروژه‌ها، جستجو و فیلترها"""
+        from accounts.models import Project
+        Project.objects.create(
+            employer=self.user,
+            title='پروژه تست پایتون و جنگو',
+            description='توضیحات تستی برای اعتبارسنجی جستجو',
+            pricing_type='FIXED_PRICE',
+            budget=10000000,
+            status='OPEN'
+        )
+
+        # دسترسی بدون لاگین (مهمان)
+        res_guest = self.client.get(reverse('projects_list'))
+        self.assertEqual(res_guest.status_code, 200)
+        self.assertContains(res_guest, 'پروژه‌های باز و آماده همکاری')
+        self.assertContains(res_guest, 'پروژه تست پایتون و جنگو')
+
+        # تست جستجو با کلمه کلیدی
+        res_search = self.client.get(reverse('projects_list') + '?q=جنگو')
+        self.assertEqual(res_search.status_code, 200)
+        self.assertContains(res_search, 'پروژه تست پایتون و جنگو')
+
+        # تست جستجو با کلمه ناموجود
+        res_not_found = self.client.get(reverse('projects_list') + '?q=کلمه_کاملا_ناموجود_xyz')
+        self.assertEqual(res_not_found.status_code, 200)
+        self.assertContains(res_not_found, 'هیچ پروژه‌ای مطابق با فیلترهای انتخابی یافت نشد')
 

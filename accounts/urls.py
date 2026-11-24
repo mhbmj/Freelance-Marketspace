@@ -9,6 +9,7 @@ urlpatterns = [
     path('onboarding/categories/', views.onboarding_categories_view, name='onboarding_categories'),
     path('onboarding/skills/', views.onboarding_skills_view, name='onboarding_skills'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('projects/', views.projects_list_view, name='projects_list'),
     path('forgot-password/', views.forgot_password_view, name='forgot_password'),
     path('password-reset/done/', views.password_reset_done_view, name='password_reset_done'),
     path('password-reset/<uidb64>/<token>/', views.reset_password_confirm_view, name='reset_password'),

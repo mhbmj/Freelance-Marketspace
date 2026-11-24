@@ -115,7 +115,7 @@
                             </a>
 
                             <!-- کارت ۲: مشاهده پروژه‌ها -->
-                            <a href="javascript:void(0)" class="mega-card" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">
+                            <a href="{% url 'projects_list' %}" class="mega-card">
                                 <div class="mega-card-icon">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
@@ -490,7 +490,7 @@
                     <p class="empty-state-subtitle">
                         بین هزاران پروژه، بر اساس مهارت‌هایتان پروژه مورد نظرتان را پیدا و برای آن پیشنهاد ارسال کنید.
                     </p>
-                    <a href="#projects-section" class="btn-view-projects">
+                    <a href="{% url 'projects_list' %}" class="btn-view-projects">
                         مشاهده پروژه‌ها
                     </a>
                 </div>
@@ -501,7 +501,7 @@
                         <h3 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0;">
                             جدیدترین پروژه‌های ثبت‌شده
                         </h3>
-                        <a href="#projects-section" class="link-pink" style="font-size: 13px; font-weight: 700;">
+                        <a href="{% url 'projects_list' %}" class="link-pink" style="font-size: 13px; font-weight: 700;">
                             ← مشاهده همه پروژه‌ها
                         </a>
                     </div>
