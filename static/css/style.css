@@ -2003,3 +2003,145 @@ body {
     font-weight: 700;
     box-shadow: 0 2px 6px rgba(244, 114, 182, 0.15);
 }
+
+/* ==========================================================================
+   Terms and Conditions Page Styles (قوانین و مقررات مطابق پونیشا)
+   ========================================================================== */
+.terms-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 26px;
+    align-items: start;
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+    .terms-layout {
+        grid-template-columns: 1fr;
+    }
+    .terms-toc-card {
+        display: none;
+    }
+}
+
+.terms-toc-card {
+    position: sticky;
+    top: 84px;
+    background: #ffffff;
+    border-radius: var(--radius-card);
+    border: 1.5px solid var(--border-card);
+    box-shadow: var(--shadow-minimal);
+    padding: 22px 18px;
+}
+
+.terms-toc-title {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--border-card);
+}
+
+.terms-toc-link {
+    display: block;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    transition: all 0.15s ease;
+}
+
+.terms-toc-link:hover {
+    background: var(--pastel-pink-soft);
+    color: #be185d;
+    padding-right: 16px;
+}
+
+.terms-section-card {
+    background: #ffffff;
+    border-radius: var(--radius-card);
+    border: 1.5px solid var(--border-card);
+    box-shadow: var(--shadow-minimal);
+    padding: 32px 34px;
+    margin-bottom: 22px;
+    scroll-margin-top: 84px;
+    position: relative;
+    overflow: hidden;
+}
+
+.terms-section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f9eff4;
+}
+
+.term-num-badge {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--pastel-yellow-light);
+    border: 1px solid var(--pastel-yellow-border);
+    color: #854d0e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.terms-section-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.terms-text {
+    font-size: 13.5px;
+    color: #4b3f46;
+    line-height: 2;
+    margin-bottom: 14px;
+    text-align: justify;
+}
+
+.terms-list {
+    list-style: none;
+    font-size: 13.5px;
+    color: #4b3f46;
+    line-height: 2.1;
+    margin-bottom: 14px;
+}
+
+.terms-list li {
+    position: relative;
+    padding-right: 18px;
+    margin-bottom: 6px;
+}
+
+.terms-list li::before {
+    content: '•';
+    position: absolute;
+    right: 0;
+    color: var(--pastel-pink);
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.terms-highlight-box {
+    background: #fdfafc;
+    border: 1px solid var(--border-card);
+    border-right: 4px solid var(--accent-teal);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 13px;
+    color: #372f35;
+    line-height: 1.8;
+}

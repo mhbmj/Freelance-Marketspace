@@ -368,3 +368,11 @@ class AuthenticationTests(TestCase):
         self.assertEqual(res_not_found.status_code, 200)
         self.assertContains(res_not_found, 'هیچ پروژه‌ای مطابق با فیلترهای انتخابی یافت نشد')
 
+    def test_terms_view_accessible_for_all(self):
+        """مشاهده صفحه قوانین و مقررات پلتفرم مطابق پونیشا"""
+        res = self.client.get(reverse('terms'))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, 'قوانین و مقررات سامانه فریلنسری')
+        self.assertContains(res, 'سیستم پرداخت امن (صندوق امانی - Escrow)')
+        self.assertContains(res, 'فرآیند حل اختلاف و داوری')
+

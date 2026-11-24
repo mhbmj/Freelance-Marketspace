@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+
+{% block title %}قوانین و مقررات | سامانه بازار کار فریلنسری{% endblock %}
+
+{% block content %}
+<div class="home-page-container">
+
+    <!-- نوار منوی بالای سایت -->
+    <header class="top-navbar" style="border-radius: 14px; margin-bottom: 24px;">
+        <div class="top-navbar-container">
+            <div class="top-nav-right">
+                <a href="{% url 'home' %}" class="nav-brand-logo" title="صفحه اصلی">
+                    <span class="nav-logo-badge">✦</span>
+                    <span class="nav-brand-text">فریلنسـ‌مارکت</span>
+                </a>
+
+                <span class="nav-divider" style="height: 22px; margin: 0 4px;"></span>
+
+                <a href="{% url 'projects_list' %}" class="nav-link-btn">
+                    <span>مشاهده پروژه‌ها</span>
+                </a>
+
+                <a href="{% url 'dashboard' %}" class="nav-link-btn">
+                    <span>داشبورد</span>
+                </a>
+            </div>
+
+            <div class="top-nav-left">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn-quick-project">
+                        <span>داشبورد من</span>
+                    </a>
+                    <div class="user-menu-wrapper" onclick="toggleUserDrawer(true)" style="cursor: pointer;" title="مشاهده حساب کاربری">
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <div class="avatar-header-circle">
+                                {{ user_initials|default:"MA" }}
+                            </div>
+                            <span style="font-size: 11px; color: #9ca3af;">▾</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-pink btn-outline-pink" style="padding: 8px 18px; font-size: 13px; width: auto; text-decoration: none;">ورود</a>
+                    <a href="{% url 'signup' %}" class="btn-pink" style="padding: 8px 18px; font-size: 13px; width: auto; text-decoration: none;">ثبت‌نام</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- سربرگ صفحه قوانین -->
+    <div style="margin-bottom: 28px; text-align: right;">
+        <span class="user-badge-tag">مستندات حقوقی پلتفرم</span>
+        <h1 style="font-size: 26px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">
+            قوانین و مقررات سامانه فریلنسری
+        </h1>
+        <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.8;">
+            شرایط و ضوابط استفاده از خدمات، حقوق و تکالیف کارفرمایان و فریلنسرها، و قوانین پرداخت امن و داوری.
+            <span style="color: var(--accent-teal); font-weight: 700; margin-right: 8px;">(آخرین به‌روزرسانی: پاییز ۱۴۰۵)</span>
+        </p>
+    </div>
+
+    <!-- چیدمان دو ستونه: فهرست عناوین راست + محتوای قوانین چپ -->
+    <div class="terms-layout">
+
+        <!-- سایدبار فهرست عناوین (Sticky Table of Contents) -->
+        <aside class="terms-toc-card">
+            <div class="terms-toc-title">
+                فهرست بخش‌های قوانین
+            </div>
+            <nav>
+                <a href="#term-1" class="terms-toc-link">۱. بررسی کلی و تعاریف</a>
+                <a href="#term-2" class="terms-toc-link">۲. شرایط ثبت‌نام و حساب</a>
+                <a href="#term-3" class="terms-toc-link">۳. روابط کارفرما و فریلنسر</a>
+                <a href="#term-4" class="terms-toc-link">۴. سیستم پرداخت امن (Escrow)</a>
+                <a href="#term-5" class="terms-toc-link">۵. تعرفه‌ها و کارمزد خدمات</a>
+                <a href="#term-6" class="terms-toc-link">۶. فرآیند حل اختلاف و داوری</a>
+                <a href="#term-7" class="terms-toc-link">۷. خاتمه، تعلیق و مسدودسازی</a>
+                <a href="#term-8" class="terms-toc-link">۸. مالکیت معنوی و محرمانگی</a>
+                <a href="#term-9" class="terms-toc-link">۹. محدودیت‌ها و سلب مسئولیت</a>
+            </nav>
+        </aside>
+
+        <!-- محتوای کامل قوانین و مقررات -->
+        <main>
+
+            <!-- بخش ۱: بررسی کلی و تعاریف -->
+            <section class="terms-section-card" id="term-1">
+                <div class="terms-section-header">
+                    <span class="term-num-badge">۱</span>
+                    <h2 class="terms-section-title">بررسی کلی و تعاریف</h2>
+                </div>
+                <p class="terms-text">
+                    سامانه بازار کار فریلنسری یک پلتفرم آنلاین است که صرفاً به عنوان یک «واسطه مستقل و شخص ثالث» میان کارفرمایان (سفارش‌دهندگان پروژه) و فریلنسرها (متخصصان مجری) عمل می‌کند تا فرآیند برون‌سپاری، انعقاد توافق‌نامه و تسویه مالی پروژه‌ها در بستری امن و قابل اعتماد انجام پذیرد.
+                </p>
+                <div class="terms-highlight-box">
+                    <strong>تعاریف اصلی:</strong>
+                    <ul class="terms-list" style="margin-top: 8px; margin-bottom: 0;">
+                        <li><strong>کارفرما:</strong> هر شخص حقیقی یا حقوقی که با ایجاد پروژه، نیازمندی کاری خود را مطرح می‌کند.</li>
+                        <li><strong>فریلنسر (پیمانکار):</strong> متخصصی که با ارسال پیشنهاد مالی و زمانی، آمادگی انجام پروژه را اعلام می‌نماید.</li>
+                        <li><strong>صندوق پرداخت امن (Escrow):** حساب واسط امانی سامانه که مبالغ تا رضایت کامل کارفرما نزد آن نگهداری می‌شود.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- بخش ۲: شرایط ثبت‌نام و حساب کاربری -->
+            <section class="terms-section-card" id="term-2">
+                <div class="terms-section-header">
+                    <span class="term-num-badge">۲</span>
+                    <h2 class="terms-section-title">شرایط ثبت‌نام و امنیت حساب کاربری</h2>
+                </div>
+                <ul class="terms-list">
+                    <li>استفاده از خدمات سامانه منوط به داشتن حداقل ۱۸ سال تمام خورشیدی است.</li>
+                    <li>هر فرد مجاز به ثبت و بهره‌برداری از <strong>تنها یک حساب کاربری</strong> در سامانه است. ایجاد چند حساب تخلف محسوب شده و منجر به مسدود شدن تمامی حساب‌ها می‌گردد.</li>
+                    <li>کاربر موظف به وارد کردن اطلاعات هویتی صحیح و به‌روز (ایمیل، نام و شماره موبایل) است.</li>
+                    <li>مسئولیت حفظ محرمانگی رمز عبور و هرگونه فعالیتی که از طریق حساب کاربری انجام می‌شود تماماً بر عهده خود کاربر است.</li>
+                </ul>
+            </section>
+
+            <!-- بخش ۳: روابط میان کارفرما و فریلنسر -->
+            <section class="terms-section-card" id="term-3">
+                <div class="terms-section-header">
+                    <span class="term-num-badge">۳</span>
+                    <h2 class="terms-section-title">روابط میان کارفرما، فریلنسر و سامانه</h2>
+                </div>
+                <p class="terms-text">
+                    کارفرما و فریلنسر به عنوان دو طرف تجاری مستقل عمل می‌کنند. انعقاد توافق یا پذیرش پیشنهاد در سامانه به هیچ وجه به معنای رابطه استخدامی، کارگری و کارفرمایی یا شراکت میان طرفین یا با سامانه نیست. سامانه ضامن کیفیت نهایی کار، زمان تحویل یا توان مالی طرفین نبوده اما به عنوان ناظر و بسترساز تبادل، از حقوق مشروع هر دو طرف حمایت می‌کند.
+                </p>
+            </section>
+
+            <!-- بخش ۴: سیستم پرداخت امن -->
+            <section class="terms-section-card" id="term-4">
+                <div class="terms-section-header">
+                    <span class="term-num-badge">۴</span>
+                    <h2 class="terms-section-title">سیستم پرداخت امن (صندوق امانی - Escrow)</h2>
+                </div>
+                <p class="terms-text">
+                    جهت تضمین امنیت مالی طرفین، تسویه هزینه‌ها منحصراً از مسیر پرداخت تضمین‌شده سامانه انجام می‌شود:
+                </p>
+                <ul class="terms-list">
+                    <li>کارفرما پیش از شروع کار فریلنسر، مبلغ توافق‌شده را در صندوق پرداخت امن سامانه واریز و قفل می‌نماید.</li>
+                    <li>فریلنسر با اطمینان از تأمین مالی پروژه، کار را آغاز و در موعد مقرر تحویل می‌دهد.</li>
+                    <li>پس از بررسی و رضایت کامل کارفرما از خروجی کار، وجه توسط کارفرما آزادسازی شده و به کیف پول فریلنسر منتقل می‌شود.</li>
+                    <li>آزادسازی وجه توسط کارفرما به معنای تایید نهایی کار بوده و پس از آن <strong>غیرقابل بازگشت</strong> خواهد بود.</li>
+                    <li>تلاش برای دور زدن پرداخت امن و معامله خارج از پلتفرم تخلف محسوب شده و سلب عضویت به همراه دارد.</li>
+                </ul>
+            </section>
+
+            <!-- بخش ۵: تعرفه‌ها و کارمزد خدمات -->
+            <section class="terms-section-card" id="term-5">
+                <div class="terms-section-header">
+                    <span class="term-num-badge">۵</span>
+                    <h2 class="terms-section-title">تعرفه‌ها و کارمزد خدمات</h2>
+                </div>
+                <p class="terms-text">
+                    استفاده از خدمات پلتفرم مشمول کسر کارمزد نظارتی به شرح زیر است:
+                </p>
+                <ul class="terms-list">
+                    <li><strong>کارمزد فریلنسر:</strong> ۱۰٪ از مبلغ پروژه هنگام آزادسازی وجه کسر می‌گردد.</li>
+                    <li><strong>هزینه خدمات کارفرما:</strong> ۵٪ هزینه خدمات فنی و میزبانی در زمان ایجاد پرداخت امن افزوده می‌شود.</li>
+                    <li>درخواست تسویه‌حساب بانکی پس از احراز هویت (کارت ملی و شبا) ظرف ۲ تا ۴ روز کاری پردازش می‌گردد.</li>
+                </ul>
+            </section>
+
+            <!-- بخش ۶: حل اختلاف و داوری -->
+            <section class="terms-section-card" id="term-6">
+                <div class="terms-section-header">
+                    <span class="term-num-badge">۶</span>
+                    <h2 class="terms-section-title">فرآیند حل اختلاف و داوری</h2>
+                </div>
+                <p class="terms-text">
+                    در صورتی که اختلافی در خصوص کیفیت یا عدم تحویل کار رخ دهد و وجه هنوز در صندوق پرداخت امن باشد:
+                </p>
+                <ul class="terms-list">
+                    <li>طرفین ابتدا ظرف ۵ روز کاری موظف به مذاکره در بخش پیام‌های پروژه هستند.</li>
+                    <li>در صورت عدم دستیابی به توافق، درخواست داوری به سامانه ارجاع می‌گردد.</li>
+                    <li>تیم داوری بر اساس فایل‌های ارسالی، توضیحات اولیه پروژه و تاریخچه گفتگوها تصمیم‌گیری نموده و رای صادرشده قطعی و لازم‌الاجرا خواهد بود.</li>
+                </ul>
+            </section>
+
+            <!-- بخش ۷: خاتمه دادن و تعلیق حساب -->
+            <section class="terms-section-card" id="term-7">
+                <div class="terms-section-header">
+                    <span class="term-num-badge">۷</span>
+                    <h2 class="terms-section-title">خاتمه دادن، تعلیق و مسدودسازی</h2>
+                </div>
+                <p class="terms-text">
+                    سامانه این حق را برای خود محفوظ می‌دارد که در صورت مشاهده هر یک از موارد زیر، بدون اخطار قبلی حساب کاربر را به صورت موقت یا دائم مسدود نماید:
+                </p>
+                <ul class="terms-list">
+                    <li>تلاش برای دور زدن سیستم پرداخت امن و تبادل شماره تماس جهت تسویه خارج از سایت.</li>
+                    <li>ارائه مدارک هویتی جعلی یا ثبت حساب‌های متعدد.</li>
+                    <li>رفتارهای غیرحرفه‌ای، توهین، کلاهبرداری یا عدم تحویل غیرموجه پروژه‌های پذیرفته‌شده.</li>
+                </ul>
+            </section>
+
+            <!-- بخش ۸: مالکیت معنوی و محرمانگی -->
+            <section class="terms-section-card" id="term-8">
+                <div class="terms-section-header">
+                    <span class="term-num-badge">۸</span>
+                    <h2 class="terms-section-title">مالکیت معنوی و محرمانگی اطلاعات</h2>
+                </div>
+                <ul class="terms-list">
+                    <li>با تسویه و آزادسازی کامل وجه پروژه، تمامی حقوق مادی و معنوی خروجی کار به کارفرما منتقل می‌شود.</li>
+                    <li>فریلنسر متعهد می‌گردد کلیه اسرار تجاری، اسناد و اطلاعات پروژه کارفرما را کاملاً محرمانه نگه دارد.</li>
+                    <li>کاربران مسئول محتوای منتشره خویش هستند و حق نقض کپی‌رایت اشخاص ثالث را ندارند.</li>
+                </ul>
+            </section>
+
+            <!-- بخش ۹: محدودیت‌ها و سلب مسئولیت -->
+            <section class="terms-section-card" id="term-9">
+                <div class="terms-section-header">
+                    <span class="term-num-badge">۹</span>
+                    <h2 class="terms-section-title">محدودیت‌ها و سلب مسئولیت</h2>
+                </div>
+                <p class="terms-text">
+                    هرگونه استخراج خودکار داده‌ها (Scraping)، مهندسی معکوس، یا ارسال هرزنامه در پلتفرم اکیداً ممنوع است. خدمات سامانه به صورت «همان‌گونه که هست» ارائه شده و سامانه در خصوص خسارات احتمالی ناشی از توافقات خارج از چارچوب قوانین پلتفرم، هیچ‌گونه مسئولیتی نخواهد داشت.
+                </p>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- فوتر سایت -->
+    <footer class="site-footer">
+        <div class="footer-top-row">
+            <div class="footer-brand-links-side">
+                <div class="footer-brand-logo">
+                    <span class="footer-logo-badge">✦</span>
+                    <span class="footer-brand-name">فریلنسـ‌مارکت</span>
+                </div>
+                <div class="footer-nav-links">
+                    <a href="{% url 'terms' %}" class="footer-link-item" style="color: var(--accent-teal); font-weight: 700;">قوانین و مقررات</a>
+                    <a href="javascript:void(0)" class="footer-link-item" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">حریم شخصی</a>
+                    <a href="javascript:void(0)" class="footer-link-item" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">راهنما</a>
+                    <a href="javascript:void(0)" class="footer-link-item" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">وبلاگ</a>
+                    <a href="javascript:void(0)" class="footer-link-item" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">درباره ما</a>
+                </div>
+            </div>
+
+            <div>
+                <div class="trust-badge-card">
+                    <span class="trust-badge-label">مورد تایید</span>
+                    <div class="trust-badge-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            <polyline points="9 12 11 14 15 10"></polyline>
+                        </svg>
+                    </div>
+                    <span class="trust-badge-caption">ضمانت پرداخت امن</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom-row">
+            <div class="footer-copyright-text">
+                © تمام حقوق برای سامانه فریلنسری محفوظ است
+            </div>
+            <div class="footer-social-icons">
+                <a href="javascript:void(0)" class="social-icon-btn" title="تلگرام">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </a>
+                <a href="javascript:void(0)" class="social-icon-btn" title="اینستاگرام">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                </a>
+                <a href="javascript:void(0)" class="social-icon-btn" title="ایکس (توییتر)">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                </a>
+                <a href="javascript:void(0)" class="social-icon-btn" title="لینکدین">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                </a>
+                <a href="javascript:void(0)" class="social-icon-btn" title="یوتیوب">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+{% if user.is_authenticated %}
+    {% include 'includes/user_drawer.html' %}
+{% endif %}
+{% endblock %}

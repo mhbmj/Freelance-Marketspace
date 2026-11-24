@@ -277,6 +277,17 @@ def projects_list_view(request):
     })
 
 
+def terms_view(request):
+    """صفحه قوانین و مقررات پلتفرم فریلنسری مطابق استاندارد پونیشا"""
+    initials = "MA"
+    if request.user.is_authenticated and request.user.first_name and request.user.last_name:
+        initials = (request.user.first_name[0] + request.user.last_name[0]).upper()
+
+    return render(request, 'accounts/terms.html', {
+        'user_initials': initials,
+    })
+
+
 def forgot_password_view(request):
     """درخواست بازیابی رمز عبور با محدودیت نرخ درخواست (Rate Limit - HTTP 429) و پیام امن"""
     if request.user.is_authenticated:
