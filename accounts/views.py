@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.conf import settings
 from django.db.models import Q
 
-from .models import User, Category, Skill, UserSkill, Project, Proposal
+from .models import User, Category, Skill, UserSkill, Project, Proposal, UserProfile, Portfolio, Certificate
 from .forms import LoginForm, SignupForm, ForgotPasswordForm, ResetPasswordForm, RoleSelectionForm
 from .rate_limit import (
     is_login_rate_limited,
@@ -232,6 +232,59 @@ def dashboard_view(request):
         'profile_percent': profile_percent,
         'remaining_proposals': 5,
         'remaining_days': 0,
+    })
+
+
+@login_required
+def profile_view(request):
+    """صفحه پروفایل کاربر مطابق اسکرین‌شات پونیشا با قابلیت ثبت درباره من و نمونه‌کارها"""
+    user = request.user
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+    user_skills = UserSkill.objects.filter(user=user).select_related('skill')
+    portfolios = Portfolio.objects.filter(user=user).order_by('-created_at')
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'update_bio':
+            bio_text = request.POST.get('bio', '').strip()
+            profile.bio = bio_text
+            profile.save()
+            messages.success(request, 'بخش درباره من با موفقیت به‌روزرسانی شد.')
+        elif action == 'update_location':
+            loc = request.POST.get('location', '').strip()
+            profile.location = loc
+            profile.save()
+            messages.success(request, 'موقعیت مکانی شما با موفقیت ذخیره شد.')
+        elif action == 'add_portfolio':
+            title = request.POST.get('portfolio_title', '').strip()
+            desc = request.POST.get('portfolio_desc', '').strip()
+            url = request.POST.get('portfolio_url', '').strip()
+            if title:
+                Portfolio.objects.create(user=user, title=title, description=desc, project_url=url)
+                messages.success(request, 'نمونه‌کار جدید با موفقیت اضافه شد.')
+        return redirect('profile')
+
+    initials = "MA"
+    if user.first_name and user.last_name:
+        initials = (user.first_name[0] + user.last_name[0]).upper()
+
+    profile_percent = 30
+    if user.username:
+        profile_percent += 15
+    if profile.bio:
+        profile_percent += 20
+    if profile.location:
+        profile_percent += 15
+    if user_skills.exists():
+        profile_percent += 20
+
+    return render(request, 'accounts/profile.html', {
+        'user': user,
+        'profile': profile,
+        'user_skills': user_skills,
+        'portfolios': portfolios,
+        'user_initials': initials,
+        'profile_percent': min(profile_percent, 100),
     })
 
 

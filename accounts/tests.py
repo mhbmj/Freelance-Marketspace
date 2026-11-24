@@ -376,3 +376,35 @@ class AuthenticationTests(TestCase):
         self.assertContains(res, 'سیستم پرداخت امن (صندوق امانی - Escrow)')
         self.assertContains(res, 'فرآیند حل اختلاف و داوری')
 
+    # ------------------------------------------------------------------------
+    # ۷. آزمون‌های صفحه پروفایل و ویرایش مشخصات (/profile/)
+    # ------------------------------------------------------------------------
+    def test_profile_view_and_updates(self):
+        """مشاهده صفحه پروفایل کاربری مطابق پونیشا و ویرایش درباره من و لوکیشن"""
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+
+        # ۱. مشاهده صفحه پروفایل
+        res = self.client.get(reverse('profile'))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, 'درباره من')
+        self.assertContains(res, 'سوابق کاری')
+        self.assertContains(res, 'سوابق تحصیلی')
+        self.assertContains(res, 'نمونه‌کارها')
+        self.assertContains(res, 'وضعیت پروفایل')
+
+        # ۲. به‌روزرسانی بخش درباره من
+        res_bio = self.client.post(reverse('profile'), {
+            'action': 'update_bio',
+            'bio': 'برنامه‌نویس فول‌استک پایتون و ری‌اکت با علاقه به هوش مصنوعی'
+        }, follow=True)
+        self.assertEqual(res_bio.status_code, 200)
+        self.assertContains(res_bio, 'برنامه‌نویس فول‌استک پایتون')
+
+        # ۳. به‌روزرسانی موقعیت مکانی
+        res_loc = self.client.post(reverse('profile'), {
+            'action': 'update_location',
+            'location': 'اصفهان، ایران'
+        }, follow=True)
+        self.assertEqual(res_loc.status_code, 200)
+        self.assertContains(res_loc, 'اصفهان، ایران')
+

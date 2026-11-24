@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+
+{% block title %}پروفایل کاربری | سامانه بازار کار فریلنسری{% endblock %}
+
+{% block content %}
+<div class="home-page-container">
+
+    <!-- نوار منوی بالای سایت -->
+    <header class="top-navbar" style="border-radius: 14px; margin-bottom: 24px;">
+        <div class="top-navbar-container">
+            <div class="top-nav-right">
+                <a href="{% url 'home' %}" class="nav-brand-logo" title="صفحه اصلی">
+                    <span class="nav-logo-badge">✦</span>
+                    <span class="nav-brand-text">فریلنسـ‌مارکت</span>
+                </a>
+                <span class="nav-divider" style="height: 22px; margin: 0 4px;"></span>
+                <a href="{% url 'projects_list' %}" class="nav-link-btn"><span>مشاهده پروژه‌ها</span></a>
+                <a href="{% url 'dashboard' %}" class="nav-link-btn"><span>داشبورد</span></a>
+            </div>
+
+            <div class="top-nav-left">
+                <a href="{% url 'dashboard' %}" class="btn-quick-project"><span>داشبورد من</span></a>
+                <div class="user-menu-wrapper" onclick="toggleUserDrawer(true)" style="cursor: pointer;" title="مشاهده حساب کاربری">
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                        <div class="avatar-header-circle">{{ user_initials|default:"MA" }}</div>
+                        <span style="font-size: 11px; color: #9ca3af;">▾</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" style="margin-bottom: 20px;">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- چیدمان دو ستونه صفحه پروفایل مطابق تصویر ۱۹ پونیشا -->
+    <div class="profile-page-layout">
+
+        <!-- ستون اصلی پروفایل (Main Column - سمت راست در RTL) -->
+        <main class="profile-main-column">
+
+            <!-- کارت مشخصات اصلی کاربر -->
+            <div class="profile-header-card">
+                <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+                    <div class="profile-avatar-wrapper">
+                        <div class="profile-avatar-circle">
+                            {{ user_initials|default:"MA" }}
+                        </div>
+                        <button type="button" class="avatar-edit-badge" onclick="alert('قابلیت انتخاب عکس پروفایل در گام بعدی فعال خواهد شد!')" title="تغییر عکس پروفایل">
+                            ✏️
+                        </button>
+                    </div>
+
+                    <div>
+                        <div class="profile-name-title">
+                            {{ user.username|default:"mahtabmrj" }}
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <span class="badge-new-user">
+                                کاربر جدید ⭐ ۰
+                            </span>
+                            <a href="javascript:void(0)" class="location-tag-btn" onclick="openModal('location-modal')">
+                                <span>📍 {{ profile.location|default:"محل سکونت" }}</span>
+                                <span style="font-size: 10px;">✏️</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: left; display: flex; flex-direction: column; align-items: flex-end; gap: 10px;">
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" class="btn-public-profile" onclick="alert('لینک عمومی پروفایل شما کپی شد!')">
+                            <span>🔗</span>
+                        </button>
+                        <a href="javascript:void(0)" class="btn-public-profile" onclick="alert('حالت مشاهده عمومی فعال است.')">
+                            <span>مشاهده حالت عمومی پروفایل</span>
+                            <span>👁️</span>
+                        </a>
+                    </div>
+                    <span style="font-size: 11.5px; color: var(--text-muted);">
+                        متوسط زمان پاسخ‌گویی کمتر از ۱ ساعت
+                    </span>
+                </div>
+            </div>
+
+            <!-- بخش ۱: درباره من -->
+            <div class="profile-section-card">
+                <div class="profile-section-header">
+                    <h2 class="profile-section-title">درباره من</h2>
+                    <button type="button" class="btn-add-section" onclick="openModal('bio-modal')">
+                        {% if profile.bio %}ویرایش ✏️{% else %}+ افزودن{% endif %}
+                    </button>
+                </div>
+                {% if profile.bio %}
+                    <p style="font-size: 13.5px; color: var(--text-main); line-height: 1.9; text-align: justify;">
+                        {{ profile.bio }}
+                    </p>
+                {% else %}
+                    <p class="profile-empty-text">
+                        خودتو کوتاه معرفی کن تا بقیه بدونن با چه کسی طرفن.
+                    </p>
+                {% endif %}
+            </div>
+
+            <!-- بخش ۲: مهارت‌ها -->
+            <div class="profile-section-card">
+                <div class="profile-section-header">
+                    <h2 class="profile-section-title">مهارت‌ها</h2>
+                    <a href="{% url 'onboarding_skills' %}" class="btn-add-section" style="font-size: 12.5px;">
+                        <span>ویرایش</span>
+                        <span>✏️</span>
+                    </a>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    {% if user_skills %}
+                        {% for us in user_skills %}
+                            <span class="user-skill-pill">
+                                {{ us.skill.name }}
+                            </span>
+                        {% endfor %}
+                    {% else %}
+                        <p class="profile-empty-text">
+                            هنوز مهارتی اضافه نکرده‌اید. <a href="{% url 'onboarding_skills' %}" class="link-pink">انتخاب مهارت‌ها</a>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- بخش ۳: سوابق کاری -->
+            <div class="profile-section-card">
+                <div class="profile-section-header">
+                    <h2 class="profile-section-title">سوابق کاری</h2>
+                    <button type="button" class="btn-add-section" onclick="alert('قابلیت افزودن سابقه کاری در فاز بعدی فعال خواهد شد!')">
+                        + افزودن
+                    </button>
+                </div>
+                <p class="profile-empty-text">
+                    تجربه‌هات رو بنویس؛ حتی فریلنس یا کارآموزی هم حسابه.
+                </p>
+            </div>
+
+            <!-- بخش ۴: سوابق تحصیلی -->
+            <div class="profile-section-card">
+                <div class="profile-section-header">
+                    <h2 class="profile-section-title">سوابق تحصیلی</h2>
+                    <button type="button" class="btn-add-section" onclick="alert('قابلیت افزودن سوابق تحصیلی در فاز بعدی فعال خواهد شد!')">
+                        + افزودن
+                    </button>
+                </div>
+                <p class="profile-empty-text">
+                    تحصیلاتت رو اضافه کن تا زمینه تخصصی‌ت مشخص باشه.
+                </p>
+            </div>
+
+            <!-- بخش ۵: نمونه‌کارها -->
+            <div class="profile-section-card">
+                <div class="profile-section-header">
+                    <h2 class="profile-section-title">نمونه‌کارها</h2>
+                    <button type="button" class="btn-add-section" onclick="openModal('portfolio-modal')">
+                        + افزودن نمونه‌کار
+                    </button>
+                </div>
+
+                {% if portfolios %}
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;">
+                        {% for pf in portfolios %}
+                            <div class="ponisha-card" style="padding: 16px; border: 1px solid var(--border-card);">
+                                <h4 style="font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">{{ pf.title }}</h4>
+                                {% if pf.description %}<p style="font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 8px;">{{ pf.description }}</p>{% endif %}
+                                {% if pf.project_url %}<a href="{{ pf.project_url }}" target="_blank" class="link-pink" style="font-size: 11.5px;">مشاهده پروژه ↗</a>{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <!-- کادر نمونه کار مطابق تصویر پونیشا -->
+                    <div class="empty-tab-box" style="padding: 38px 20px;">
+                        <div class="dots-icon-circle" style="font-size: 22px;">
+                            🖼️
+                        </div>
+                        <p class="empty-tab-text" style="margin-bottom: 14px;">
+                            نمونه‌کارهای خفن و باکیفیت خودت رو بگذار
+                        </p>
+                        <button type="button" class="btn-add-section" style="font-size: 13.5px;" onclick="openModal('portfolio-modal')">
+                            + افزودن نمونه‌کار
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- بخش ۶: پروژه‌ها -->
+            <div class="profile-section-card">
+                <div class="profile-section-header">
+                    <h2 class="profile-section-title">پروژه‌ها</h2>
+                    <div style="display: flex; gap: 14px; font-size: 13px;">
+                        <span style="font-weight: 700; color: #be185d; border-bottom: 2px solid var(--pastel-pink); padding-bottom: 4px;">پایان‌یافته (۰)</span>
+                        <span style="color: var(--text-muted);">در حال انجام (۰)</span>
+                    </div>
+                </div>
+
+                <div class="empty-tab-box" style="padding: 36px 20px;">
+                    <div class="dots-icon-circle" style="font-size: 22px;">
+                        💼
+                    </div>
+                    <p class="empty-tab-text" style="margin-bottom: 14px;">
+                        هنوز پروژه‌ای انجام ندادی؟ همین حالا شروع کن!
+                    </p>
+                    <a href="{% url 'projects_list' %}" class="btn-view-projects">
+                        <span>مشاهده پروژه‌ها</span>
+                        <span>👁️</span>
+                    </a>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- ستون سایدبار چپ (Sidebar Widgets - سمت چپ در RTL) -->
+        <aside style="display: flex; flex-direction: column; gap: 18px;">
+
+            <!-- کارت تبلیغات / ارتقا («تو رقابت، زودتر دیده شو!») -->
+            <div class="ponisha-card" style="padding: 22px 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span>📢</span>
+                        <span style="font-size: 14px; font-weight: 800; color: var(--text-main);">تو رقابت، زودتر دیده شو!</span>
+                    </div>
+                    <span style="font-size: 12px; color: #9ca3af;">▲</span>
+                </div>
+                <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.7; margin-bottom: 14px;">
+                    راهکارهای تبلیغاتی بهت کمک می‌کنن تا در زمان درست و جای درست جلوی چشم کارفرما باشی.
+                </p>
+                <button type="button" class="btn-upgrade-membership" style="margin: 0;" onclick="alert('قابلیت راهکارهای تبلیغاتی در فاز بعدی فعال خواهد شد!')">
+                    مشاهده و مقایسه راهکارها
+                </button>
+            </div>
+
+            <!-- کارت گیج سرعت سنج درصد تکمیل پروفایل (Speedometer Gauge Meter) -->
+            <div class="gauge-card">
+                <div class="gauge-svg-wrapper">
+                    <svg viewBox="0 0 100 55" style="width: 100%; height: 100%;">
+                        <!-- پس‌زمینه نیم‌دایره -->
+                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#f1e4ea" stroke-width="8" stroke-linecap="round"></path>
+                        <!-- نیم‌دایره رنگی پیشرفت -->
+                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#gauge-grad)" stroke-width="8" stroke-dasharray="126" stroke-dashoffset="{{ 126|add:'-38' }}" stroke-linecap="round"></path>
+                        <defs>
+                            <linearGradient id="gauge-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#fef08a"></stop>
+                                <stop offset="100%" stop-color="#f472b6"></stop>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="gauge-center-text">
+                        {{ profile_percent }}٪ وضعیت پروفایل
+                    </div>
+                </div>
+
+                <p style="font-size: 12px; color: var(--text-muted); line-height: 1.8; margin-bottom: 14px;">
+                    عکس پروفایل خود را وارد کنید تا حس حضور و فعال بودن بیشتری در کارفرمایان ایجاد کنید و پروفایلی حرفه‌ای داشته باشید.
+                </p>
+
+                <button type="button" class="btn-pink btn-outline-pink" style="width: 100%; font-size: 12.5px; padding: 10px;" onclick="openModal('photo-modal')">
+                    عکس پروفایل خود را وارد کنید
+                </button>
+            </div>
+
+            <!-- کارت احراز هویت -->
+            <div class="ponisha-card" style="padding: 22px 20px; text-align: center;">
+                <p style="font-size: 12.5px; font-weight: 700; color: var(--text-main); line-height: 1.7; margin-bottom: 14px;">
+                    برای دریافت نشان سطح کاربری باید احراز هویت خود را تکمیل کنید!
+                </p>
+                <button type="button" class="btn-pink btn-outline-pink" style="width: 100%; font-size: 12.5px; padding: 10px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;" onclick="alert('قابلیت احراز هویت در فاز بعدی فعال خواهد شد!')">
+                    <span>🪪</span>
+                    <span>احراز هویت</span>
+                </button>
+            </div>
+
+        </aside>
+
+    </div>
+
+    <!-- فوتر سایت -->
+    <footer class="site-footer">
+        <div class="footer-top-row">
+            <div class="footer-brand-links-side">
+                <div class="footer-brand-logo">
+                    <span class="footer-logo-badge">✦</span>
+                    <span class="footer-brand-name">فریلنسـ‌مارکت</span>
+                </div>
+                <div class="footer-nav-links">
+                    <a href="{% url 'terms' %}" class="footer-link-item">قوانین و مقررات</a>
+                    <a href="javascript:void(0)" class="footer-link-item" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">حریم شخصی</a>
+                    <a href="javascript:void(0)" class="footer-link-item" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">راهنما</a>
+                    <a href="javascript:void(0)" class="footer-link-item" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">وبلاگ</a>
+                    <a href="javascript:void(0)" class="footer-link-item" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">درباره ما</a>
+                </div>
+            </div>
+            <div>
+                <div class="trust-badge-card">
+                    <span class="trust-badge-label">مورد تایید</span>
+                    <div class="trust-badge-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+                    </div>
+                    <span class="trust-badge-caption">ضمانت پرداخت امن</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom-row">
+            <div class="footer-copyright-text">© تمام حقوق برای سامانه فریلنسری محفوظ است</div>
+            <div class="footer-social-icons">
+                <a href="javascript:void(0)" class="social-icon-btn" title="تلگرام"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></a>
+                <a href="javascript:void(0)" class="social-icon-btn" title="اینستاگرام"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                <a href="javascript:void(0)" class="social-icon-btn" title="ایکس"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a>
+                <a href="javascript:void(0)" class="social-icon-btn" title="لینکدین"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+                <a href="javascript:void(0)" class="social-icon-btn" title="یوتیوب"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg></a>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<!-- مودال‌های ویرایش اطلاعات (درباره من، محل سکونت، نمونه‌کار) -->
+<div id="bio-modal" class="user-drawer-backdrop" style="display: none; align-items: center; justify-content: center; z-index: 2500;">
+    <div class="auth-card" style="width: 460px; max-width: 90vw; padding: 26px;">
+        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">ویرایش درباره من</h3>
+        <form method="post" action="{% url 'profile' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="update_bio">
+            <textarea name="bio" class="form-input" rows="4" placeholder="معرفی کوتاه خود را بنویسید...">{{ profile.bio|default:'' }}</textarea>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px;">
+                <button type="button" class="btn-pink btn-outline-pink" style="width: auto; padding: 8px 16px;" onclick="closeModal('bio-modal')">انصراف</button>
+                <button type="submit" class="btn-pink" style="width: auto; padding: 8px 20px;">ذخیره</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="location-modal" class="user-drawer-backdrop" style="display: none; align-items: center; justify-content: center; z-index: 2500;">
+    <div class="auth-card" style="width: 400px; max-width: 90vw; padding: 26px;">
+        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">ثبت محل سکونت</h3>
+        <form method="post" action="{% url 'profile' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="update_location">
+            <input type="text" name="location" value="{{ profile.location|default:'' }}" class="form-input" placeholder="مثال: تهران، ایران" required>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px;">
+                <button type="button" class="btn-pink btn-outline-pink" style="width: auto; padding: 8px 16px;" onclick="closeModal('location-modal')">انصراف</button>
+                <button type="submit" class="btn-pink" style="width: auto; padding: 8px 20px;">ذخیره</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="portfolio-modal" class="user-drawer-backdrop" style="display: none; align-items: center; justify-content: center; z-index: 2500;">
+    <div class="auth-card" style="width: 460px; max-width: 90vw; padding: 26px;">
+        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">افزودن نمونه‌کار جدید</h3>
+        <form method="post" action="{% url 'profile' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add_portfolio">
+            <input type="text" name="portfolio_title" class="form-input" placeholder="عنوان نمونه‌کار (الزامی)" style="margin-bottom: 10px;" required>
+            <textarea name="portfolio_desc" class="form-input" rows="3" placeholder="توضیحات نمونه‌کار..." style="margin-bottom: 10px;"></textarea>
+            <input type="url" name="portfolio_url" class="form-input" placeholder="لینک آنلاین یا گیت‌هاب (اختیاری)" dir="ltr">
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px;">
+                <button type="button" class="btn-pink btn-outline-pink" style="width: auto; padding: 8px 16px;" onclick="closeModal('portfolio-modal')">انصراف</button>
+                <button type="submit" class="btn-pink" style="width: auto; padding: 8px 20px;">افزودن</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openModal(id) {
+    const m = document.getElementById(id);
+    if (m) { m.style.display = 'flex'; m.classList.add('open'); }
+}
+function closeModal(id) {
+    const m = document.getElementById(id);
+    if (m) { m.style.display = 'none'; m.classList.remove('open'); }
+}
+</script>
+
+{% if user.is_authenticated %}
+    {% include 'includes/user_drawer.html' %}
+{% endif %}
+{% endblock %}
