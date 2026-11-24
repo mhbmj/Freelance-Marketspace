@@ -58,7 +58,7 @@ INSERT INTO user_skills (user_id, skill_id, years_of_experience) VALUES
 
 -- 9. Projects
 INSERT INTO projects (id, employer_id, title, description, pricing_type, budget, status) VALUES
-(1, 2, 'طراحی بک‌اند فریلنسری', 'پیاده‌سازی پایگاه داده و API', 'FIXED_PRICE', 20000000, 'OPEN'),
+(1, 4, 'طراحی بک‌اند فریلنسری', 'پیاده‌سازی پایگاه داده و API', 'FIXED_PRICE', 20000000, 'OPEN'),
 (2, 4, 'پردازش متن فارسی', 'تحلیل متن با پایتون', 'HOURLY', 400000, 'OPEN'),
 (3, 4, 'اپلیکیشن موبایل', 'پروژه پیش‌نویس', 'FIXED_PRICE', 15000000, 'DRAFT');
 

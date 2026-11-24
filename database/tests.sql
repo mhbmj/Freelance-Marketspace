@@ -20,7 +20,7 @@ VALUES (2, 3, 450000, 'پیشنهاد دوم', 'PENDING');
 
 -- Test 6: Employer proposing on own project (Expect Error)
 INSERT INTO proposals (project_id, freelancer_id, bid_amount, cover_letter, status)
-VALUES (1, 2, 10000000, 'پیشنهاد کارفرما', 'PENDING');
+VALUES (1, 4, 10000000, 'پیشنهاد کارفرما', 'PENDING');
 
 -- Test 7: Multiple accepted proposals for one project (Expect Error)
 INSERT INTO proposals (project_id, freelancer_id, bid_amount, cover_letter, status)

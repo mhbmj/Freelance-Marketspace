@@ -22,7 +22,7 @@ from .rate_limit import (
 
 def home_view(request):
     """صفحه اصلی و لندینگ پیج پلتفرم فریلنسری (Home Page)"""
-    latest_projects = Project.objects.filter(status='OPEN').order_by('-created_at')[:4]
+    latest_projects = Project.objects.filter(status='OPEN').order_by('-created_at')[:8]
 
     initials = "MA"
     if request.user.is_authenticated and request.user.first_name and request.user.last_name:
