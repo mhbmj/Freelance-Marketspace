@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}پروفایل کاربری | سامانه بازار کار فریلنسری{% endblock %}
 
@@ -10,7 +11,7 @@
         <div class="top-navbar-container">
             <div class="top-nav-right">
                 <a href="{% url 'home' %}" class="nav-brand-logo" title="صفحه اصلی">
-                    <span class="nav-logo-badge">✦</span>
+                    <img src="{% static 'images/logo.png' %}" alt="لوگو" class="nav-logo-img">
                     <span class="nav-brand-text">فریلنسـ‌مارکت</span>
                 </a>
                 <span class="nav-divider" style="height: 22px; margin: 0 4px;"></span>
@@ -287,7 +288,7 @@
         <div class="footer-top-row">
             <div class="footer-brand-links-side">
                 <div class="footer-brand-logo">
-                    <span class="footer-logo-badge">✦</span>
+                    <img src="{% static 'images/logo.png' %}" alt="لوگو" class="footer-logo-img">
                     <span class="footer-brand-name">فریلنسـ‌مارکت</span>
                 </div>
                 <div class="footer-nav-links">
