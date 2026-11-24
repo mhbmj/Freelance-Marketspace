@@ -29,8 +29,11 @@
         </div>
     </div>
 
-    <form method="post" action="{% url 'onboarding_skills' %}" id="skills-form">
+    <form method="post" action="{% url 'onboarding_skills' %}{% if next_url %}?next={{ next_url }}{% endif %}" id="skills-form">
         {% csrf_token %}
+        {% if next_url %}
+            <input type="hidden" name="next" value="{{ next_url }}">
+        {% endif %}
 
         <!-- محفظه تگ‌ها و چیپ‌های مهارتی -->
         <div class="skills-chips-wrapper" id="chips-container" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; min-height: 110px;">

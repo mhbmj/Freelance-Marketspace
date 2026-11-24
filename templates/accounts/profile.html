@@ -112,7 +112,7 @@
             <div class="profile-section-card">
                 <div class="profile-section-header">
                     <h2 class="profile-section-title">مهارت‌ها</h2>
-                    <a href="{% url 'onboarding_skills' %}" class="btn-add-section" style="font-size: 12.5px;">
+                    <a href="{% url 'onboarding_skills' %}?next={% url 'profile' %}" class="btn-add-section" style="font-size: 12.5px;">
                         <span>ویرایش</span>
                         <span>✏️</span>
                     </a>
@@ -126,7 +126,7 @@
                         {% endfor %}
                     {% else %}
                         <p class="profile-empty-text">
-                            هنوز مهارتی اضافه نکرده‌اید. <a href="{% url 'onboarding_skills' %}" class="link-pink">انتخاب مهارت‌ها</a>
+                            هنوز مهارتی اضافه نکرده‌اید. <a href="{% url 'onboarding_skills' %}?next={% url 'profile' %}" class="link-pink">انتخاب مهارت‌ها</a>
                         </p>
                     {% endif %}
                 </div>

@@ -330,6 +330,28 @@ class AuthenticationTests(TestCase):
         # ۳. بررسی ذخیره در جدول user_skills
         self.assertTrue(UserSkill.objects.filter(user=self.user, skill=skill).exists())
 
+    def test_onboarding_skills_redirects_to_origin_page(self):
+        """ویرایش مهارت از پروفایل یا داشبورد به همان صفحه مبدا بازمی‌گردد"""
+        from accounts.models import Skill
+        skill = Skill.objects.first() or Skill.objects.create(name='DjangoTest')
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+
+        # ویرایش مهارت از صفحه پروفایل با پارامتر next=/profile/
+        res_profile = self.client.post(reverse('onboarding_skills'), {
+            'skills': [skill.id],
+            'next': reverse('profile')
+        }, follow=False)
+        self.assertEqual(res_profile.status_code, 302)
+        self.assertEqual(res_profile.headers.get('Location'), reverse('profile'))
+
+        # ویرایش مهارت از صفحه داشبورد با پارامتر next=/dashboard/
+        res_dash = self.client.post(reverse('onboarding_skills'), {
+            'skills': [skill.id],
+            'next': reverse('dashboard')
+        }, follow=False)
+        self.assertEqual(res_dash.status_code, 302)
+        self.assertEqual(res_dash.headers.get('Location'), reverse('dashboard'))
+
     def test_dashboard_view_authenticated(self):
         """مشاهده داشبورد فریلنسر با نمایش پروژه‌ها و مهارت‌ها"""
         self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)

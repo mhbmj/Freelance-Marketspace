@@ -156,9 +156,16 @@ def onboarding_categories_view(request):
 
 @login_required
 def onboarding_skills_view(request):
-    """مرحله ۲ از ۲: انتخاب مهارت‌های تخصصی با باکس جستجوی زنده"""
+    """مرحله ۲ از ۲: انتخاب مهارت‌های تخصصی با بازگشت به صفحه مبدا (پروفایل یا داشبورد)"""
     skills = Skill.objects.all().order_by('name')
     user = request.user
+
+    # دریافت صفحه مبدا (next) برای بازگشت به همان صفحه قبلی کاربر
+    next_url = request.POST.get('next') or request.GET.get('next')
+    if not next_url:
+        referer = request.META.get('HTTP_REFERER', '')
+        if referer and 'onboarding' not in referer and 'login' not in referer:
+            next_url = referer
 
     if request.method == 'POST':
         selected_skill_ids = request.POST.getlist('skills')
@@ -174,12 +181,16 @@ def onboarding_skills_view(request):
                 except Skill.DoesNotExist:
                     pass
 
+            # بازگشت به صفحه قبلی کاربر (پروفایل یا داشبورد) یا صفحه اصلی
+            if next_url:
+                return redirect(next_url)
             return redirect('home')
 
     user_skills_ids = list(UserSkill.objects.filter(user=user).values_list('skill_id', flat=True))
     return render(request, 'accounts/onboarding_skills.html', {
         'skills': skills,
-        'user_skills_ids': user_skills_ids
+        'user_skills_ids': user_skills_ids,
+        'next_url': next_url,
     })
 
 
