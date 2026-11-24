@@ -184,8 +184,8 @@
                     {% endif %}
                 </div>
 
-                <div style="width: 180px;">
-                    <select name="pricing_type" class="form-input" style="cursor: pointer;" onchange="this.form.submit()">
+                <div style="width: 185px;">
+                    <select name="pricing_type" class="form-input custom-select" onchange="this.form.submit()">
                         <option value="">همه انواع قیمت</option>
                         <option value="FIXED_PRICE" {% if selected_pricing_type == 'FIXED_PRICE' %}selected{% endif %}>قیمت ثابت</option>
                         <option value="HOURLY" {% if selected_pricing_type == 'HOURLY' %}selected{% endif %}>نرخ ساعتی</option>
