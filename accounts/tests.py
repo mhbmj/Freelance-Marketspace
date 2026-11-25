@@ -539,3 +539,20 @@ class AuthenticationTests(TestCase):
         self.assertEqual(res_emp.status_code, 200)
         self.assertContains(res_emp, 'کارفرما نمی‌تواند برای پروژه‌ای که خودش ثبت کرده پیشنهاد ثبت کند')
 
+    # ------------------------------------------------------------------------
+    # ۹. آزمون‌های صفحه دسته‌بندی‌ها و مهارت‌ها (/categories/)
+    # ------------------------------------------------------------------------
+    def test_categories_view_accessible_and_contents(self):
+        """مشاهده صفحه دسته‌بندی‌ها و مهارت‌ها مطابق با تصویر ۲۸ پونیشا"""
+        res = self.client.get(reverse('categories'))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, 'دسته‌بندی‌ها')
+        self.assertContains(res, 'طراحی و خلاقیت')
+        self.assertContains(res, 'توسعه نرم‌افزار و آی‌تی')
+        self.assertContains(res, 'بازاریابی و فروش')
+        self.assertContains(res, 'محتوا و ترجمه')
+        self.assertContains(res, 'مالی و کسب‌وکار')
+        self.assertContains(res, 'مهندسی و معماری')
+        self.assertContains(res, 'طراحی سایت')
+        self.assertContains(res, 'طراحی گرافیک')
+

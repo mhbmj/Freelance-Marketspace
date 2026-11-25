@@ -2845,3 +2845,115 @@ body {
     outline: none;
     box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.15);
 }
+
+/* ==========================================================================
+   Categories & Skills Directory (مطابق تصویر ۲۸ پونیشا - ponisha.ir/categories)
+   ========================================================================== */
+.categories-grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px 28px;
+    align-items: start;
+    margin-top: 15px;
+}
+
+@media (max-width: 992px) {
+    .categories-grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+}
+
+@media (max-width: 640px) {
+    .categories-grid-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+.category-column-card {
+    background: #ffffff;
+    border: 1.5px solid var(--border-card);
+    border-radius: var(--radius-card);
+    padding: 24px 22px;
+    box-shadow: var(--shadow-minimal);
+    transition: all 0.25s ease;
+}
+
+.category-column-card:hover {
+    border-color: #fbcfe8;
+    box-shadow: 0 8px 24px rgba(244, 114, 182, 0.08);
+    transform: translateY(-2px);
+}
+
+.category-column-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid #fdf2f8;
+    margin-bottom: 14px;
+}
+
+.category-column-icon {
+    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--pastel-yellow-light);
+    border: 1px solid var(--pastel-yellow-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.category-column-title {
+    font-size: 16.5px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.category-skills-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.category-skill-wrapper {
+    margin: 0;
+    padding: 0;
+}
+
+.category-skill-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    font-size: 13.5px;
+    color: #475569;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.skill-bullet-dot {
+    color: var(--pastel-pink);
+    font-size: 14px;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+.category-skill-link:hover {
+    color: var(--pastel-pink-hover);
+    transform: translateX(-4px);
+}
+
+.category-skill-link:hover .skill-bullet-dot {
+    transform: scale(1.4);
+    color: var(--pastel-pink-hover);
+}

@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}دسته‌بندی‌ها و مهارت‌ها | سامانه بازار کار فریلنسری{% endblock %}
+
+{% block content %}
+<div class="home-page-container">
+
+    <!-- نوار منوی بالای سایت -->
+    <header class="top-navbar" style="border-radius: 14px; margin-bottom: 28px;">
+        <div class="top-navbar-container">
+            <div class="top-nav-right">
+                <a href="{% url 'home' %}" class="nav-brand-logo" title="صفحه اصلی">
+                    <img src="{% static 'images/logo.png' %}" alt="لوگو" class="nav-logo-img">
+                    <span class="nav-brand-text">فریلنسـ‌مارکت</span>
+                </a>
+
+                <span class="nav-divider" style="height: 22px; margin: 0 4px;"></span>
+
+                <a href="{% url 'projects_list' %}" class="nav-link-btn">
+                    <span>مشاهده پروژه‌ها</span>
+                </a>
+
+                <a href="{% url 'categories' %}" class="nav-link-btn active" style="color: var(--pastel-pink-hover); font-weight: 700;">
+                    <span>دسته‌بندی‌ها</span>
+                </a>
+
+                <a href="{% url 'dashboard' %}" class="nav-link-btn">
+                    <span>داشبورد</span>
+                </a>
+            </div>
+
+            <div class="top-nav-left">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn-quick-project"><span>داشبورد من</span></a>
+                    <div class="user-menu-wrapper" onclick="toggleUserDrawer(true)" style="cursor: pointer;" title="مشاهده حساب کاربری">
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <div class="avatar-header-circle" style="width: 36px; height: 36px; min-width: 36px; max-width: 36px; min-height: 36px; max-height: 36px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                {% if user.avatar_url %}
+                                    <img src="{{ user.avatar_url }}" alt="آواتار" style="width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 50%; display: block;">
+                                {% else %}
+                                    {{ user.initials|default:user_initials|default:"MA" }}
+                                {% endif %}
+                            </div>
+                            <span style="font-size: 11px; color: #9ca3af;">▾</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-pink btn-outline-pink" style="padding: 8px 18px; font-size: 13px; width: auto; text-decoration: none;">ورود</a>
+                    <a href="{% url 'signup' %}" class="btn-pink" style="padding: 8px 18px; font-size: 13px; width: auto; text-decoration: none;">ثبت‌نام</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- سربرگ صفحه دسته‌بندی‌ها مطابق تصویر ۲۸ پونیشا -->
+    <div style="text-align: center; margin-bottom: 38px;">
+        <span class="user-badge-tag" style="margin-bottom: 10px;">
+            مهارت‌ها و تخصص‌ها
+        </span>
+        <h1 style="font-size: 30px; font-weight: 800; color: var(--text-main); margin-bottom: 10px;">
+            دسته‌بندی‌ها
+        </h1>
+        <p style="font-size: 14px; color: var(--text-muted); max-width: 540px; margin: 0 auto; line-height: 1.8;">
+            مجموعه کامل حوزه‌های تخصصی برای یافتن پروژه‌های متناسب با مهارت‌ها یا انتخاب بهترین فریلنسرها
+        </p>
+
+        <!-- باکس جستجوی زنده در مهارت‌ها -->
+        <div style="max-width: 440px; margin: 22px auto 0; position: relative;">
+            <input type="text" id="skill-live-search" class="form-input" placeholder="جستجوی سریع مهارت یا دسته‌بندی..." oninput="filterCategoriesAndSkills(this.value)" style="padding: 12px 18px 12px 42px; font-size: 13.5px; border-radius: 25px; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
+            <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #9ca3af; pointer-events: none;">🔍</span>
+        </div>
+    </div>
+
+    <!-- گرید ستون‌های دسته‌بندی‌ها مطابق تصویر ۲۸ پونیشا -->
+    <div class="categories-grid-container" id="categories-grid">
+        {% for cat in categories_data %}
+            <div class="category-column-card">
+                <!-- هدر ستون دسته‌بندی با آیکون و خط زیرین -->
+                <div class="category-column-header">
+                    <span class="category-column-icon">{{ cat.icon }}</span>
+                    <h2 class="category-column-title">{{ cat.name }}</h2>
+                </div>
+
+                <!-- لیست مهارت‌های زیرمجموعه -->
+                <ul class="category-skills-list">
+                    {% for skill in cat.skills %}
+                        <li class="category-skill-wrapper">
+                            <a href="{% url 'projects_list' %}?q={{ skill }}" class="category-skill-link" title="مشاهده پروژه‌های مربوط به {{ skill }}">
+                                <span class="skill-bullet-dot">•</span>
+                                <span class="skill-name-text">{{ skill }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- کادر راهنمای پایین صفحه -->
+    <div class="ponisha-card" style="margin-top: 45px; margin-bottom: 40px; padding: 30px; text-align: center; background: #ffffff; border-radius: 16px;">
+        <div style="font-size: 28px; margin-bottom: 8px;">🚀</div>
+        <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">
+            پروژه خود را بر اساس تخصص‌های بالا ایجاد کنید
+        </h3>
+        <p style="font-size: 13px; color: var(--text-muted); max-width: 520px; margin: 0 auto 18px; line-height: 1.8;">
+            هزاران فریلنسر ماهر در این حوزه‌ها آماده همکاری و ثبت پیشنهاد روی پروژه شما هستند.
+        </p>
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <a href="{% url 'projects_list' %}" class="btn-pink" style="display: inline-block; width: auto; padding: 10px 24px; text-decoration: none; font-size: 13.5px;">
+                مشاهده همه پروژه‌ها
+            </a>
+            <a href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'login' %}{% endif %}" class="btn-pink btn-outline-pink" style="display: inline-block; width: auto; padding: 10px 24px; text-decoration: none; font-size: 13.5px;">
+                داشبورد کاربری
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function filterCategoriesAndSkills(query) {
+    const q = query.trim().toLowerCase();
+    const columns = document.querySelectorAll('.category-column-card');
+
+    columns.forEach(col => {
+        const catTitle = col.querySelector('.category-column-title').textContent.toLowerCase();
+        const skillItems = col.querySelectorAll('.category-skill-wrapper');
+        let hasMatchInSkills = false;
+
+        skillItems.forEach(item => {
+            const skillName = item.querySelector('.skill-name-text').textContent.toLowerCase();
+            if (!q || skillName.includes(q) || catTitle.includes(q)) {
+                item.style.display = 'block';
+                hasMatchInSkills = true;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        if (!q || hasMatchInSkills || catTitle.includes(q)) {
+            col.style.display = 'block';
+        } else {
+            col.style.display = 'none';
+        }
+    });
+}
+</script>
+
+{% if user.is_authenticated %}
+    {% include 'includes/user_drawer.html' %}
+{% endif %}
+{% endblock %}
