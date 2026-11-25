@@ -73,6 +73,28 @@ class User(AbstractBaseUser):
         return f"{self.first_name} {self.last_name}".strip()
 
     @property
+    def initials(self):
+        """محاسبه حروف اختصاری نام برای نمایش به عنوان آواتار پیش‌فرض"""
+        if self.first_name and self.last_name:
+            return (self.first_name[0] + self.last_name[0]).upper()
+        if self.first_name:
+            return self.first_name[:2].upper()
+        if self.username:
+            return self.username[:2].upper()
+        return "MA"
+
+    @property
+    def avatar_url(self):
+        """آدرس تصویر آواتار آپلود شده در صورت وجود در جدول user_profiles"""
+        try:
+            profile = getattr(self, 'userprofile', None)
+            if profile and profile.avatar:
+                return profile.avatar.url
+        except Exception:
+            return None
+        return None
+
+    @property
     def is_active(self):
         return self.status == 'ACTIVE'
 
@@ -113,6 +135,7 @@ class Admin(models.Model):
 # ============================================================================
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, db_column='user_id')
+    avatar = models.FileField('تصویر پروفایل', upload_to='avatars/', blank=True, null=True)
     professional_title = models.CharField('عنوان حرفه‌ای', max_length=100, blank=True, null=True)
     bio = models.TextField('معرفی / بیوگرافی', blank=True, null=True)
     location = models.CharField('موقعیت مکانی', max_length=100, blank=True, null=True)

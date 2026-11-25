@@ -430,3 +430,39 @@ class AuthenticationTests(TestCase):
         self.assertEqual(res_loc.status_code, 200)
         self.assertContains(res_loc, 'اصفهان، ایران')
 
+    def test_avatar_upload_valid_and_invalid_formats(self):
+        """آزمون آپلود تصویر پروفایل مطابق شرایط عکس ۲۰ (حجم ۵MB و فرمت‌های مجاز)"""
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+
+        # ۱. آپلود فایل نامعتبر با فرمت txt
+        invalid_file = SimpleUploadedFile("test.txt", b"not an image", content_type="text/plain")
+        res_invalid = self.client.post(reverse('profile'), {
+            'action': 'upload_avatar',
+            'avatar_file': invalid_file
+        }, follow=True)
+        self.assertEqual(res_invalid.status_code, 200)
+        self.assertContains(res_invalid, 'فرمت فایل معتبر نیست')
+
+        # ۲. آپلود فایل معتبر با فرمت png
+        valid_png = SimpleUploadedFile("avatar.png", b"\x89PNG\r\n\x1a\nfakeimagecontent", content_type="image/png")
+        res_valid = self.client.post(reverse('profile'), {
+            'action': 'upload_avatar',
+            'avatar_file': valid_png
+        }, follow=True)
+        self.assertEqual(res_valid.status_code, 200)
+        self.assertContains(res_valid, 'تصویر پروفایل شما با موفقیت ذخیره شد')
+
+        # ۳. اطمینان از نمایش آواتار آپلود شده در سایر بخش‌ها (داشبورد، هدر، و صفحه اصلی)
+        res_dash = self.client.get(reverse('dashboard'))
+        self.assertEqual(res_dash.status_code, 200)
+        self.assertContains(res_dash, self.user.avatar_url)
+
+        res_home = self.client.get(reverse('home'))
+        self.assertEqual(res_home.status_code, 200)
+        self.assertContains(res_home, self.user.avatar_url)
+
+        res_projects = self.client.get(reverse('projects_list'))
+        self.assertEqual(res_projects.status_code, 200)
+        self.assertContains(res_projects, self.user.avatar_url)
+

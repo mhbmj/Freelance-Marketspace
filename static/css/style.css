@@ -506,6 +506,10 @@ body {
 .avatar-circle-initials {
     width: 78px;
     height: 78px;
+    min-width: 78px;
+    max-width: 78px;
+    min-height: 78px;
+    max-height: 78px;
     border-radius: 50%;
     background: #9ca3af;
     color: #ffffff;
@@ -516,6 +520,19 @@ body {
     font-weight: 700;
     margin: 0 auto 14px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.avatar-circle-initials img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 50%;
+    display: block;
 }
 
 .user-display-username {
@@ -1223,6 +1240,10 @@ body {
 .avatar-header-circle {
     width: 36px;
     height: 36px;
+    min-width: 36px;
+    max-width: 36px;
+    min-height: 36px;
+    max-height: 36px;
     border-radius: 50%;
     background: #9ca3af;
     color: #ffffff;
@@ -1231,6 +1252,19 @@ body {
     justify-content: center;
     font-size: 13px;
     font-weight: 700;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.avatar-header-circle img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 50%;
+    display: block;
 }
 
 .user-dropdown-menu {
@@ -1278,21 +1312,19 @@ body {
     align-items: center;
     gap: 8px;
     padding: 9px 18px;
-    background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
-    border: 1.5px solid #facc15;
-    color: #713f12;
+    background: linear-gradient(135deg, #33b5a854 0%, #18bead87 100%);
+    border: 1.5px solid #18bead00;
+    color: #0c0a07d6;
     border-radius: 10px;
     font-size: 13.5px;
     font-weight: 700;
     cursor: pointer;
     text-decoration: none;
-    box-shadow: 0 4px 12px rgba(234, 179, 8, 0.22);
     transition: all 0.2s ease;
 }
 
 .btn-quick-project:hover {
     background: linear-gradient(135deg, #fef9c3 0%, #fde047 100%);
-    box-shadow: 0 6px 16px rgba(234, 179, 8, 0.32);
     transform: translateY(-1px);
     color: #552f0a;
 }
@@ -2204,6 +2236,10 @@ body {
 .profile-avatar-circle {
     width: 82px;
     height: 82px;
+    min-width: 82px;
+    max-width: 82px;
+    min-height: 82px;
+    max-height: 82px;
     border-radius: 50%;
     background: #9ca3af;
     color: #ffffff;
@@ -2212,6 +2248,19 @@ body {
     justify-content: center;
     font-size: 26px;
     font-weight: 800;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.profile-avatar-circle img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 50%;
+    display: block;
 }
 
 .avatar-edit-badge {

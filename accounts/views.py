@@ -217,22 +217,27 @@ def dashboard_view(request):
     elif active_subtab == 'inactive':
         user_proposals = user_proposals.filter(status__in=['REJECTED', 'WITHDRAWN'])
 
-    # محاسبه اینیشیال آواتار (مانند MA در پونیشا)
-    initials = "MA"
-    if user.first_name and user.last_name:
-        initials = (user.first_name[0] + user.last_name[0]).upper()
+    profile, _ = UserProfile.objects.get_or_create(user=user)
 
-    # محاسبه درصد تکمیل پروفایل
+    # محاسبه اینیشیال آواتار (مانند MA در پونیشا)
+    initials = user.initials
+
+    # محاسبه درصد تکمیل پروفایل (همگام با صفحه پروفایل)
     profile_percent = 30
     if user.username:
-        profile_percent += 20
+        profile_percent += 15
+    if profile.bio:
+        profile_percent += 15
+    if profile.location:
+        profile_percent += 10
     if user_skills.exists():
-        profile_percent += 30
-    if user.phone_number:
-        profile_percent += 20
+        profile_percent += 15
+    if profile.avatar:
+        profile_percent += 15
 
     return render(request, 'accounts/dashboard.html', {
         'user': user,
+        'profile': profile,
         'user_skills': user_skills,
         'projects': projects,
         'user_proposals': user_proposals,
@@ -273,6 +278,21 @@ def profile_view(request):
             if title:
                 Portfolio.objects.create(user=user, title=title, description=desc, project_url=url)
                 messages.success(request, 'نمونه‌کار جدید با موفقیت اضافه شد.')
+        elif action == 'upload_avatar':
+            avatar_file = request.FILES.get('avatar_file')
+            if not avatar_file:
+                messages.error(request, 'لطفاً یک فایل تصویر برای پروفایل انتخاب کنید.')
+            elif avatar_file.size > 5 * 1024 * 1024:
+                messages.error(request, 'حجم فایل بیشتر از ۵ مگابایت است. لطفاً فایل کم‌حجم‌تری انتخاب نمایید.')
+            else:
+                import os
+                ext = os.path.splitext(avatar_file.name)[1].lower()
+                if ext not in ['.jpg', '.jpeg', '.png']:
+                    messages.error(request, 'فرمت فایل معتبر نیست؛ فقط فایل‌های تصویری با فرمت jpeg، jpg و png مجاز هستند.')
+                else:
+                    profile.avatar = avatar_file
+                    profile.save()
+                    messages.success(request, 'تصویر پروفایل شما با موفقیت ذخیره شد!')
         return redirect('profile')
 
     initials = "MA"
@@ -283,11 +303,13 @@ def profile_view(request):
     if user.username:
         profile_percent += 15
     if profile.bio:
-        profile_percent += 20
-    if profile.location:
         profile_percent += 15
+    if profile.location:
+        profile_percent += 10
     if user_skills.exists():
-        profile_percent += 20
+        profile_percent += 15
+    if profile.avatar:
+        profile_percent += 15
 
     return render(request, 'accounts/profile.html', {
         'user': user,

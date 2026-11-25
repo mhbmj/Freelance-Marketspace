@@ -23,7 +23,13 @@
                 <a href="{% url 'dashboard' %}" class="btn-quick-project"><span>داشبورد من</span></a>
                 <div class="user-menu-wrapper" onclick="toggleUserDrawer(true)" style="cursor: pointer;" title="مشاهده حساب کاربری">
                     <div style="display: flex; align-items: center; gap: 4px;">
-                        <div class="avatar-header-circle">{{ user_initials|default:"MA" }}</div>
+                        <div class="avatar-header-circle" style="width: 36px; height: 36px; min-width: 36px; max-width: 36px; min-height: 36px; max-height: 36px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            {% if user.avatar_url %}
+                                <img src="{{ user.avatar_url }}" alt="آواتار" style="width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 50%; display: block;">
+                            {% else %}
+                                {{ user.initials|default:user_initials|default:"MA" }}
+                            {% endif %}
+                        </div>
                         <span style="font-size: 11px; color: #9ca3af;">▾</span>
                     </div>
                 </div>
@@ -49,10 +55,14 @@
             <div class="profile-header-card">
                 <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
                     <div class="profile-avatar-wrapper">
-                        <div class="profile-avatar-circle">
-                            {{ user_initials|default:"MA" }}
+                        <div class="profile-avatar-circle" style="width: 82px; height: 82px; min-width: 82px; max-width: 82px; min-height: 82px; max-height: 82px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            {% if user.avatar_url %}
+                                <img src="{{ user.avatar_url }}" alt="تصویر پروفایل" style="width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 50%; display: block;">
+                            {% else %}
+                                {{ user.initials|default:user_initials|default:"MA" }}
+                            {% endif %}
                         </div>
-                        <button type="button" class="avatar-edit-badge" onclick="alert('قابلیت انتخاب عکس پروفایل در گام بعدی فعال خواهد شد!')" title="تغییر عکس پروفایل">
+                        <button type="button" class="avatar-edit-badge" onclick="openModal('photo-modal')" title="تغییر عکس پروفایل">
                             ✏️
                         </button>
                     </div>
@@ -371,6 +381,69 @@
     </div>
 </div>
 
+<div id="photo-modal" class="user-drawer-backdrop" style="display: none; align-items: center; justify-content: center; z-index: 2500;">
+    <div class="auth-card" style="width: 480px; max-width: 92vw; padding: 28px 24px; position: relative; direction: rtl;">
+
+        <!-- هدر مودال -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border-card);">
+            <h3 style="font-size: 16.5px; font-weight: 800; color: var(--text-main); margin: 0;">تصویر پروفایل</h3>
+            <button type="button" class="user-drawer-close-btn" onclick="closeModal('photo-modal')" title="بستن">✕</button>
+        </div>
+
+        <form method="post" action="{% url 'profile' %}" enctype="multipart/form-data" id="avatar-upload-form">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="upload_avatar">
+
+            <!-- کادر اعلان راهنما -->
+            <div style="background: var(--accent-teal-soft); border: 1px solid var(--accent-teal-border); border-radius: 12px; padding: 14px 16px; color: #065f46; font-size: 12.5px; line-height: 1.8; margin-bottom: 20px; text-align: justify;">
+                انتخاب یک تصویر پروفایل مناسب به اعتماد‌سازی کارفرمایان و همچنین بهتر دیده شدن شما کمک می‌کند. لطفاً راهنمای مربوط به انتخاب تصویر پروفایل مناسب را مطالعه کنید.
+            </div>
+
+            <!-- پیش‌نمایش آواتار با یوزرنیم و تیک تایید مطابق عکس ۲۰ -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div class="profile-avatar-circle" id="modal-avatar-preview" style="width: 72px; height: 72px; min-width: 72px; max-width: 72px; min-height: 72px; max-height: 72px; font-size: 22px; margin: 0 auto 8px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    {% if user.avatar_url %}
+                        <img src="{{ user.avatar_url }}" alt="آواتار" style="width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 50%; display: block;">
+                    {% else %}
+                        {{ user.initials|default:user_initials|default:"MA" }}
+                    {% endif %}
+                </div>
+                <div style="display: inline-flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 800; color: var(--text-main);" dir="ltr">
+                    <span>@{{ user.username|default:"mahtabmrj" }}</span>
+                    <span style="color: var(--accent-teal); font-size: 13px;">✔</span>
+                </div>
+            </div>
+
+            <!-- کادر خط‌چین آپلود فایل با شرایط عکس ۲۰ -->
+            <div style="border: 2px dashed var(--accent-teal); border-radius: 12px; background: #fdfcfd; padding: 22px 18px; text-align: center; margin-bottom: 22px;">
+                <input type="file" name="avatar_file" accept=".png,.jpg,.jpeg" id="avatar_file_input" style="display: none;" onchange="previewAvatarImage(this)">
+
+                <button type="button" class="btn-pink btn-outline-pink" style="display: inline-flex; width: auto; padding: 9px 20px; font-size: 13px; margin-bottom: 10px;" onclick="document.getElementById('avatar_file_input').click()">
+                    <span>📎</span>
+                    <span>آپلود فایل</span>
+                </button>
+
+                <p style="font-size: 12.5px; color: #4b5563; margin-bottom: 5px;" id="file-chosen-label">
+                    تصویر پروفایل خود را ضمیمه کنید
+                </p>
+                <span style="font-size: 11px; color: #9ca3af;">
+                    حداکثر حجم ۵MB، فقط فایل‌های jpeg, jpg, png
+                </span>
+            </div>
+
+            <!-- دکمه‌های انصراف و تایید -->
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                <button type="button" class="btn-pink btn-outline-pink" style="width: auto; padding: 9px 20px; font-size: 13px;" onclick="closeModal('photo-modal')">
+                    انصراف
+                </button>
+                <button type="submit" class="btn-pink" style="width: auto; padding: 9px 22px; font-size: 13px;">
+                    ذخیره تصویر پروفایل
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
 function openModal(id) {
     const m = document.getElementById(id);
@@ -379,6 +452,18 @@ function openModal(id) {
 function closeModal(id) {
     const m = document.getElementById(id);
     if (m) { m.style.display = 'none'; m.classList.remove('open'); }
+}
+function previewAvatarImage(input) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        document.getElementById('file-chosen-label').textContent = 'فایل انتخاب شد: ' + file.name;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('modal-avatar-preview');
+            preview.innerHTML = '<img src="' + e.target.result + '" alt="پیش‌نمایش" style="width: 100%; height: 100%; object-fit: cover;">';
+        }
+        reader.readAsDataURL(file);
+    }
 }
 </script>
 
