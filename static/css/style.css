@@ -2424,8 +2424,8 @@ body {
 }
 
 .project-detail-top-bar {
-    height: 4px;
-    background: linear-gradient(90deg, #10b981 0%, var(--accent-teal) 100%);
+    height: 5px;
+    background: linear-gradient(90deg, var(--pastel-pink) 0%, var(--pastel-yellow) 50%, var(--accent-teal) 100%);
     width: 100%;
 }
 
@@ -2433,9 +2433,9 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: #ecfdf5;
-    border: 1px solid #a7f3d0;
-    color: #065f46;
+    background: #fdf2f8;
+    border: 1px solid #fbcfe8;
+    color: #be185d;
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 12px;
@@ -2446,7 +2446,7 @@ body {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #10b981;
+    background: var(--pastel-pink-hover);
 }
 
 .project-detail-title {
@@ -2542,31 +2542,32 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: #047857;
+    background: linear-gradient(135deg, var(--pastel-pink) 0%, var(--pastel-pink-hover) 100%);
     color: #ffffff;
-    border: none;
-    border-radius: 10px;
+    border: 1.5px solid var(--pastel-pink-border);
+    border-radius: 12px;
     padding: 12px 28px;
     font-size: 14.5px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(4, 120, 87, 0.25);
+    box-shadow: 0 4px 14px rgba(244, 114, 182, 0.35);
     transition: all 0.2s ease;
 }
 
 .btn-send-proposal:hover {
-    background: #065f46;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(4, 120, 87, 0.35);
+    background: linear-gradient(135deg, var(--pastel-pink-hover) 0%, #db2777 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(244, 114, 182, 0.45);
+    color: #ffffff;
 }
 
 .btn-bid-submitted {
     display: inline-flex;
     align-items: center;
-    background: #ecfdf5;
-    color: #065f46;
-    border: 1.5px solid #a7f3d0;
-    border-radius: 10px;
+    background: #fdf2f8;
+    color: #be185d;
+    border: 1.5px solid #fbcfe8;
+    border-radius: 12px;
     padding: 11px 22px;
     font-size: 13.5px;
     font-weight: 700;
@@ -2606,12 +2607,56 @@ body {
     flex-shrink: 0;
 }
 
+/* Modal Backdrop Overlay (پاپ‌آپ سنتر شده و فیکس روی کل صفحه) */
+.modal-backdrop {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(15, 23, 42, 0.55) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    z-index: 3000 !important;
+    display: none;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+}
+
+.modal-backdrop.open {
+    display: flex !important;
+}
+
 /* Proposal Modal Styles (Image 24) */
 .proposal-modal-card {
+    background: #ffffff !important;
+    border: 1.5px solid var(--border-card) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18) !important;
     max-width: 660px !important;
     width: 95% !important;
-    max-height: 90vh;
-    overflow-y: auto;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    padding: 26px 28px !important;
+    position: relative !important;
+    margin: auto !important;
+    animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPopIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .proposal-modal-grid {
@@ -2678,17 +2723,19 @@ body {
     margin-bottom: 6px;
 }
 
-.btn-submit-green {
-    background: #047857;
+.btn-submit-green, .btn-submit-proposal {
+    background: linear-gradient(135deg, var(--pastel-pink) 0%, var(--pastel-pink-hover) 100%);
     color: #ffffff;
     border: none;
     border-radius: 10px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(4, 120, 87, 0.2);
+    box-shadow: 0 4px 14px rgba(244, 114, 182, 0.35);
     transition: all 0.2s ease;
 }
 
-.btn-submit-green:hover {
-    background: #065f46;
+.btn-submit-green:hover, .btn-submit-proposal:hover {
+    background: linear-gradient(135deg, var(--pastel-pink-hover) 0%, #db2777 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(244, 114, 182, 0.45);
 }

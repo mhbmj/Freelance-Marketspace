@@ -176,7 +176,7 @@
                     {% else %}
                         <button type="button" class="btn-send-proposal" onclick="openModal('proposal-modal')">
                             <span>ارسال پیشنهاد</span>
-                            <span>←</span>
+                            <span>🚀</span>
                         </button>
                     {% endif %}
                 </div>
@@ -299,12 +299,12 @@
                                 <input type="text" id="escrow_amount_display" class="form-control" placeholder="به مبلغ" readonly style="background: #ffffff;">
                                 <span class="input-suffix-tag">تومان</span>
                             </div>
-                            <div style="flex: 1; text-align: center; background: #ffffff; border: 1.5px solid var(--border-card); border-radius: 10px; padding: 10px 6px; font-weight: 700; color: var(--accent-teal);">
+                            <div style="flex: 1; text-align: center; background: #fdf2f8; border: 1.5px solid var(--pastel-pink-border); border-radius: 10px; padding: 10px 6px; font-weight: 700; color: #be185d;">
                                 ۱۰۰ ٪
                             </div>
                         </div>
 
-                        <a href="javascript:void(0)" onclick="alert('پرداخت امن مرحله‌ای در فاز بعدی فعال خواهد شد.')" style="display: inline-block; font-size: 12px; color: var(--accent-teal); font-weight: 700; text-decoration: none; margin-top: 10px;">
+                        <a href="javascript:void(0)" onclick="alert('پرداخت امن مرحله‌ای در فاز بعدی فعال خواهد شد.')" style="display: inline-block; font-size: 12px; color: var(--pastel-pink-hover); font-weight: 700; text-decoration: none; margin-top: 10px;">
                             + اضافه کردن پرداخت امن جدید
                         </a>
                     </div>
@@ -324,7 +324,7 @@
 
                     <div class="calc-row calc-row-highlight">
                         <span style="font-weight: 700; color: var(--text-main);">مبلغ دریافتی نهایی شما</span>
-                        <strong id="calc-net-receive" style="color: #059669; font-size: 15px;">۰ تومان</strong>
+                        <strong id="calc-net-receive" style="color: #be185d; font-size: 15px;">۰ تومان</strong>
                     </div>
 
                     <!-- نوار وضعیت و پیشرفت پرداخت امن -->
@@ -334,7 +334,7 @@
                             <strong id="calc-escrow-sum" style="color: var(--text-main);">۰ تومان</strong>
                         </div>
                         <div class="completion-bar-track" style="height: 6px;">
-                            <div class="completion-bar-fill" id="escrow-progress" style="width: 0%; background: var(--accent-teal);"></div>
+                            <div class="completion-bar-fill" id="escrow-progress" style="width: 0%; background: linear-gradient(90deg, var(--pastel-pink) 0%, var(--accent-teal) 100%);"></div>
                         </div>
                     </div>
                 </div>
@@ -373,7 +373,7 @@
             </div>
 
             <!-- باکس یادآوری سهمیه پیشنهاد -->
-            <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #92400e; display: flex; align-items: center; gap: 8px; margin-bottom: 22px;">
+            <div style="background: var(--pastel-yellow-light); border: 1px solid var(--pastel-yellow-border); border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #854d0e; display: flex; align-items: center; gap: 8px; margin-bottom: 22px;">
                 <span>ℹ️</span>
                 <span>تعداد پیشنهاد مورد نیاز برای این پروژه: <strong>۵ عدد</strong></span>
             </div>
@@ -383,7 +383,7 @@
                 <button type="button" class="btn-pink btn-outline-pink" style="width: auto; padding: 10px 24px; font-size: 13.5px;" onclick="closeModal('proposal-modal')">
                     لغو
                 </button>
-                <button type="submit" class="btn-submit-green" style="width: auto; padding: 10px 32px; font-size: 14px;">
+                <button type="submit" class="btn-submit-proposal" style="width: auto; padding: 10px 32px; font-size: 14px;">
                     ثبت پیشنهاد
                 </button>
             </div>
@@ -394,11 +394,19 @@
 <script>
 function openModal(id) {
     const m = document.getElementById(id);
-    if (m) { m.style.display = 'flex'; m.classList.add('open'); }
+    if (m) {
+        m.style.display = 'flex';
+        m.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
 }
 function closeModal(id) {
     const m = document.getElementById(id);
-    if (m) { m.style.display = 'none'; m.classList.remove('open'); }
+    if (m) {
+        m.style.display = 'none';
+        m.classList.remove('open');
+        document.body.style.overflow = '';
+    }
 }
 
 function toggleProjectDescription() {
