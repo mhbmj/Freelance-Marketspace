@@ -535,6 +535,56 @@ def categories_view(request):
     })
 
 
+def freelancers_list_view(request):
+    """صفحه لیست تمام فریلنسرهای فعال در دیتابیس با امکان جستجو، مشاهده مهارت‌ها و دعوت به همکاری"""
+    freelancers = User.objects.filter(role='FREELANCER').select_related('userprofile').prefetch_related('userskill_set__skill').order_by('-id')
+
+    # جستجو بر اساس نام، نام کاربری، عنوان شغلی، بیوگرافی یا نام مهارت
+    query = request.GET.get('q', '').strip()
+    if query:
+        freelancers = freelancers.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(username__icontains=query) |
+            Q(userprofile__professional_title__icontains=query) |
+            Q(userprofile__bio__icontains=query) |
+            Q(userskill__skill__name__icontains=query)
+        ).distinct()
+
+    # مدیریت ارسال دعوت‌نامه همکاری
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            messages.error(request, 'برای ارسال دعوت‌نامه همکاری، ابتدا وارد حساب کاربری خود شوید.')
+            return redirect('login')
+
+        freelancer_id = request.POST.get('freelancer_id')
+        target_freelancer = get_object_or_404(User, pk=freelancer_id, role='FREELANCER')
+
+        if request.user.id == target_freelancer.id:
+            messages.warning(request, 'شما نمی‌توانید برای خودتان دعوت‌نامه همکاری ارسال کنید.')
+        else:
+            messages.success(request, f'دعوت‌نامه همکاری با موفقیت برای {target_freelancer.full_name or target_freelancer.username} ارسال شد!')
+
+        return redirect('freelancers_list')
+
+    # پروژه‌های باز کارفرما برای انتخاب در مودال دعوت به همکاری
+    employer_projects = []
+    if request.user.is_authenticated:
+        employer_projects = Project.objects.filter(employer=request.user, status='OPEN')
+
+    initials = "MA"
+    if request.user.is_authenticated and request.user.first_name and request.user.last_name:
+        initials = (request.user.first_name[0] + request.user.last_name[0]).upper()
+
+    return render(request, 'accounts/freelancers_list.html', {
+        'freelancers': freelancers,
+        'query': query,
+        'total_count': freelancers.count(),
+        'employer_projects': employer_projects,
+        'user_initials': initials,
+    })
+
+
 def terms_view(request):
     """صفحه قوانین و مقررات پلتفرم فریلنسری مطابق استاندارد پونیشا"""
     initials = "MA"

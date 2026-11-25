@@ -556,3 +556,59 @@ class AuthenticationTests(TestCase):
         self.assertContains(res, 'طراحی سایت')
         self.assertContains(res, 'طراحی گرافیک')
 
+    # ------------------------------------------------------------------------
+    # ۱۰. آزمون‌های صفحه فهرست فریلنسرها و دعوت به همکاری (/freelancers/)
+    # ------------------------------------------------------------------------
+    def test_freelancers_list_view_and_invitation(self):
+        """مشاهده بانک فریلنسرها، نمایش پویا پس از ثبت‌نام، مهارت‌ها و ارسال دعوت‌نامه"""
+        from accounts.models import Skill, UserSkill, UserProfile
+
+        # ایجاد فریلنسر نمونه جدید برای اطمینان از پویایی اضافه شدن فریلنسرها
+        new_freelancer = User.objects.create_user(
+            email='new_freelancer_test@example.com',
+            password='Password123',
+            first_name='سامان',
+            last_name='کریمی',
+            username='samankarimi',
+            role='FREELANCER'
+        )
+        UserProfile.objects.create(
+            user=new_freelancer,
+            professional_title='توسعه‌دهنده فلاتر و اندروید',
+            location='مشهد، ایران',
+            bio='طراحی اپلیکیشن‌های موبایل کراس‌پلتفرم با فلاتر'
+        )
+        flutter_skill, _ = Skill.objects.get_or_create(name='Flutter')
+        UserSkill.objects.create(user=new_freelancer, skill=flutter_skill)
+
+        # ۱. دسترسی به صفحه فریلنسرها و مشاهده فریلنسر جدید همراه با مهارت‌ها
+        res = self.client.get(reverse('freelancers_list'))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, 'سامان کریمی')
+        self.assertContains(res, '@samankarimi')
+        self.assertContains(res, 'توسعه‌دهنده فلاتر و اندروید')
+        self.assertContains(res, 'Flutter')
+        self.assertContains(res, 'دعوت به همکاری')
+
+        # ۲. جستجوی فریلنسر بر اساس مهارت
+        res_search = self.client.get(reverse('freelancers_list') + '?q=Flutter')
+        self.assertEqual(res_search.status_code, 200)
+        self.assertContains(res_search, 'سامان کریمی')
+
+        # ۳. ارسال دعوت‌نامه همکاری توسط کارفرما
+        employer = User.objects.create_user(
+            email='employer_inviter@example.com',
+            password='Password123',
+            first_name='حامد',
+            last_name='احمدی',
+            username='hamed_employer',
+            role='EMPLOYER'
+        )
+        self.client.login(email='employer_inviter@example.com', password='Password123')
+        res_invite = self.client.post(reverse('freelancers_list'), {
+            'freelancer_id': new_freelancer.id,
+            'message': 'دعوت به پروژه موبایل'
+        }, follow=True)
+        self.assertEqual(res_invite.status_code, 200)
+        self.assertContains(res_invite, 'دعوت‌نامه همکاری با موفقیت برای')
+

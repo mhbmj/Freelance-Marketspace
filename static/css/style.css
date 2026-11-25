@@ -2957,3 +2957,81 @@ body {
     transform: scale(1.4);
     color: var(--pastel-pink-hover);
 }
+
+/* ==========================================================================
+   Freelancers Directory Grid & Cards (بانک فریلنسرها)
+   ========================================================================== */
+.freelancers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    align-items: stretch;
+}
+
+@media (max-width: 860px) {
+    .freelancers-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.freelancer-card {
+    background: #ffffff;
+    border: 1.5px solid var(--border-card);
+    border-radius: var(--radius-card);
+    padding: 24px;
+    box-shadow: var(--shadow-minimal);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.freelancer-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--pastel-pink) 0%, var(--pastel-yellow) 100%);
+}
+
+.freelancer-card:hover {
+    border-color: #fbcfe8;
+    box-shadow: 0 10px 25px rgba(244, 114, 182, 0.1);
+    transform: translateY(-2px);
+}
+
+.freelancer-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-card);
+    margin-top: auto;
+}
+
+.btn-invite-freelancer {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
+    border: 1.5px solid #facc15;
+    color: #713f12;
+    border-radius: 10px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(234, 179, 8, 0.25);
+    transition: all 0.2s ease;
+}
+
+.btn-invite-freelancer:hover {
+    background: linear-gradient(135deg, #fef9c3 0%, #facc15 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(234, 179, 8, 0.35);
+    color: #552f0a;
+}
