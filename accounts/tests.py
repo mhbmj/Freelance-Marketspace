@@ -612,3 +612,35 @@ class AuthenticationTests(TestCase):
         self.assertEqual(res_invite.status_code, 200)
         self.assertContains(res_invite, 'دعوت‌نامه همکاری با موفقیت برای')
 
+    # ------------------------------------------------------------------------
+    # ۱۱. آزمون‌های بخش اطلاعیه‌ها و پیام‌های داشبورد (تصاویر ۲۹ و ۳۰)
+    # ------------------------------------------------------------------------
+    def test_dashboard_announcements_and_messages_sections(self):
+        """مشاهده بخش‌های اطلاعیه‌های من و پیام‌های من در داشبورد مطابق تصاویر ۲۹ و ۳۰ پونیشا"""
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+
+        # ۱. بخش اطلاعیه‌ها (?section=announcements)
+        res_ann = self.client.get(reverse('dashboard') + '?section=announcements')
+        self.assertEqual(res_ann.status_code, 200)
+        self.assertContains(res_ann, 'اطلاعیه‌های من')
+        self.assertContains(res_ann, 'به پونیشا خوش آمدید')
+        self.assertContains(res_ann, '۲۳ آبان ۱۴۰۵')
+        self.assertContains(res_ann, 'تنظیم مهارت‌ها:')
+
+        # ۲. بخش پیام‌ها (?section=messages)
+        res_msg = self.client.get(reverse('dashboard') + '?section=messages')
+        self.assertEqual(res_msg.status_code, 200)
+        self.assertContains(res_msg, 'پیام های من')
+        self.assertContains(res_msg, 'پیام‌های پشتیبانی')
+        self.assertContains(res_msg, 'شما هنوز مکالمه ای رو شروع نکردید')
+        self.assertContains(res_msg, 'برای شروع به گفت‌وگو لطفا یکی از مکالمه ها را انتخاب کنید')
+
+        # ۳. تست ریدایرکت‌های کمکی
+        res_notif_redir = self.client.get(reverse('dashboard_notifications'))
+        self.assertEqual(res_notif_redir.status_code, 302)
+        self.assertIn('section=announcements', res_notif_redir.headers.get('Location'))
+
+        res_msg_redir = self.client.get(reverse('dashboard_messages'))
+        self.assertEqual(res_msg_redir.status_code, 302)
+        self.assertIn('section=messages', res_msg_redir.headers.get('Location'))
+

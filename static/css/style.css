@@ -671,10 +671,11 @@ body {
 }
 
 .sidebar-nav-item.active {
-    background: #fff0f6;
-    color: #be185d;
+    background: #fdfcfd;
+    color: var(--text-main);
     font-weight: 700;
-    border-right: 3.5px solid var(--pastel-pink);
+    border-left: 4px solid var(--accent-teal);
+    border-right: none;
 }
 
 .nav-item-content {
@@ -3034,4 +3035,200 @@ body {
     transform: translateY(-1px);
     box-shadow: 0 5px 14px rgba(234, 179, 8, 0.35);
     color: #552f0a;
+}
+
+/* ==========================================================================
+   Dashboard Announcements (اطلاعیه‌های من - مطابق تصویر ۲۹)
+   ========================================================================== */
+.announcement-full-card {
+    background: #ffffff;
+    border: 1.5px solid var(--border-card);
+    border-radius: var(--radius-card);
+    padding: 32px 30px;
+    box-shadow: var(--shadow-minimal);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 28px;
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    .announcement-full-card {
+        flex-direction: column-reverse;
+        gap: 18px;
+    }
+}
+
+.announcement-body-text {
+    font-size: 13.5px;
+    color: #374151;
+    line-height: 2.3;
+    text-align: justify;
+    margin: 0;
+}
+
+.announcement-body-text strong {
+    color: var(--text-main);
+    font-weight: 800;
+}
+
+.announcement-meta-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    padding-top: 4px;
+}
+
+.announcement-date-text {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.announcement-logo-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #ecfdf5;
+    border: 1.5px solid #a7f3d0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #059669;
+    font-size: 18px;
+}
+
+.announcement-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.pagination-nav-arrow {
+    font-size: 16px;
+    color: #9ca3af;
+    cursor: default;
+    user-select: none;
+    padding: 4px 8px;
+}
+
+.pagination-page-active {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: #10b981;
+    color: #ffffff;
+    font-size: 13.5px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+}
+
+/* ==========================================================================
+   Dashboard Messages (پیام های من - مطابق تصویر ۳۰)
+   ========================================================================== */
+.messages-container-card {
+    background: #ffffff;
+    border: 1.5px solid var(--border-card);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-minimal);
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: 520px;
+    overflow: hidden;
+}
+
+@media (max-width: 860px) {
+    .messages-container-card {
+        grid-template-columns: 1fr;
+    }
+}
+
+.messages-sidebar-col {
+    border-left: 1.5px solid var(--border-card);
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+}
+
+.messages-nav-tabs {
+    display: flex;
+    border-bottom: 1.5px solid var(--border-card);
+}
+
+.messages-tab-btn {
+    flex: 1;
+    padding: 12px 14px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.messages-tab-btn.active {
+    color: var(--text-main);
+    border-bottom-color: #10b981;
+}
+
+.messages-search-wrap {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-card);
+}
+
+.messages-search-input {
+    width: 100%;
+    background: #f8fafc;
+    border: 1px solid var(--border-card);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12.5px;
+    font-family: inherit;
+    box-sizing: border-box;
+    color: var(--text-main);
+}
+
+.messages-search-input:focus {
+    outline: none;
+    border-color: var(--pastel-pink);
+    background: #ffffff;
+}
+
+.messages-empty-state-list {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.messages-chat-area-col {
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    text-align: center;
+}
+
+.messages-chat-empty-text {
+    font-size: 13.5px;
+    color: #94a3b8;
+    max-width: 320px;
+    line-height: 1.8;
 }

@@ -219,14 +219,14 @@
                 </div>
 
                 <!-- آیکون پیام‌ها -->
-                <a href="javascript:void(0)" class="nav-link-btn" style="padding: 6px;" onclick="alert('قابلیت پیام‌ها در فازهای بعدی پلتفرم فعال خواهد شد!')" title="پیام‌ها">
+                <a href="{% url 'dashboard' %}?section=messages" class="nav-link-btn" style="padding: 6px; {% if active_section == 'messages' %}background: var(--pastel-pink-soft); color: #be185d;{% endif %}" title="پیام‌ها">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                     </svg>
                 </a>
 
                 <!-- آیکون زنگوله اطلاعیه‌ها -->
-                <a href="javascript:void(0)" class="nav-link-btn" style="padding: 6px;" onclick="alert('قابلیت اطلاعیه‌ها در فازهای بعدی پلتفرم فعال خواهد شد!')" title="اطلاعیه‌ها">
+                <a href="{% url 'dashboard' %}?section=announcements" class="nav-link-btn" style="padding: 6px; {% if active_section == 'announcements' %}background: var(--pastel-pink-soft); color: #be185d;{% endif %}" title="اطلاعیه‌ها">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
@@ -305,7 +305,7 @@
             <!-- منوی سایدبار مطابق اسکرین‌شات پونیشا -->
             <div class="ponisha-card">
                 <nav class="sidebar-nav-menu">
-                    <a href="{% url 'dashboard' %}" class="sidebar-nav-item active">
+                    <a href="{% url 'dashboard' %}" class="sidebar-nav-item {% if active_section == 'workspace' %}active{% endif %}">
                         <div class="nav-item-content">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
@@ -318,7 +318,7 @@
                         </svg>
                     </a>
 
-                    <a href="javascript:void(0)" class="sidebar-nav-item" onclick="alert('قابلیت اطلاعیه‌ها در فازهای بعدی پلتفرم فعال خواهد شد!')">
+                    <a href="{% url 'dashboard' %}?section=announcements" class="sidebar-nav-item {% if active_section == 'announcements' %}active{% endif %}">
                         <div class="nav-item-content">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -331,7 +331,7 @@
                         </svg>
                     </a>
 
-                    <a href="javascript:void(0)" class="sidebar-nav-item" onclick="alert('قابلیت پیام‌ها در فازهای بعدی پلتفرم فعال خواهد شد!')">
+                    <a href="{% url 'dashboard' %}?section=messages" class="sidebar-nav-item {% if active_section == 'messages' %}active{% endif %}">
                         <div class="nav-item-content">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -395,36 +395,105 @@
         <!-- ستون اصلی داشبورد (Main Content Column) -->
         <main class="main-content-column">
 
-            <!-- کارت بنر راهنما مطابق پونیشا -->
-            <div class="welcome-announcement-card" id="announcement-banner">
-                <button type="button" class="announcement-close-btn" onclick="document.getElementById('announcement-banner').style.display='none';" title="بستن اعلان">
-                    ✕
-                </button>
-                <div class="announcement-title">
-                    به داشبورد خوش آمدید! 👋
-                </div>
-                <p class="announcement-text">
-                    از بخش‌های مختلف داشبورد می‌توانید به پروفایل، اطلاعیه‌ها، تنظیمات و ... دسترسی داشته باشید و وضعیت پروژه‌ها را در هر مرحله پیگیری کنید.
-                </p>
-                <ul class="announcement-list">
-                    <li>در ابتدا شما از طریق گزینه "ثبت سریع پروژه" پروژه خود را در سایت ثبت می‌کنید.</li>
-                    <li>پروژه شما با نشان "در انتظار تایید" در مرحله بررسی توسط پشتیبان سایت است.</li>
-                    <li>پروژه شما با نشان "باز" در سایت نمایش داده می‌شود و متخصصین می‌توانند پیشنهادهای خود را برای شما ارسال کنند.</li>
-                </ul>
-            </div>
+            {% if active_section == 'announcements' %}
+                <!-- ==================== بخش اطلاعیه‌های من (مطابق تصویر ۲۹ پونیشا) ==================== -->
+                <div style="margin-bottom: 20px;">
+                    <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin: 0 0 18px 0;">
+                        اطلاعیه‌های من
+                    </h2>
 
-            <!-- تب‌های پروژه‌های من / پیشنهادات / محصولات -->
-            <div class="dashboard-tabs-bar" style="margin-bottom: 20px;">
-                <a href="?tab=my_projects" class="tab-btn {% if active_tab == 'my_projects' %}active{% endif %}">
-                    پروژه‌های من
-                </a>
-                <a href="?tab=proposals" class="tab-btn {% if active_tab == 'proposals' %}active{% endif %}">
-                    پیشنهادات
-                </a>
-                <a href="?tab=products" class="tab-btn {% if active_tab == 'products' %}active{% endif %}">
-                    محصولات
-                </a>
-            </div>
+                    <div class="announcement-full-card">
+                        <!-- متن پیام اطلاعیه با هایلایت بخش‌ها -->
+                        <div class="announcement-body-text">
+                            به پونیشا خوش آمدید ما به شما کمک می‌کنیم تا از مهارت خود درآمد کسب کنید، در هر کجا و هر زمان که دوست دارید کار کنید و از آزادی عمل در کار به صورت یک فریلنسر لذت ببرید. <strong>تنظیم مهارت‌ها:</strong> مهارت‌های خود را انتخاب کنید، ما پروژه‌های جدید با مهارت‌های شما را هر روز برایتان ایمیل می‌کنیم. برای مشاهده پروژه‌ها از فهرست پروژه‌ها با مهارت من، می‌توانید پروژه‌ها را مشاهده کنید. <strong>تکمیل پروفایل:</strong> قبل از ارسال پیشنهاد روی پروژه‌ها پروفایل خود را تکمیل کنید، عکس مناسب برای پروفایل خود انتخاب کنید، برای پروفایل خود کاور مناسب انتخاب کنید، نمونه‌های خود را به پروفایلتان اضافه کنید و رزومه خود را تکمیل کنید. پروفایل‌های تکمیل شده ۹۰٪ شانس بیشتری برای دریافت پروژه دارند. <strong>ارسال پیشنهاد:</strong> با دقت متن پروژه را مطالعه کنید، قیمت و زمان انجام پروژه را برای کارفرما ارسال کنید و توضیح دهید چرا شما بهترین فرد برای انجام پروژه کارفرما هستید یا اگر سوال دارید از کارفرما بپرسید. زمانی که کارفرما برای شما پیام ارسال کند امکان گفتگو فعال می‌شود. <strong>میزکار:</strong> هر زمان برای انجام پروژه انتخاب شدید می‌بایست در مدت زمان مشخص انجام پروژه را قبول کنید، سپس میزکار برای شما فعال می‌شود. در میزکار می‌توانید گفتگوها، فایل‌ها و پرداخت‌ها را مشاهده و مدیریت کنید. <strong>انجام شد:</strong> هر زمان پروژه انجام شود می‌توانید رتبه و نظر خود را برای کارفرما ثبت کنید و کارفرما نیز به شما رتبه دهد. بعد از دریافت رتبه، مهارت‌های مرتبط به آن پروژه در پروفایل شما امتیاز می‌گیرند که سه ماه اعتبار دارد. این امتیاز شما را در لیست فریلنسرها بالا آورده و ما فریلنسرهای برتر را به کارفرمایان پیشنهاد می‌کنیم. برای جلوگیری از مسدود شدن حساب خود قوانین سایت را با دقت مطالعه کنید. امیدواریم بتوانیم همکاری خوب و طولانی مدتی با هم داشته باشیم.
+                        </div>
+
+                        <!-- ستون متادیتا و لوگوی اطلاعیه -->
+                        <div class="announcement-meta-box">
+                            <span class="announcement-date-text">۲۳ آبان ۱۴۰۵</span>
+                            <div class="announcement-logo-badge">
+                                <img src="{% static 'images/logo.png' %}" alt="لوگو" style="width: 22px; height: 22px; object-fit: contain;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- صفحه‌بندی مطابق تصویر ۲۹ پونیشا -->
+                    <div class="announcement-pagination">
+                        <span class="pagination-nav-arrow">←</span>
+                        <span class="pagination-page-active">۱</span>
+                        <span class="pagination-nav-arrow">→</span>
+                    </div>
+                </div>
+
+            {% elif active_section == 'messages' %}
+                <!-- ==================== بخش پیام های من (مطابق تصویر ۳۰ پونیشا) ==================== -->
+                <div style="margin-bottom: 20px;">
+                    <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin: 0 0 18px 0;">
+                        پیام های من
+                    </h2>
+
+                    <div class="messages-container-card">
+                        <!-- ستون راست: لیست پیام‌ها و تب‌ها -->
+                        <div class="messages-sidebar-col">
+                            <div class="messages-nav-tabs">
+                                <button type="button" class="messages-tab-btn active" id="tab-btn-messages">
+                                    پیام‌ها
+                                </button>
+                                <button type="button" class="messages-tab-btn" id="tab-btn-support" onclick="alert('پیام پشتیبانی جدیدی ثبت نشده است.')">
+                                    پیام‌های پشتیبانی
+                                </button>
+                            </div>
+
+                            <div class="messages-search-wrap">
+                                <input type="text" class="messages-search-input" placeholder="جست و جو...">
+                            </div>
+
+                            <div class="messages-empty-state-list">
+                                شما هنوز مکالمه ای رو شروع نکردید
+                            </div>
+                        </div>
+
+                        <!-- ستون چپ: صفحه چت خالی با راهنما -->
+                        <div class="messages-chat-area-col">
+                            <div class="messages-chat-empty-text">
+                                برای شروع به گفت‌وگو لطفا یکی از مکالمه ها را انتخاب کنید
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% else %}
+                <!-- ==================== بخش اتاق کار (پروژه‌های من - پیش‌فرض) ==================== -->
+                <!-- کارت بنر راهنما مطابق پونیشا -->
+                <div class="welcome-announcement-card" id="announcement-banner">
+                    <button type="button" class="announcement-close-btn" onclick="document.getElementById('announcement-banner').style.display='none';" title="بستن اعلان">
+                        ✕
+                    </button>
+                    <div class="announcement-title">
+                        به داشبورد خوش آمدید! 👋
+                    </div>
+                    <p class="announcement-text">
+                        از بخش‌های مختلف داشبورد می‌توانید به پروفایل، اطلاعیه‌ها، تنظیمات و ... دسترسی داشته باشید و وضعیت پروژه‌ها را در هر مرحله پیگیری کنید.
+                    </p>
+                    <ul class="announcement-list">
+                        <li>در ابتدا شما از طریق گزینه "ثبت سریع پروژه" پروژه خود را در سایت ثبت می‌کنید.</li>
+                        <li>پروژه شما با نشان "در انتظار تایید" در مرحله بررسی توسط پشتیبان سایت است.</li>
+                        <li>پروژه شما با نشان "باز" در سایت نمایش داده می‌شود و متخصصین می‌توانند پیشنهادهای خود را برای شما ارسال کنند.</li>
+                    </ul>
+                </div>
+
+                <!-- تب‌های پروژه‌های من / پیشنهادات / محصولات -->
+                <div class="dashboard-tabs-bar" style="margin-bottom: 20px;">
+                    <a href="?tab=my_projects" class="tab-btn {% if active_tab == 'my_projects' %}active{% endif %}">
+                        پروژه‌های من
+                    </a>
+                    <a href="?tab=proposals" class="tab-btn {% if active_tab == 'proposals' %}active{% endif %}">
+                        پیشنهادات
+                    </a>
+                    <a href="?tab=products" class="tab-btn {% if active_tab == 'products' %}active{% endif %}">
+                        محصولات
+                    </a>
+                </div>
 
             {% if active_tab == 'proposals' %}
                 <!-- ==================== تب پیشنهادات (مطابق تصویر ۴) ==================== -->
@@ -569,6 +638,7 @@
                         {% endif %}
                     </div>
                 </div>
+            {% endif %}
             {% endif %}
 
         </main>

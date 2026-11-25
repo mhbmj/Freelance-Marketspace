@@ -235,6 +235,9 @@ def dashboard_view(request):
     if profile.avatar:
         profile_percent += 15
 
+    # بخش فعال سایدبار (اتاق کار / اطلاعیه‌ها / پیام‌ها) مطابق تصاویر ۲۹ و ۳۰
+    active_section = request.GET.get('section', 'workspace')
+
     return render(request, 'accounts/dashboard.html', {
         'user': user,
         'profile': profile,
@@ -242,6 +245,7 @@ def dashboard_view(request):
         'projects': projects,
         'user_proposals': user_proposals,
         'query': query,
+        'active_section': active_section,
         'active_tab': active_tab,
         'active_subtab': active_subtab,
         'user_initials': initials,
@@ -249,6 +253,18 @@ def dashboard_view(request):
         'remaining_proposals': 5,
         'remaining_days': 0,
     })
+
+
+@login_required
+def notifications_redirect_view(request):
+    """هدایت مستقیم به بخش اطلاعیه‌های داشبورد"""
+    return redirect(f"{reverse('dashboard')}?section=announcements")
+
+
+@login_required
+def messages_redirect_view(request):
+    """هدایت مستقیم به بخش پیام‌های داشبورد"""
+    return redirect(f"{reverse('dashboard')}?section=messages")
 
 
 @login_required
