@@ -644,3 +644,9 @@ class AuthenticationTests(TestCase):
         self.assertEqual(res_msg_redir.status_code, 302)
         self.assertIn('section=messages', res_msg_redir.headers.get('Location'))
 
+        # ۴. تست وجود لینک‌های اطلاعیه‌ها و پیام‌ها در سایدبار کشویی (user_drawer.html)
+        res_home = self.client.get(reverse('home'))
+        self.assertEqual(res_home.status_code, 200)
+        self.assertContains(res_home, 'section=announcements')
+        self.assertContains(res_home, 'section=messages')
+
