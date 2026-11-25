@@ -110,4 +110,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setupPasswordStrength('password');
     setupPasswordStrength('new_password');
+
+    // جلوگیری از باز شدن فایل توسط رفتار پیش‌فرض مرورگر در صورت رها شدن تصادفی در هر جای صفحه
+    window.addEventListener('dragover', function (e) {
+        e.preventDefault();
+    }, false);
+
+    window.addEventListener('drop', function (e) {
+        e.preventDefault();
+    }, false);
 });

@@ -287,8 +287,8 @@ def profile_view(request):
             else:
                 import os
                 ext = os.path.splitext(avatar_file.name)[1].lower()
-                if ext not in ['.jpg', '.jpeg', '.png']:
-                    messages.error(request, 'فرمت فایل معتبر نیست؛ فقط فایل‌های تصویری با فرمت jpeg، jpg و png مجاز هستند.')
+                if ext not in ['.jpg', '.jpeg', '.png', '.webp']:
+                    messages.error(request, 'فرمت فایل معتبر نیست؛ فقط فایل‌های تصویری با فرمت jpeg، jpg، png و webp مجاز هستند.')
                 else:
                     profile.avatar = avatar_file
                     profile.save()
