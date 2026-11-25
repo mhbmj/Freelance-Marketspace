@@ -257,56 +257,31 @@
         <form method="post" action="{% url 'project_detail' project.id %}" id="proposal-form">
             {% csrf_token %}
 
-            <!-- گرید دو ستونه: فیلدهای ورودی در راست و کادر محاسبه مالی در چپ -->
+            <!-- گرید دو ستونه: فیلدهای اصلی در راست و کادر محاسبه مالی در چپ مطابق تصویر ۲۷ -->
             <div class="proposal-modal-grid">
 
                 <!-- ستون ورودی‌ها (سمت راست در RTL) -->
-                <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
                     <!-- کل پیشنهاد شما -->
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label class="form-label" for="bid_amount_input">
+                        <label class="form-label" for="bid_amount_input" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
                             کل پیشنهاد شما
                         </label>
                         <div class="input-with-suffix">
-                            <input type="number" name="bid_amount" id="bid_amount_input" class="form-control" placeholder="مثال: ۱۲۰۰۰۰۰۰" required min="1000" oninput="calculateProposalFees(this.value)">
+                            <input type="number" name="bid_amount" id="bid_amount_input" class="modal-input-field" placeholder="مثال: ۱۲۰۰۰۰۰۰" required min="1000" oninput="calculateProposalFees(this.value)">
                             <span class="input-suffix-tag">تومان</span>
                         </div>
                     </div>
 
                     <!-- زمان تحویل -->
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label class="form-label" for="duration_input">
+                        <label class="form-label" for="duration_input" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
                             زمان تحویل
                         </label>
                         <div class="input-with-suffix">
-                            <input type="number" name="estimated_duration" id="duration_input" class="form-control" placeholder="مثال: ۱۰" required min="1" max="365">
+                            <input type="number" name="estimated_duration" id="duration_input" class="modal-input-field" placeholder="مثال: ۱۰" required min="1" max="365">
                             <span class="input-suffix-tag">روز</span>
                         </div>
-                    </div>
-
-                    <!-- پیشنهاد شما برای پرداخت امن مطابق تصویر ۲۴ -->
-                    <div style="background: #fdfafc; border: 1.5px solid var(--border-card); border-radius: 12px; padding: 14px 16px;">
-                        <div style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">
-                            پیشنهاد شما برای پرداخت امن
-                        </div>
-                        <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.7;">
-                            شما باید به اندازه مبلغ پیشنهادی‌تان از کارفرما درخواست واریز به صندوق امن را داشته باشید.
-                        </p>
-
-                        <div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;">
-                            <span style="font-weight: 700; color: #4b5563;">مرحله ۱</span>
-                            <div class="input-with-suffix" style="flex: 2;">
-                                <input type="text" id="escrow_amount_display" class="form-control" placeholder="به مبلغ" readonly style="background: #ffffff;">
-                                <span class="input-suffix-tag">تومان</span>
-                            </div>
-                            <div style="flex: 1; text-align: center; background: #fdf2f8; border: 1.5px solid var(--pastel-pink-border); border-radius: 10px; padding: 10px 6px; font-weight: 700; color: #be185d;">
-                                ۱۰۰ ٪
-                            </div>
-                        </div>
-
-                        <a href="javascript:void(0)" onclick="alert('پرداخت امن مرحله‌ای در فاز بعدی فعال خواهد شد.')" style="display: inline-block; font-size: 12px; color: var(--pastel-pink-hover); font-weight: 700; text-decoration: none; margin-top: 10px;">
-                            + اضافه کردن پرداخت امن جدید
-                        </a>
                     </div>
                 </div>
 
@@ -318,7 +293,7 @@
                     </div>
 
                     <div class="calc-row">
-                        <span style="color: var(--text-muted);">هزینه خدمات (۱۰٪)</span>
+                        <span style="color: var(--text-muted);">هزینه خدمات</span>
                         <span id="calc-fee" style="color: #ef4444;">۰ تومان</span>
                     </div>
 
@@ -326,19 +301,52 @@
                         <span style="font-weight: 700; color: var(--text-main);">مبلغ دریافتی نهایی شما</span>
                         <strong id="calc-net-receive" style="color: #be185d; font-size: 15px;">۰ تومان</strong>
                     </div>
+                </div>
 
-                    <!-- نوار وضعیت و پیشرفت پرداخت امن -->
-                    <div style="margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--border-card);">
-                        <div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 6px;">
-                            <span style="color: var(--text-muted);">مجموع درخواست پرداخت امن:</span>
-                            <strong id="calc-escrow-sum" style="color: var(--text-main);">۰ تومان</strong>
-                        </div>
-                        <div class="completion-bar-track" style="height: 6px;">
-                            <div class="completion-bar-fill" id="escrow-progress" style="width: 0%; background: linear-gradient(90deg, var(--pastel-pink) 0%, var(--accent-teal) 100%);"></div>
-                        </div>
+            </div>
+
+            <!-- بخش پرداخت امن تمام‌عرض مطابق عکس ۲۷ پونیشا -->
+            <div class="escrow-section-card">
+                <div style="font-size: 14px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">
+                    پیشنهاد شما برای پرداخت امن
+                </div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.7;">
+                    شما باید به اندازه مبلغ پیشنهادی‌تان از کارفرما درخواست واریز به صندوق امن را داشته باشید.
+                </p>
+
+                <div class="escrow-stage-row">
+                    <div class="escrow-stage-num">۱</div>
+                    <span style="font-size: 12.5px; font-weight: 600; color: #475569; white-space: nowrap;">به مبلغ</span>
+                    <div class="input-with-suffix" style="flex: 1;">
+                        <input type="text" id="escrow_amount_display" class="modal-input-field" placeholder="مبلغ پرداخت امن" readonly style="background: #ffffff; height: 44px;">
+                        <span class="input-suffix-tag">تومان</span>
+                    </div>
+                    <div class="escrow-percent-box">
+                        ۱۰۰ ٪
                     </div>
                 </div>
 
+                <div style="margin-top: 10px; margin-bottom: 14px;">
+                    <a href="javascript:void(0)" onclick="alert('پرداخت امن مرحله‌ای در فاز بعدی فعال خواهد شد.')" style="display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; color: var(--accent-teal); font-weight: 700; text-decoration: none;">
+                        <span>⊕</span>
+                        <span>اضافه کردن پرداخت امن جدید</span>
+                    </a>
+                </div>
+
+                <!-- نوار وضعیت و پیشرفت پرداخت امن در پایین کادر پرداخت امن -->
+                <div style="padding-top: 14px; border-top: 1px dashed #e2e8f0;">
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;">
+                        <span style="color: var(--text-muted);">
+                            مجموع درخواست پرداخت امن ایجاد شده: <strong id="calc-escrow-sum" style="color: var(--text-main);">۰ تومان</strong>
+                        </span>
+                        <span style="color: var(--text-muted);">
+                            کل پیشنهاد شما روی پروژه: <strong id="calc-total-bid-sub" style="color: var(--text-main);">۰ تومان</strong>
+                        </span>
+                    </div>
+                    <div class="completion-bar-track" style="height: 6px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                        <div class="completion-bar-fill" id="escrow-progress" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--pastel-pink) 0%, var(--accent-teal) 100%); transition: width 0.3s ease;"></div>
+                    </div>
+                </div>
             </div>
 
             <!-- کادر پیشنهاد ویژه با شیپور صورتی مطابق تصویر ۲۴ پونیشا -->
@@ -434,6 +442,10 @@ function calculateProposalFees(val) {
     const net = num - fee;
 
     document.getElementById('calc-total-bid').textContent = num.toLocaleString('fa-IR') + ' تومان';
+    const subTotal = document.getElementById('calc-total-bid-sub');
+    if (subTotal) {
+        subTotal.textContent = num.toLocaleString('fa-IR') + ' تومان';
+    }
     document.getElementById('calc-fee').textContent = fee.toLocaleString('fa-IR') + ' تومان';
     document.getElementById('calc-net-receive').textContent = net.toLocaleString('fa-IR') + ' تومان';
     document.getElementById('escrow_amount_display').value = num ? num.toLocaleString('fa-IR') : '';

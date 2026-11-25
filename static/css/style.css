@@ -2607,23 +2607,23 @@ body {
     flex-shrink: 0;
 }
 
-/* Modal Backdrop Overlay (پاپ‌آپ سنتر شده و فیکس روی کل صفحه) */
+/* Modal Backdrop Overlay (اسکرول در لبه چپ کل صفحه، بدون اسکرول‌بار داخلی داخل کادر) */
 .modal-backdrop {
     position: fixed !important;
     top: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
     left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
+    width: 100% !important;
+    height: 100% !important;
     background: rgba(15, 23, 42, 0.55) !important;
     backdrop-filter: blur(5px) !important;
     -webkit-backdrop-filter: blur(5px) !important;
     z-index: 3000 !important;
     display: none;
-    align-items: center !important;
+    align-items: flex-start !important;
     justify-content: center !important;
-    padding: 20px !important;
+    padding: 30px 16px !important;
     box-sizing: border-box !important;
     overflow-y: auto !important;
 }
@@ -2632,20 +2632,21 @@ body {
     display: flex !important;
 }
 
-/* Proposal Modal Styles (Image 24) */
+/* Proposal Modal Styles (مطابق دقیق تصویر ۲۷ در مقیاس ۱۰۰٪) */
 .proposal-modal-card {
     background: #ffffff !important;
     border: 1.5px solid var(--border-card) !important;
     border-radius: 18px !important;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18) !important;
-    max-width: 660px !important;
-    width: 95% !important;
-    max-height: 90vh !important;
-    overflow-y: auto !important;
-    padding: 26px 28px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.16) !important;
+    max-width: 760px !important;
+    width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 30px 34px !important;
     position: relative !important;
-    margin: auto !important;
+    margin: 20px auto 40px !important;
     animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box !important;
 }
 
 @keyframes modalPopIn {
@@ -2661,9 +2662,10 @@ body {
 
 .proposal-modal-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    margin-bottom: 18px;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 22px;
+    align-items: stretch;
+    margin-bottom: 22px;
 }
 
 @media (max-width: 640px) {
@@ -2672,55 +2674,120 @@ body {
     }
 }
 
+.modal-input-field {
+    width: 100%;
+    height: 48px;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 16px 10px 55px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-main);
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.modal-input-field:focus {
+    border-color: var(--pastel-pink);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.15);
+}
+
 .input-with-suffix {
     position: relative;
     display: flex;
     align-items: center;
 }
 
-.input-with-suffix .form-control {
-    padding-left: 55px;
-}
-
 .input-suffix-tag {
     position: absolute;
-    left: 12px;
-    font-size: 12px;
-    color: var(--text-muted);
+    left: 14px;
+    font-size: 13px;
+    color: #94a3b8;
     pointer-events: none;
+    font-weight: 500;
 }
 
 .proposal-calc-card {
-    background: #fdfafc;
-    border: 1.5px solid var(--border-card);
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
     border-radius: 12px;
-    padding: 16px;
+    padding: 18px 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 .calc-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 12.5px;
-    margin-bottom: 10px;
+    font-size: 13px;
+    margin-bottom: 12px;
 }
 
 .calc-row-highlight {
-    padding-top: 10px;
-    border-top: 1px solid var(--border-card);
-    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+    margin-top: 2px;
     margin-bottom: 0;
 }
 
+/* Escrow Full-width Section */
+.escrow-section-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin-bottom: 22px;
+}
+
+.escrow-stage-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    margin-bottom: 12px;
+}
+
+.escrow-stage-num {
+    background: #f1f5f9;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    width: 36px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #475569;
+    flex-shrink: 0;
+}
+
+.escrow-percent-box {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    height: 44px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0284c7;
+    flex-shrink: 0;
+}
+
 .featured-proposal-box {
-    background: #fdf2f8;
+    background: #fffbfe;
     border: 1.5px solid #fbcfe8;
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 6px;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
 }
 
 .btn-submit-green, .btn-submit-proposal {
@@ -2728,6 +2795,8 @@ body {
     color: #ffffff;
     border: none;
     border-radius: 10px;
+    padding: 12px 36px;
+    font-size: 14.5px;
     font-weight: 700;
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(244, 114, 182, 0.35);
@@ -2738,4 +2807,41 @@ body {
     background: linear-gradient(135deg, var(--pastel-pink-hover) 0%, #db2777 100%);
     transform: translateY(-1px);
     box-shadow: 0 6px 18px rgba(244, 114, 182, 0.45);
+}
+
+.btn-cancel-modal {
+    background: transparent;
+    border: 1.5px solid #e2e8f0;
+    color: #64748b;
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel-modal:hover {
+    background: #f8fafc;
+    color: var(--text-main);
+    border-color: #cbd5e1;
+}
+
+#cover_letter_input {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 13.5px;
+    font-family: inherit;
+    line-height: 1.8;
+    color: var(--text-main);
+    box-sizing: border-box;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+#cover_letter_input:focus {
+    border-color: var(--pastel-pink);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.15);
 }
