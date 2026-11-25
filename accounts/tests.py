@@ -623,7 +623,7 @@ class AuthenticationTests(TestCase):
         res_ann = self.client.get(reverse('dashboard') + '?section=announcements')
         self.assertEqual(res_ann.status_code, 200)
         self.assertContains(res_ann, 'اطلاعیه‌های من')
-        self.assertContains(res_ann, 'به پونیشا خوش آمدید')
+        self.assertContains(res_ann, 'خوش آمدید')
         self.assertContains(res_ann, '۲۳ آبان ۱۴۰۵')
         self.assertContains(res_ann, 'تنظیم مهارت‌ها:')
 
@@ -649,4 +649,14 @@ class AuthenticationTests(TestCase):
         self.assertEqual(res_home.status_code, 200)
         self.assertContains(res_home, 'section=announcements')
         self.assertContains(res_home, 'section=messages')
+
+        # ۵. بخش کلینیک پروفایل (?section=clinic) و حذف کامل گزینه پروفایل برجسته (تصویر ۳۲)
+        res_clinic = self.client.get(reverse('dashboard') + '?section=clinic')
+        self.assertEqual(res_clinic.status_code, 200)
+        self.assertContains(res_clinic, 'کلینیک پروفایل')
+        self.assertContains(res_clinic, 'اولین بررسی پروفایل خود را شروع کنید')
+        self.assertContains(res_clinic, 'بررسی‌های قبلی پروفایل')
+        self.assertContains(res_clinic, 'هنوز بررسی قبلی برای نمایش وجود ندارد')
+        self.assertNotContains(res_clinic, 'پروفایل برجسته')
+        self.assertNotContains(res_home, 'پروفایل برجسته')
 

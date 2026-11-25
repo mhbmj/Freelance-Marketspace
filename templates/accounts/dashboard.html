@@ -343,7 +343,7 @@
                         </svg>
                     </a>
 
-                    <a href="{% url 'onboarding_skills' %}?next={% url 'dashboard' %}" class="sidebar-nav-item">
+                    <a href="{% url 'dashboard' %}?section=clinic" class="sidebar-nav-item {% if active_section == 'clinic' %}active{% endif %}">
                         <div class="nav-item-content">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -353,16 +353,6 @@
                                 <polyline points="10 9 9 9 8 9"></polyline>
                             </svg>
                             <span>کلینیک پروفایل</span>
-                        </div>
-                        <span class="nav-badge-new">جدید</span>
-                    </a>
-
-                    <a href="javascript:void(0)" class="sidebar-nav-item" onclick="alert('قابلیت پروفایل برجسته در فازهای بعدی پلتفرم فعال خواهد شد!')">
-                        <div class="nav-item-content">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                            </svg>
-                            <span>پروفایل برجسته</span>
                         </div>
                         <span class="nav-badge-new">جدید</span>
                     </a>
@@ -405,7 +395,7 @@
                     <div class="announcement-full-card">
                         <!-- متن پیام اطلاعیه با هایلایت بخش‌ها -->
                         <div class="announcement-body-text">
-                            به پونیشا خوش آمدید ما به شما کمک می‌کنیم تا از مهارت خود درآمد کسب کنید، در هر کجا و هر زمان که دوست دارید کار کنید و از آزادی عمل در کار به صورت یک فریلنسر لذت ببرید. <strong>تنظیم مهارت‌ها:</strong> مهارت‌های خود را انتخاب کنید، ما پروژه‌های جدید با مهارت‌های شما را هر روز برایتان ایمیل می‌کنیم. برای مشاهده پروژه‌ها از فهرست پروژه‌ها با مهارت من، می‌توانید پروژه‌ها را مشاهده کنید. <strong>تکمیل پروفایل:</strong> قبل از ارسال پیشنهاد روی پروژه‌ها پروفایل خود را تکمیل کنید، عکس مناسب برای پروفایل خود انتخاب کنید، برای پروفایل خود کاور مناسب انتخاب کنید، نمونه‌های خود را به پروفایلتان اضافه کنید و رزومه خود را تکمیل کنید. پروفایل‌های تکمیل شده ۹۰٪ شانس بیشتری برای دریافت پروژه دارند. <strong>ارسال پیشنهاد:</strong> با دقت متن پروژه را مطالعه کنید، قیمت و زمان انجام پروژه را برای کارفرما ارسال کنید و توضیح دهید چرا شما بهترین فرد برای انجام پروژه کارفرما هستید یا اگر سوال دارید از کارفرما بپرسید. زمانی که کارفرما برای شما پیام ارسال کند امکان گفتگو فعال می‌شود. <strong>میزکار:</strong> هر زمان برای انجام پروژه انتخاب شدید می‌بایست در مدت زمان مشخص انجام پروژه را قبول کنید، سپس میزکار برای شما فعال می‌شود. در میزکار می‌توانید گفتگوها، فایل‌ها و پرداخت‌ها را مشاهده و مدیریت کنید. <strong>انجام شد:</strong> هر زمان پروژه انجام شود می‌توانید رتبه و نظر خود را برای کارفرما ثبت کنید و کارفرما نیز به شما رتبه دهد. بعد از دریافت رتبه، مهارت‌های مرتبط به آن پروژه در پروفایل شما امتیاز می‌گیرند که سه ماه اعتبار دارد. این امتیاز شما را در لیست فریلنسرها بالا آورده و ما فریلنسرهای برتر را به کارفرمایان پیشنهاد می‌کنیم. برای جلوگیری از مسدود شدن حساب خود قوانین سایت را با دقت مطالعه کنید. امیدواریم بتوانیم همکاری خوب و طولانی مدتی با هم داشته باشیم.
+                            به فریلنسـ‌مارکت خوش آمدید ما به شما کمک می‌کنیم تا از مهارت خود درآمد کسب کنید، در هر کجا و هر زمان که دوست دارید کار کنید و از آزادی عمل در کار به صورت یک فریلنسر لذت ببرید. <strong>تنظیم مهارت‌ها:</strong> مهارت‌های خود را انتخاب کنید، ما پروژه‌های جدید با مهارت‌های شما را هر روز برایتان ایمیل می‌کنیم. برای مشاهده پروژه‌ها از فهرست پروژه‌ها با مهارت من، می‌توانید پروژه‌ها را مشاهده کنید. <strong>تکمیل پروفایل:</strong> قبل از ارسال پیشنهاد روی پروژه‌ها پروفایل خود را تکمیل کنید، عکس مناسب برای پروفایل خود انتخاب کنید، برای پروفایل خود کاور مناسب انتخاب کنید، نمونه‌های خود را به پروفایلتان اضافه کنید و رزومه خود را تکمیل کنید. پروفایل‌های تکمیل شده ۹۰٪ شانس بیشتری برای دریافت پروژه دارند. <strong>ارسال پیشنهاد:</strong> با دقت متن پروژه را مطالعه کنید، قیمت و زمان انجام پروژه را برای کارفرما ارسال کنید و توضیح دهید چرا شما بهترین فرد برای انجام پروژه کارفرما هستید یا اگر سوال دارید از کارفرما بپرسید. زمانی که کارفرما برای شما پیام ارسال کند امکان گفتگو فعال می‌شود. <strong>میزکار:</strong> هر زمان برای انجام پروژه انتخاب شدید می‌بایست در مدت زمان مشخص انجام پروژه را قبول کنید، سپس میزکار برای شما فعال می‌شود. در میزکار می‌توانید گفتگوها، فایل‌ها و پرداخت‌ها را مشاهده و مدیریت کنید. <strong>انجام شد:</strong> هر زمان پروژه انجام شود می‌توانید رتبه و نظر خود را برای کارفرما ثبت کنید و کارفرما نیز به شما رتبه دهد. بعد از دریافت رتبه، مهارت‌های مرتبط به آن پروژه در پروفایل شما امتیاز می‌گیرند که سه ماه اعتبار دارد. این امتیاز شما را در لیست فریلنسرها بالا آورده و ما فریلنسرهای برتر را به کارفرمایان پیشنهاد می‌کنیم. برای جلوگیری از مسدود شدن حساب خود قوانین سایت را با دقت مطالعه کنید. امیدواریم بتوانیم همکاری خوب و طولانی مدتی با هم داشته باشیم.
                         </div>
 
                         <!-- ستون متادیتا و لوگوی اطلاعیه -->
@@ -460,6 +450,77 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+            {% elif active_section == 'clinic' %}
+                <!-- ==================== بخش کلینیک پروفایل (مطابق تصویر ۳۲ پونیشا) ==================== -->
+                <div style="margin-bottom: 20px;">
+
+                    <!-- کارت ۱: سربرگ کلینیک پروفایل -->
+                    <div class="clinic-card clinic-top-card">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <div style="width: 44px; height: 44px; border-radius: 12px; background: #ecfdf5; border: 1.5px solid #a7f3d0; color: #059669; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+                                🩺
+                            </div>
+                            <div>
+                                <h2 style="font-size: 20px; font-weight: 800; color: var(--text-main); margin: 0 0 4px 0;">
+                                    کلینیک پروفایل
+                                </h2>
+                                <p style="font-size: 13px; color: var(--text-muted); margin: 0;">
+                                    یک بررسی مبتنی بر شواهد برای شناخت نقاط قوت و بهبود پروفایل حرفه‌ای شما.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <a href="javascript:void(0)" onclick="startProfileAudit()" class="btn-clinic-action">
+                                <span>💳</span>
+                                <span>شروع بررسی جدید</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- کارت ۲: اولین بررسی پروفایل خود را شروع کنید -->
+                    <div class="clinic-card" style="padding: 34px 30px;">
+                        <div style="width: 44px; height: 44px; border-radius: 12px; background: #ecfdf5; border: 1.5px solid #a7f3d0; color: #059669; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 18px;">
+                            ✨
+                        </div>
+
+                        <h3 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0 0 10px 0;">
+                            اولین بررسی پروفایل خود را شروع کنید
+                        </h3>
+
+                        <p style="font-size: 13.5px; color: #4b5563; line-height: 1.8; margin: 0 0 24px 0;">
+                            معرفی حرفه‌ای، مهارت‌ها، نمونه‌کارها و نشانه‌های اعتماد بررسی می‌شوند و پیشنهادهای عملی دریافت می‌کنید.
+                        </p>
+
+                        <div style="display: flex; justify-content: flex-end;">
+                            <a href="javascript:void(0)" onclick="startProfileAudit()" class="link-clinic-start">
+                                <span>شروع بررسی</span>
+                                <span>💳</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- کارت ۳: بررسی‌های قبلی پروفایل -->
+                    <div class="clinic-card" style="padding: 28px 26px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                            <span style="font-size: 18px;">⏱️</span>
+                            <h3 style="font-size: 17px; font-weight: 800; color: var(--text-main); margin: 0;">
+                                بررسی‌های قبلی پروفایل
+                            </h3>
+                        </div>
+
+                        <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 16px 0;">
+                            نتیجه بررسی‌های قبلی و تغییر امتیاز پروفایل خود را مقایسه کنید.
+                        </p>
+
+                        <div class="clinic-empty-history-box" id="clinic-history-box">
+                            <span>هنوز بررسی قبلی برای نمایش وجود ندارد.</span>
+                            <span style="font-size: 16px; color: #0d9488;">⏱️</span>
+                        </div>
+                    </div>
+
                 </div>
 
             {% else %}
@@ -747,4 +808,42 @@
 </div>
 
 {% include 'includes/user_drawer.html' %}
+
+<script>
+function startProfileAudit() {
+    const historyBox = document.getElementById('clinic-history-box');
+    if (!historyBox) return;
+
+    const percent = {{ profile_percent|default:30 }};
+    const skillsCount = {{ user_skills.count|default:0 }};
+    const hasBio = {% if profile.bio %}true{% else %}false{% endif %};
+    const hasAvatar = {% if profile.avatar %}true{% else %}false{% endif %};
+
+    let advice = [];
+    if (!hasAvatar) advice.push('آپلود تصویر پروفایل رسمی (+۱۵٪)');
+    if (!hasBio) advice.push('تکمیل بخش درباره من (+۱۵٪)');
+    if (skillsCount < 3) advice.push('افزودن حداقل ۳ مهارت تخصصی (+۱۵٪)');
+
+    let adviceHtml = advice.length > 0
+        ? '<div style="margin-top: 8px; font-size: 12px; color: #be185d;"><strong>پیشنهادهای بهبود:</strong> ' + advice.join(' • ') + '</div>'
+        : '<div style="margin-top: 8px; font-size: 12px; color: #059669;"><strong>وضعیت عالی:</strong> پروفایل شما از نظر معیارهای پایه کامل است!</div>';
+
+    historyBox.innerHTML = `
+        <div style="width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span style="font-weight: 700; color: #065f46;">بررسی هوشمند کلینیک پروفایل (امروز)</span>
+                <span style="background: #10b981; color: #fff; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700;">امتیاز: ${percent}٪</span>
+            </div>
+            <div style="font-size: 12.5px; color: #374151; line-height: 1.8;">
+                تعداد مهارت‌ها: <strong>${skillsCount}</strong> | بیوگرافی: <strong>${hasBio ? 'ثبت شده ✔' : 'ناقص ✕'}</strong> | آواتار: <strong>${hasAvatar ? 'تایید شده ✔' : 'ثبت نشده ✕'}</strong>
+            </div>
+            ${adviceHtml}
+        </div>
+    `;
+    historyBox.style.background = '#ffffff';
+    historyBox.style.borderColor = '#10b981';
+    historyBox.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.12)';
+    alert('بررسی هوشمند پروفایل با موفقیت انجام شد! نتایج ارزیابی در کادر بررسی‌های قبلی ثبت گردید.');
+}
+</script>
 {% endblock %}
