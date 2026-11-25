@@ -1,0 +1,444 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ project.title }} | سامانه بازار کار فریلنسری{% endblock %}
+
+{% block content %}
+<div class="home-page-container">
+
+    <!-- نوار منوی بالای سایت -->
+    <header class="top-navbar" style="border-radius: 14px; margin-bottom: 24px;">
+        <div class="top-navbar-container">
+            <div class="top-nav-right">
+                <a href="{% url 'home' %}" class="nav-brand-logo" title="صفحه اصلی">
+                    <img src="{% static 'images/logo.png' %}" alt="لوگو" class="nav-logo-img">
+                    <span class="nav-brand-text">فریلنسـ‌مارکت</span>
+                </a>
+
+                <span class="nav-divider" style="height: 22px; margin: 0 4px;"></span>
+
+                <a href="{% url 'projects_list' %}" class="nav-link-btn">
+                    <span>مشاهده پروژه‌ها</span>
+                </a>
+
+                <a href="{% url 'dashboard' %}" class="nav-link-btn">
+                    <span>داشبورد</span>
+                </a>
+            </div>
+
+            <div class="top-nav-left">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn-quick-project"><span>داشبورد من</span></a>
+                    <div class="user-menu-wrapper" onclick="toggleUserDrawer(true)" style="cursor: pointer;" title="مشاهده حساب کاربری">
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <div class="avatar-header-circle" style="width: 36px; height: 36px; min-width: 36px; max-width: 36px; min-height: 36px; max-height: 36px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                {% if user.avatar_url %}
+                                    <img src="{{ user.avatar_url }}" alt="آواتار" style="width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 50%; display: block;">
+                                {% else %}
+                                    {{ user.initials|default:user_initials|default:"MA" }}
+                                {% endif %}
+                            </div>
+                            <span style="font-size: 11px; color: #9ca3af;">▾</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-pink btn-outline-pink" style="padding: 8px 18px; font-size: 13px; width: auto; text-decoration: none;">ورود</a>
+                    <a href="{% url 'signup' %}" class="btn-pink" style="padding: 8px 18px; font-size: 13px; width: auto; text-decoration: none;">ثبت‌نام</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'success' }}{% endif %}" style="margin-bottom: 20px;">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- کادر اصلی جزئیات پروژه مطابق تصاویر ۲۳ و ۲۵ پونیشا -->
+    <div class="project-detail-card">
+        <!-- خط رنگی سربرگ کارت -->
+        <div class="project-detail-top-bar"></div>
+
+        <div style="padding: 28px 30px;">
+            <!-- ردیف وضعیت و شناسه پروژه -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <span class="project-status-badge">
+                    <span class="project-status-dot"></span>
+                    <span>{{ project.get_status_display|default:"باز" }}</span>
+                </span>
+                <span style="font-size: 12px; color: var(--text-muted);">
+                    شناسه پروژه: #{{ project.id }}
+                </span>
+            </div>
+
+            <!-- عنوان بزرگ پروژه -->
+            <h1 class="project-detail-title">
+                {{ project.title }}
+            </h1>
+
+            <!-- متادیتای پروژه: دسته‌بندی، زمان، بودجه -->
+            <div class="project-meta-row">
+                <div class="project-meta-item">
+                    <span style="color: var(--accent-teal);">🏛️</span>
+                    <span>
+                        {% for pc in project_categories %}
+                            {{ pc.category.name }}{% if not forloop.last %}، {% endif %}
+                        {% empty %}
+                            تکنولوژی و نرم‌افزار
+                        {% endfor %}
+                    </span>
+                </div>
+
+                <div class="project-meta-item">
+                    <span>⏱️</span>
+                    <span>{{ project.deadline|date:"Y/m/d"|default:"۱۲ روز و ۲۳ ساعت زمان باقی‌مانده برای ارسال پیشنهاد" }}</span>
+                </div>
+
+                <div class="project-meta-item">
+                    <span>💼</span>
+                    <span>
+                        بودجه: <strong>{{ project.budget|floatformat:0 }} تومان</strong>
+                        <span style="font-size: 11.5px; color: var(--text-muted); font-weight: normal;">({{ project.get_pricing_type_display }})</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- بخش توضیحات پروژه با قابلیت باز/بسته شدن مطابق عکس ۲۳ و ۲۵ -->
+            <div class="project-desc-wrapper">
+                <div id="project-desc-short" style="line-height: 2; color: #374151; font-size: 14px; white-space: pre-line;">
+                    {{ project.description|truncatechars:220 }}
+                </div>
+                <div id="project-desc-full" style="display: none; line-height: 2; color: #374151; font-size: 14px; white-space: pre-line;">
+                    {{ project.description }}
+                </div>
+
+                {% if project.description|length > 200 %}
+                    <button type="button" class="btn-toggle-desc" id="btn-toggle-desc" onclick="toggleProjectDescription()">
+                        <span id="desc-toggle-text">توضیحات بیشتر</span>
+                        <span id="desc-toggle-icon">▾</span>
+                    </button>
+                {% endif %}
+            </div>
+
+            <!-- بخش مهارت‌های مورد نیاز پروژه -->
+            <div style="margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-card);">
+                <div style="font-size: 13.5px; font-weight: 700; color: var(--text-main); margin-bottom: 12px;">
+                    مهارت‌های مورد نیاز
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    {% for ps in project_skills %}
+                        <span class="skill-pill-chip">
+                            {{ ps.skill.name }}
+                        </span>
+                    {% empty %}
+                        <span class="skill-pill-chip">برنامه‌نویسی پایتون</span>
+                        <span class="skill-pill-chip">توسعه جنگو</span>
+                        <span class="skill-pill-chip">طراحی رابط کاربری</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- سرویس‌های مرتبط مطابق عکس ۲۵ پونیشا -->
+            <div style="margin-top: 20px;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px;">
+                    سرویس‌های مرتبط
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <a href="{% url 'projects_list' %}" class="service-link-tag">استخدام مهندس نرم‌افزار ←</a>
+                    <a href="{% url 'projects_list' %}" class="service-link-tag">استخدام برنامه‌نویس پایتون ←</a>
+                    <a href="{% url 'projects_list' %}" class="service-link-tag">استخدام طراح وب ←</a>
+                </div>
+            </div>
+
+            <!-- ردیف دکمه ارسال پیشنهاد و اطلاعات کارفرما مطابق عکس ۲۳ و ۲۵ -->
+            <div class="project-action-bar">
+                <div class="employer-info-box">
+                    <div class="employer-avatar-circle">
+                        👤
+                    </div>
+                    <span style="font-size: 13.5px; color: #4b5563;">
+                        <strong>{{ project.employer.username|default:project.employer.full_name }}</strong> کارفرمای این پروژه است.
+                    </span>
+                </div>
+
+                <div>
+                    {% if user.is_authenticated and project.employer_id == user.id %}
+                        <span class="badge-role" style="font-size: 13px; padding: 10px 18px;">
+                            شما کارفرمای این پروژه هستید
+                        </span>
+                    {% elif user_proposal %}
+                        <span class="btn-bid-submitted">
+                            ✔ پیشنهاد شما به مبلغ {{ user_proposal.bid_amount|floatformat:0 }} تومان ثبت شده است
+                        </span>
+                    {% else %}
+                        <button type="button" class="btn-send-proposal" onclick="openModal('proposal-modal')">
+                            <span>ارسال پیشنهاد</span>
+                            <span>←</span>
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- بخش فریلنسرهایی که پیشنهاد ارسال کرده‌اند مطابق عکس ۲۳ و ۲۵ -->
+    <div style="margin-top: 36px; margin-bottom: 40px;">
+        <h2 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 18px;">
+            فریلنسرهایی که در این پروژه پیشنهاد ارسال کرده‌اند ({{ proposals_count }})
+        </h2>
+
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+            {% for prop in proposals %}
+                <div class="proposal-card-item">
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                        <div class="proposal-freelancer-avatar">
+                            {% if prop.freelancer.avatar_url %}
+                                <img src="{{ prop.freelancer.avatar_url }}" alt="آواتار" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            {% else %}
+                                {{ prop.freelancer.initials|default:"FL" }}
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                                <span style="font-size: 14.5px; font-weight: 700; color: var(--text-main);">
+                                    {{ prop.freelancer.username|default:prop.freelancer.full_name }}
+                                </span>
+                                <span style="color: #3b82f6; font-size: 13px;" title="حساب تایید شده">✔</span>
+                            </div>
+                            <div style="font-size: 12px; color: #854d0e; display: flex; align-items: center; gap: 4px;">
+                                <span>⭐ ۴.۹۸</span>
+                                <span style="color: var(--text-muted);">(۱۱ امتیاز)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: left; font-size: 12.5px; color: var(--text-muted); line-height: 1.8;">
+                        <div>
+                            <span>زمان تحویل: </span>
+                            <strong style="color: var(--text-main);">{{ prop.estimated_duration|default:1 }} روز</strong>
+                        </div>
+                        <div>
+                            <span>ارسال پیشنهاد در: </span>
+                            <span>{{ prop.created_at|date:"Y/m/d H:i" }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="ponisha-card" style="padding: 35px 20px; text-align: center; color: var(--text-muted);">
+                    <div style="font-size: 32px; margin-bottom: 10px;">💡</div>
+                    <div style="font-size: 14.5px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
+                        هنوز پیشنهادی برای این پروژه ثبت نشده است
+                    </div>
+                    <p style="font-size: 13px; margin: 0 auto; max-width: 480px;">
+                        شما می‌توانید اولین فریلنسری باشید که برای انجام این پروژه به کارفرما پیشنهاد همکاری ارسال می‌کند!
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+<!-- مودال ارسال پیشنهاد مطابق اسکرین‌شات ۲۴ پونیشا -->
+<div class="modal-backdrop" id="proposal-modal" style="display: none;" onclick="if(event.target===this) closeModal('proposal-modal')">
+    <div class="modal-card proposal-modal-card" onclick="event.stopPropagation()">
+        <!-- هدر مودال -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 1.5px solid var(--border-card); margin-bottom: 22px;">
+            <h3 style="font-size: 17px; font-weight: 800; color: var(--text-main); margin: 0;">
+                ارسال پیشنهاد
+            </h3>
+            <button type="button" class="user-drawer-close-btn" onclick="closeModal('proposal-modal')" title="بستن">✕</button>
+        </div>
+
+        <form method="post" action="{% url 'project_detail' project.id %}" id="proposal-form">
+            {% csrf_token %}
+
+            <!-- گرید دو ستونه: فیلدهای ورودی در راست و کادر محاسبه مالی در چپ -->
+            <div class="proposal-modal-grid">
+
+                <!-- ستون ورودی‌ها (سمت راست در RTL) -->
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <!-- کل پیشنهاد شما -->
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="bid_amount_input">
+                            کل پیشنهاد شما
+                        </label>
+                        <div class="input-with-suffix">
+                            <input type="number" name="bid_amount" id="bid_amount_input" class="form-control" placeholder="مثال: ۱۲۰۰۰۰۰۰" required min="1000" oninput="calculateProposalFees(this.value)">
+                            <span class="input-suffix-tag">تومان</span>
+                        </div>
+                    </div>
+
+                    <!-- زمان تحویل -->
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="duration_input">
+                            زمان تحویل
+                        </label>
+                        <div class="input-with-suffix">
+                            <input type="number" name="estimated_duration" id="duration_input" class="form-control" placeholder="مثال: ۱۰" required min="1" max="365">
+                            <span class="input-suffix-tag">روز</span>
+                        </div>
+                    </div>
+
+                    <!-- پیشنهاد شما برای پرداخت امن مطابق تصویر ۲۴ -->
+                    <div style="background: #fdfafc; border: 1.5px solid var(--border-card); border-radius: 12px; padding: 14px 16px;">
+                        <div style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">
+                            پیشنهاد شما برای پرداخت امن
+                        </div>
+                        <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.7;">
+                            شما باید به اندازه مبلغ پیشنهادی‌تان از کارفرما درخواست واریز به صندوق امن را داشته باشید.
+                        </p>
+
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;">
+                            <span style="font-weight: 700; color: #4b5563;">مرحله ۱</span>
+                            <div class="input-with-suffix" style="flex: 2;">
+                                <input type="text" id="escrow_amount_display" class="form-control" placeholder="به مبلغ" readonly style="background: #ffffff;">
+                                <span class="input-suffix-tag">تومان</span>
+                            </div>
+                            <div style="flex: 1; text-align: center; background: #ffffff; border: 1.5px solid var(--border-card); border-radius: 10px; padding: 10px 6px; font-weight: 700; color: var(--accent-teal);">
+                                ۱۰۰ ٪
+                            </div>
+                        </div>
+
+                        <a href="javascript:void(0)" onclick="alert('پرداخت امن مرحله‌ای در فاز بعدی فعال خواهد شد.')" style="display: inline-block; font-size: 12px; color: var(--accent-teal); font-weight: 700; text-decoration: none; margin-top: 10px;">
+                            + اضافه کردن پرداخت امن جدید
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ستون خلاصه محاسبات و کارمزد (سمت چپ در RTL) -->
+                <div class="proposal-calc-card">
+                    <div class="calc-row">
+                        <span style="color: var(--text-muted);">کل پیشنهاد شما</span>
+                        <strong id="calc-total-bid">۰ تومان</strong>
+                    </div>
+
+                    <div class="calc-row">
+                        <span style="color: var(--text-muted);">هزینه خدمات (۱۰٪)</span>
+                        <span id="calc-fee" style="color: #ef4444;">۰ تومان</span>
+                    </div>
+
+                    <div class="calc-row calc-row-highlight">
+                        <span style="font-weight: 700; color: var(--text-main);">مبلغ دریافتی نهایی شما</span>
+                        <strong id="calc-net-receive" style="color: #059669; font-size: 15px;">۰ تومان</strong>
+                    </div>
+
+                    <!-- نوار وضعیت و پیشرفت پرداخت امن -->
+                    <div style="margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--border-card);">
+                        <div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 6px;">
+                            <span style="color: var(--text-muted);">مجموع درخواست پرداخت امن:</span>
+                            <strong id="calc-escrow-sum" style="color: var(--text-main);">۰ تومان</strong>
+                        </div>
+                        <div class="completion-bar-track" style="height: 6px;">
+                            <div class="completion-bar-fill" id="escrow-progress" style="width: 0%; background: var(--accent-teal);"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- کادر پیشنهاد ویژه با شیپور صورتی مطابق تصویر ۲۴ پونیشا -->
+            <div class="featured-proposal-box">
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                    <div style="font-size: 22px;">📣</div>
+                    <div style="flex: 1;">
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 800; color: var(--text-main); cursor: pointer; margin-bottom: 4px;">
+                            <input type="checkbox" name="is_featured" style="width: 17px; height: 17px; accent-color: var(--pastel-pink);">
+                            <span>با پیشنهاد ویژه، زودتر دیده شو!</span>
+                        </label>
+                        <p style="font-size: 12px; color: var(--text-muted); margin: 0; line-height: 1.7;">
+                            پیشنهاد ویژه باعث می‌شود پیشنهاد شما در بالای لیست پین شود و با اولویت بالاتری به کارفرما نمایش داده شود.
+                        </p>
+                    </div>
+                </div>
+                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 11.5px; color: #be185d; display: flex; justify-content: space-between;">
+                    <span>تعداد پیشنهاد مورد نیاز: ۵۰ عدد</span>
+                    <span>پیشنهاد ویژه های ارسال شده روی این پروژه: ۰ از ۵ ظرفیت</span>
+                </div>
+            </div>
+
+            <!-- بخش توضیحات و کاور لتر -->
+            <div class="form-group" style="margin-top: 18px; margin-bottom: 16px;">
+                <label class="form-label" for="cover_letter_input">
+                    توضیحات
+                </label>
+                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">
+                    این توضیحات فقط برای کارفرما قابل مشاهده است و تبادل هر گونه اطلاعات تماس مجاز نمی‌باشد.
+                </div>
+                <textarea name="cover_letter" id="cover_letter_input" class="form-control" rows="4" placeholder="دلایل برتری شما برای این پروژه، سوابق مشابه، و نحوه اجرای کار را به تفصیل بیان کنید..." required style="resize: vertical;"></textarea>
+            </div>
+
+            <!-- باکس یادآوری سهمیه پیشنهاد -->
+            <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #92400e; display: flex; align-items: center; gap: 8px; margin-bottom: 22px;">
+                <span>ℹ️</span>
+                <span>تعداد پیشنهاد مورد نیاز برای این پروژه: <strong>۵ عدد</strong></span>
+            </div>
+
+            <!-- دکمه‌های اقدام -->
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+                <button type="button" class="btn-pink btn-outline-pink" style="width: auto; padding: 10px 24px; font-size: 13.5px;" onclick="closeModal('proposal-modal')">
+                    لغو
+                </button>
+                <button type="submit" class="btn-submit-green" style="width: auto; padding: 10px 32px; font-size: 14px;">
+                    ثبت پیشنهاد
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openModal(id) {
+    const m = document.getElementById(id);
+    if (m) { m.style.display = 'flex'; m.classList.add('open'); }
+}
+function closeModal(id) {
+    const m = document.getElementById(id);
+    if (m) { m.style.display = 'none'; m.classList.remove('open'); }
+}
+
+function toggleProjectDescription() {
+    const shortEl = document.getElementById('project-desc-short');
+    const fullEl = document.getElementById('project-desc-full');
+    const toggleText = document.getElementById('desc-toggle-text');
+    const toggleIcon = document.getElementById('desc-toggle-icon');
+
+    if (fullEl.style.display === 'none') {
+        shortEl.style.display = 'none';
+        fullEl.style.display = 'block';
+        toggleText.textContent = 'توضیحات کمتر';
+        toggleIcon.textContent = '▴';
+    } else {
+        shortEl.style.display = 'block';
+        fullEl.style.display = 'none';
+        toggleText.textContent = 'توضیحات بیشتر';
+        toggleIcon.textContent = '▾';
+    }
+}
+
+function calculateProposalFees(val) {
+    const num = parseFloat(val) || 0;
+    const fee = num * 0.10; // کارمزد ۱۰ درصد سامانه
+    const net = num - fee;
+
+    document.getElementById('calc-total-bid').textContent = num.toLocaleString('fa-IR') + ' تومان';
+    document.getElementById('calc-fee').textContent = fee.toLocaleString('fa-IR') + ' تومان';
+    document.getElementById('calc-net-receive').textContent = net.toLocaleString('fa-IR') + ' تومان';
+    document.getElementById('escrow_amount_display').value = num ? num.toLocaleString('fa-IR') : '';
+    document.getElementById('calc-escrow-sum').textContent = num.toLocaleString('fa-IR') + ' تومان';
+
+    const progress = document.getElementById('escrow-progress');
+    if (progress) {
+        progress.style.width = num > 0 ? '100%' : '0%';
+    }
+}
+</script>
+
+{% if user.is_authenticated %}
+    {% include 'includes/user_drawer.html' %}
+{% endif %}
+{% endblock %}

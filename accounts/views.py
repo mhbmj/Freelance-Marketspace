@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
@@ -359,6 +359,85 @@ def projects_list_view(request):
         'selected_category': int(category_id) if category_id and category_id.isdigit() else None,
         'selected_pricing_type': pricing_type,
         'total_count': projects.count(),
+        'user_initials': initials,
+    })
+
+
+def project_detail_view(request, project_id):
+    """صفحه جزئیات پروژه و ثبت پیشنهاد (Proposal) مطابق تصاویر ۲۳، ۲۴ و ۲۵ پونیشا"""
+    project = get_object_or_404(
+        Project.objects.select_related('employer').prefetch_related('projectskill_set__skill', 'projectcategory_set__category'),
+        pk=project_id
+    )
+
+    project_skills = project.projectskill_set.all()
+    project_categories = project.projectcategory_set.all()
+    proposals = project.proposals.select_related('freelancer').order_by('-created_at')
+
+    user = request.user
+    user_proposal = None
+    if user.is_authenticated:
+        user_proposal = proposals.filter(freelancer=user).first()
+
+    if request.method == 'POST':
+        if not user.is_authenticated:
+            messages.error(request, 'برای ارسال پیشنهاد، ابتدا باید وارد حساب کاربری خود شوید.')
+            return redirect('login')
+
+        if project.employer_id == user.id:
+            messages.error(request, 'کارفرما نمی‌تواند برای پروژه‌ای که خودش ثبت کرده پیشنهاد ثبت کند.')
+            return redirect('project_detail', project_id=project.id)
+
+        if user_proposal:
+            messages.warning(request, 'شما قبلاً برای این پروژه پیشنهاد ارسال کرده‌اید.')
+            return redirect('project_detail', project_id=project.id)
+
+        bid_amount_str = request.POST.get('bid_amount', '').strip().replace(',', '')
+        estimated_duration = request.POST.get('estimated_duration', '').strip()
+        cover_letter = request.POST.get('cover_letter', '').strip()
+
+        if not bid_amount_str:
+            messages.error(request, 'لطفاً مبلغ پیشنهادی خود را وارد کنید.')
+            return redirect('project_detail', project_id=project.id)
+
+        try:
+            bid_amount = float(bid_amount_str)
+            if bid_amount <= 0:
+                raise ValueError
+        except ValueError:
+            messages.error(request, 'مبلغ پیشنهادی باید یک عدد معتبر و بزرگتر از صفر باشد.')
+            return redirect('project_detail', project_id=project.id)
+
+        duration = None
+        if estimated_duration and estimated_duration.isdigit():
+            duration = int(estimated_duration)
+
+        if not cover_letter:
+            cover_letter = 'پیشنهاد انجام پروژه مطابق با الزامات کارفرما با بهترین کیفیت و در موعد مقرر.'
+
+        Proposal.objects.create(
+            project=project,
+            freelancer=user,
+            bid_amount=bid_amount,
+            estimated_duration=duration,
+            cover_letter=cover_letter,
+            status='PENDING'
+        )
+
+        messages.success(request, 'پیشنهاد شما با موفقیت برای این پروژه ثبت شد!')
+        return redirect('project_detail', project_id=project.id)
+
+    initials = "MA"
+    if user.is_authenticated and user.first_name and user.last_name:
+        initials = (user.first_name[0] + user.last_name[0]).upper()
+
+    return render(request, 'accounts/project_detail.html', {
+        'project': project,
+        'project_skills': project_skills,
+        'project_categories': project_categories,
+        'proposals': proposals,
+        'proposals_count': proposals.count(),
+        'user_proposal': user_proposal,
         'user_initials': initials,
     })
 

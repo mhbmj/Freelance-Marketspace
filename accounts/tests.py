@@ -466,3 +466,76 @@ class AuthenticationTests(TestCase):
         self.assertEqual(res_projects.status_code, 200)
         self.assertContains(res_projects, self.user.avatar_url)
 
+    # ------------------------------------------------------------------------
+    # ۸. آزمون‌های صفحه جزئیات پروژه و ثبت پیشنهاد (/projects/<id>/)
+    # ------------------------------------------------------------------------
+    def test_project_detail_view_and_proposal_submission(self):
+        """مشاهده صفحه جزئیات پروژه و ثبت پیشنهاد قیمت توسط فریلنسر مطابق تصاویر ۲۳، ۲۴ و ۲۵"""
+        from accounts.models import Project, Proposal, Skill, ProjectSkill
+
+        # ایجاد کارفرمای نمونه
+        employer = User.objects.create_user(
+            email='employer_test@example.com',
+            password='Password123',
+            first_name='علی',
+            last_name='طاهری',
+            username='alitaheri',
+            role='EMPLOYER'
+        )
+
+        project = Project.objects.create(
+            employer=employer,
+            title='توسعه اپلیکیشن IoT با ESP32',
+            description='توضیحات کامل پروژه سخت‌افزاری و نرم‌افزاری',
+            pricing_type='FIXED_PRICE',
+            budget=25000000,
+            status='OPEN'
+        )
+
+        skill, _ = Skill.objects.get_or_create(name='C++')
+        ProjectSkill.objects.create(project=project, skill=skill, is_required=True)
+
+        # ۱. مشاهده جزئیات پروژه (مهمان یا کاربر لاگین‌شده)
+        detail_url = reverse('project_detail', args=[project.id])
+        res = self.client.get(detail_url)
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, 'توسعه اپلیکیشن IoT با ESP32')
+        self.assertContains(res, '25000000 تومان')
+        self.assertContains(res, 'C++')
+        self.assertContains(res, 'ارسال پیشنهاد')
+
+        # ۲. ارسال پیشنهاد موفق توسط فریلنسر
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+        res_post = self.client.post(detail_url, {
+            'bid_amount': '22000000',
+            'estimated_duration': '14',
+            'cover_letter': 'پیشنهاد با بهترین کیفیت و سابقه پیاده‌سازی پروژه‌های مشابه'
+        }, follow=True)
+        self.assertEqual(res_post.status_code, 200)
+        self.assertContains(res_post, 'پیشنهاد شما با موفقیت برای این پروژه ثبت شد')
+
+        # ۳. بررسی ذخیره شدن در دیتابیس
+        prop = Proposal.objects.get(project=project, freelancer=self.user)
+        self.assertEqual(float(prop.bid_amount), 22000000.0)
+        self.assertEqual(prop.estimated_duration, 14)
+        self.assertEqual(prop.status, 'PENDING')
+
+        # ۴. جلوگیری از ارسال پیشنهاد مجدد برای همان پروژه (Duplicate prevention)
+        res_dup = self.client.post(detail_url, {
+            'bid_amount': '20000000',
+            'estimated_duration': '10',
+            'cover_letter': 'تلاش مجدد'
+        }, follow=True)
+        self.assertEqual(res_dup.status_code, 200)
+        self.assertContains(res_dup, 'شما قبلاً برای این پروژه پیشنهاد ارسال کرده‌اید')
+
+        # ۵. کارفرما نمی‌تواند برای پروژه خودش پیشنهاد ثبت کند
+        self.client.login(email='employer_test@example.com', password='Password123')
+        res_emp = self.client.post(detail_url, {
+            'bid_amount': '15000000',
+            'estimated_duration': '5',
+            'cover_letter': 'پیشنهاد کارفرما'
+        }, follow=True)
+        self.assertEqual(res_emp.status_code, 200)
+        self.assertContains(res_emp, 'کارفرما نمی‌تواند برای پروژه‌ای که خودش ثبت کرده پیشنهاد ثبت کند')
+

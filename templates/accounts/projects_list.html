@@ -78,7 +78,7 @@
 
                     <div class="mega-menu-panel">
                         <div class="mega-menu-grid">
-                            <a href="javascript:void(0)" class="mega-card highlight" onclick="alert('این صفحه در مراحل بعدی طراحی خواهد شد!')">
+                            <a href="{% url 'projects_list' %}" class="mega-card highlight">
                                 <div class="mega-card-icon" style="background: var(--pastel-yellow-light); border-color: var(--pastel-yellow-border); color: #854d0e;">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                 </div>
@@ -235,7 +235,11 @@
                 <div class="project-card">
                     <div class="project-card-header">
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <h3 class="project-title" style="margin: 0; font-size: 17px;">{{ proj.title }}</h3>
+                            <h3 class="project-title" style="margin: 0; font-size: 17px;">
+                                <a href="{% url 'project_detail' proj.id %}" style="text-decoration: none; color: inherit;">
+                                    {{ proj.title }}
+                                </a>
+                            </h3>
                         </div>
 
                         <div class="badge-pricing">
@@ -278,10 +282,10 @@
                             </span>
                         </div>
 
-                        <button class="btn-bid" onclick="alert('قابلیت ارسال پیشنهاد روی این پروژه در فاز بعدی فعال خواهد شد!')">
-                            <span>ارسال پیشنهاد همکاری</span>
+                        <a href="{% url 'project_detail' proj.id %}" class="btn-bid" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                            <span>مشاهده پروژه و ارسال پیشنهاد</span>
                             <span>🚀</span>
-                        </button>
+                        </a>
                     </div>
                 </div>
             {% endfor %}

@@ -99,7 +99,7 @@
                     <!-- مگامنوی فریلنسر -->
                     <div class="mega-menu-panel">
                         <div class="mega-menu-grid">
-                            <a href="javascript:void(0)" class="mega-card highlight" onclick="alert('این صفحه در مراحل بعدی طراحی خواهد شد!')">
+                            <a href="{% url 'projects_list' %}" class="mega-card highlight">
                                 <div class="mega-card-icon" style="background: var(--pastel-yellow-light); border-color: var(--pastel-yellow-border); color: #854d0e;">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -357,7 +357,9 @@
                             </div>
 
                             <h4 style="font-size: 14.5px; font-weight: 800; color: var(--text-main); line-height: 1.5; margin-bottom: 8px;">
-                                {{ proj.title }}
+                                <a href="{% url 'project_detail' proj.id %}" style="text-decoration: none; color: inherit;">
+                                    {{ proj.title }}
+                                </a>
                             </h4>
 
                             <p style="font-size: 12px; color: #52474e; line-height: 1.7; margin-bottom: 12px;">
@@ -371,8 +373,8 @@
                                 <span style="font-weight: 800; color: #854d0e;">{{ proj.budget|floatformat:0 }} تومان</span>
                             </div>
 
-                            <a href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'login' %}{% endif %}" class="btn-pink" style="padding: 7px 12px; font-size: 12px; text-decoration: none;">
-                                ارسال پیشنهاد 🚀
+                            <a href="{% url 'project_detail' proj.id %}" class="btn-pink" style="padding: 7px 12px; font-size: 12px; text-decoration: none;">
+                                مشاهده و ارسال پیشنهاد 🚀
                             </a>
                         </div>
                     </div>

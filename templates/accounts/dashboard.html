@@ -104,7 +104,7 @@
                     <div class="mega-menu-panel">
                         <div class="mega-menu-grid">
                             <!-- کارت ۱: شروع کار به‌عنوان فریلنسر -->
-                            <a href="javascript:void(0)" class="mega-card highlight" onclick="alert('این صفحه در مراحل بعدی باهم طراحی خواهد شد!')">
+                            <a href="{% url 'projects_list' %}" class="mega-card highlight">
                                 <div class="mega-card-icon" style="background: var(--pastel-yellow-light); border-color: var(--pastel-yellow-border); color: #854d0e;">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -528,7 +528,11 @@
                             {% for proj in projects %}
                                 <div class="project-card">
                                     <div class="project-card-header">
-                                        <h4 class="project-title">{{ proj.title }}</h4>
+                                        <h4 class="project-title">
+                                            <a href="{% url 'project_detail' proj.id %}" style="text-decoration: none; color: inherit;">
+                                                {{ proj.title }}
+                                            </a>
+                                        </h4>
                                         <div class="badge-pricing">
                                             <span>🏷️</span>
                                             <span>
@@ -551,10 +555,10 @@
                                             <span>👤</span>
                                             <span>کارفرما: <strong>{{ proj.employer.full_name }}</strong></span>
                                         </div>
-                                        <button class="btn-bid" onclick="alert('قابلیت ارسال پیشنهاد در فاز بعدی فعال خواهد شد!')">
+                                        <a href="{% url 'project_detail' proj.id %}" class="btn-bid" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
                                             <span>ارسال پیشنهاد همکاری</span>
                                             <span>🚀</span>
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
                             {% endfor %}
