@@ -158,30 +158,72 @@
                 </div>
             </div>
 
-            <!-- بخش ۳: سوابق کاری -->
+            <!-- بخش ۳: سوابق کاری (مطابق تصویر ۳۹) -->
             <div class="profile-section-card">
                 <div class="profile-section-header">
                     <h2 class="profile-section-title">سوابق کاری</h2>
-                    <button type="button" class="btn-add-section" onclick="alert('قابلیت افزودن سابقه کاری در فاز بعدی فعال خواهد شد!')">
+                    <button type="button" class="btn-add-section" onclick="openModal('experience-modal')">
                         + افزودن
                     </button>
                 </div>
-                <p class="profile-empty-text">
-                    تجربه‌هات رو بنویس؛ حتی فریلنس یا کارآموزی هم حسابه.
-                </p>
+                {% if work_experiences %}
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        {% for exp in work_experiences %}
+                            <div class="ponisha-card" style="padding: 16px 20px; border: 1.5px solid var(--border-card); background: #ffffff;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 6px;">
+                                    <strong style="font-size: 15px; color: var(--text-main);">{{ exp.title }}</strong>
+                                    <span style="font-size: 12px; color: var(--text-muted);">
+                                        {{ exp.start_date|default:'' }}{% if exp.start_date and exp.end_date %} تا {% endif %}{{ exp.end_date|default:'' }}
+                                    </span>
+                                </div>
+                                <div style="font-size: 13px; color: var(--pastel-pink-hover); font-weight: 600; margin-bottom: 6px;">
+                                    🏢 {{ exp.company }}
+                                </div>
+                                {% if exp.description %}
+                                    <p style="font-size: 12.5px; color: #4b5563; line-height: 1.8; margin: 0;">{{ exp.description }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="profile-empty-text">
+                        تجربه‌هات رو بنویس؛ حتی فریلنس یا کارآموزی هم حسابه.
+                    </p>
+                {% endif %}
             </div>
 
-            <!-- بخش ۴: سوابق تحصیلی -->
+            <!-- بخش ۴: سوابق تحصیلی (مطابق تصویر ۴۰) -->
             <div class="profile-section-card">
                 <div class="profile-section-header">
                     <h2 class="profile-section-title">سوابق تحصیلی</h2>
-                    <button type="button" class="btn-add-section" onclick="alert('قابلیت افزودن سوابق تحصیلی در فاز بعدی فعال خواهد شد!')">
+                    <button type="button" class="btn-add-section" onclick="openModal('education-modal')">
                         + افزودن
                     </button>
                 </div>
-                <p class="profile-empty-text">
-                    تحصیلاتت رو اضافه کن تا زمینه تخصصی‌ت مشخص باشه.
-                </p>
+                {% if educations %}
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        {% for edu in educations %}
+                            <div class="ponisha-card" style="padding: 16px 20px; border: 1.5px solid var(--border-card); background: #ffffff;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 6px;">
+                                    <strong style="font-size: 15px; color: var(--text-main);">{{ edu.degree }}</strong>
+                                    <span style="font-size: 12px; color: var(--text-muted);">
+                                        {{ edu.start_date|default:'' }}{% if edu.start_date and edu.end_date %} تا {% endif %}{{ edu.end_date|default:'' }}
+                                    </span>
+                                </div>
+                                <div style="font-size: 13px; color: var(--pastel-pink-hover); font-weight: 600; margin-bottom: 6px;">
+                                    🎓 {{ edu.institution }}
+                                </div>
+                                {% if edu.description %}
+                                    <p style="font-size: 12.5px; color: #4b5563; line-height: 1.8; margin: 0;">{{ edu.description }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="profile-empty-text">
+                        تحصیلاتت رو اضافه کن تا زمینه تخصصی‌ت مشخص باشه.
+                    </p>
+                {% endif %}
             </div>
 
             <!-- بخش ۵: نمونه‌کارها -->
@@ -392,6 +434,152 @@
             <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px;">
                 <button type="button" class="btn-pink btn-outline-pink" style="width: auto; padding: 8px 16px;" onclick="closeModal('portfolio-modal')">انصراف</button>
                 <button type="submit" class="btn-pink" style="width: auto; padding: 8px 20px;">افزودن</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- مودال سوابق کاری مطابق تصویر ۳۹ پونیشا با تم پاستلی -->
+<div id="experience-modal" class="modal-backdrop" style="display: none;" onclick="if(event.target===this) closeModal('experience-modal')">
+    <div class="modal-card" style="max-width: 580px; width: 95%; padding: 28px 30px; border-radius: 18px; box-sizing: border-box;" onclick="event.stopPropagation()">
+        <!-- هدر مودال -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1.5px solid var(--border-card); margin-bottom: 20px;">
+            <h3 style="font-size: 17px; font-weight: 800; color: var(--text-main); margin: 0;">
+                سوابق کاری
+            </h3>
+            <button type="button" class="user-drawer-close-btn" onclick="closeModal('experience-modal')" title="بستن">✕</button>
+        </div>
+
+        <form method="post" action="{% url 'profile' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add_experience">
+
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" for="exp_title" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
+                    سمت
+                </label>
+                <input type="text" name="title" id="exp_title" class="form-control" placeholder="مثال: توسعه‌دهنده فرانت‌اند یا فریلنسر" required style="font-size: 13.5px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" for="exp_company" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
+                    شرکت
+                </label>
+                <input type="text" name="company" id="exp_company" class="form-control" placeholder="مثال: دیجی‌کالا یا شرکت نرم‌افزاری" required style="font-size: 13.5px;">
+            </div>
+
+            <!-- ردیف تاریخ‌ها و چک‌باکس تا امروز -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 10px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="exp_start_date" style="font-size: 12.5px; font-weight: 700; margin-bottom: 6px; display: block;">
+                        از تاریخ
+                    </label>
+                    <input type="date" name="start_date" id="exp_start_date" class="form-control" style="font-size: 13px; direction: ltr; text-align: right;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="exp_end_date" style="font-size: 12.5px; font-weight: 700; margin-bottom: 6px; display: block;">
+                        تا تاریخ
+                    </label>
+                    <input type="date" name="end_date" id="exp_end_date" class="form-control" style="font-size: 13px; direction: ltr; text-align: right;">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 18px;">
+                <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #475569; cursor: pointer;">
+                    <input type="checkbox" name="is_current" id="exp_is_current" onchange="document.getElementById('exp_end_date').disabled = this.checked;" style="width: 17px; height: 17px; accent-color: var(--pastel-pink);">
+                    <span>تا امروز</span>
+                </label>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label class="form-label" for="exp_description" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
+                    توضیحات
+                </label>
+                <textarea name="description" id="exp_description" class="form-control" rows="4" placeholder="مسئولیت‌ها، تکنولوژی‌های استفاده‌شده و دستاوردهای کاری شما..." style="font-size: 13px; resize: vertical;"></textarea>
+            </div>
+
+            <!-- دکمه‌های انصراف و ذخیره با تم پاستلی سایت (حذف رنگ سبز) -->
+            <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
+                <button type="button" class="btn-cancel-modal" onclick="closeModal('experience-modal')">
+                    لغو
+                </button>
+                <button type="submit" class="btn-submit-proposal" style="width: auto; padding: 10px 32px; font-size: 14px;">
+                    ذخیره
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- مودال سوابق تحصیلی مطابق تصویر ۴۰ پونیشا با تم پاستلی -->
+<div id="education-modal" class="modal-backdrop" style="display: none;" onclick="if(event.target===this) closeModal('education-modal')">
+    <div class="modal-card" style="max-width: 580px; width: 95%; padding: 28px 30px; border-radius: 18px; box-sizing: border-box;" onclick="event.stopPropagation()">
+        <!-- هدر مودال -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1.5px solid var(--border-card); margin-bottom: 20px;">
+            <h3 style="font-size: 17px; font-weight: 800; color: var(--text-main); margin: 0;">
+                سوابق تحصیلی
+            </h3>
+            <button type="button" class="user-drawer-close-btn" onclick="closeModal('education-modal')" title="بستن">✕</button>
+        </div>
+
+        <form method="post" action="{% url 'profile' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add_education">
+
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" for="edu_degree" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
+                    مدرک
+                </label>
+                <input type="text" name="degree" id="edu_degree" class="form-control" placeholder="مثال: کارشناسی مهندسی کامپیوتر یا دیپلم گرافیک" required style="font-size: 13.5px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" for="edu_institution" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
+                    نام آموزشگاه
+                </label>
+                <input type="text" name="institution" id="edu_institution" class="form-control" placeholder="مثال: دانشگاه تهران یا مجتمع فنی" required style="font-size: 13.5px;">
+            </div>
+
+            <!-- ردیف تاریخ‌ها و چک‌باکس تا امروز -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 10px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="edu_start_date" style="font-size: 12.5px; font-weight: 700; margin-bottom: 6px; display: block;">
+                        از تاریخ
+                    </label>
+                    <input type="date" name="start_date" id="edu_start_date" class="form-control" style="font-size: 13px; direction: ltr; text-align: right;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="edu_end_date" style="font-size: 12.5px; font-weight: 700; margin-bottom: 6px; display: block;">
+                        تا تاریخ
+                    </label>
+                    <input type="date" name="end_date" id="edu_end_date" class="form-control" style="font-size: 13px; direction: ltr; text-align: right;">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 18px;">
+                <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #475569; cursor: pointer;">
+                    <input type="checkbox" name="is_current" id="edu_is_current" onchange="document.getElementById('edu_end_date').disabled = this.checked;" style="width: 17px; height: 17px; accent-color: var(--pastel-pink);">
+                    <span>تا امروز</span>
+                </label>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label class="form-label" for="edu_description" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
+                    توضیحات
+                </label>
+                <textarea name="description" id="edu_description" class="form-control" rows="4" placeholder="توضیحات گرایش، معدل، پروژه‌های دانشجویی یا دوره‌های گذرانده‌شده..." style="font-size: 13px; resize: vertical;"></textarea>
+            </div>
+
+            <!-- دکمه‌های انصراف و ذخیره با تم پاستلی سایت (حذف رنگ سبز) -->
+            <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
+                <button type="button" class="btn-cancel-modal" onclick="closeModal('education-modal')">
+                    لغو
+                </button>
+                <button type="submit" class="btn-submit-proposal" style="width: auto; padding: 10px 32px; font-size: 14px;">
+                    ذخیره
+                </button>
             </div>
         </form>
     </div>

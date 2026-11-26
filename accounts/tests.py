@@ -430,6 +430,34 @@ class AuthenticationTests(TestCase):
         self.assertEqual(res_loc.status_code, 200)
         self.assertContains(res_loc, 'اصفهان، ایران')
 
+        # ۴. افزودن سابقه کاری (مطابق تصویر ۳۹ پونیشا)
+        res_exp = self.client.post(reverse('profile'), {
+            'action': 'add_experience',
+            'title': 'توسعه‌دهنده فرانت‌اند',
+            'company': 'دیجی‌کالا',
+            'start_date': '2023-01-01',
+            'is_current': 'on',
+            'description': 'توسعه رابط کاربری با ری‌اکت و تیلویند'
+        }, follow=True)
+        self.assertEqual(res_exp.status_code, 200)
+        self.assertContains(res_exp, 'سابقه کاری جدید با موفقیت اضافه شد')
+        self.assertContains(res_exp, 'توسعه‌دهنده فرانت‌اند')
+        self.assertContains(res_exp, 'دیجی‌کالا')
+
+        # ۵. افزودن سابقه تحصیلی (مطابق تصویر ۴۰ پونیشا)
+        res_edu = self.client.post(reverse('profile'), {
+            'action': 'add_education',
+            'degree': 'کارشناسی مهندسی نرم‌افزار',
+            'institution': 'دانشگاه صنعتی شریف',
+            'start_date': '2020-09-23',
+            'end_date': '2024-06-20',
+            'description': 'فارغ‌التحصیل ممتاز با رتبه برتر'
+        }, follow=True)
+        self.assertEqual(res_edu.status_code, 200)
+        self.assertContains(res_edu, 'سابقه تحصیلی جدید با موفقیت اضافه شد')
+        self.assertContains(res_edu, 'کارشناسی مهندسی نرم‌افزار')
+        self.assertContains(res_edu, 'دانشگاه صنعتی شریف')
+
     def test_avatar_upload_valid_and_invalid_formats(self):
         """آزمون آپلود تصویر پروفایل مطابق شرایط عکس ۲۰ (حجم ۵MB و فرمت‌های مجاز)"""
         from django.core.files.uploadedfile import SimpleUploadedFile

@@ -189,6 +189,48 @@ class Certificate(models.Model):
         return self.title
 
 
+class WorkExperience(models.Model):
+    """مدل سوابق کاری کاربر مطابق تصویر ۳۹ پونیشا"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='work_experiences')
+    title = models.CharField('سمت / عنوان شغلی', max_length=150)
+    company = models.CharField('شرکت / مجموعه', max_length=150)
+    start_date = models.CharField('از تاریخ', max_length=50, blank=True, null=True)
+    end_date = models.CharField('تا تاریخ', max_length=50, blank=True, null=True)
+    is_current = models.BooleanField('تا امروز', default=False)
+    description = models.TextField('توضیحات', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'سابقه کاری'
+        verbose_name_plural = 'سوابق کاری'
+        db_table = 'work_experiences'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.title} در {self.company}"
+
+
+class Education(models.Model):
+    """مدل سوابق تحصیلی کاربر مطابق تصویر ۴۰ پونیشا"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='educations')
+    degree = models.CharField('مدرک / رشته تحصیلی', max_length=150)
+    institution = models.CharField('نام آموزشگاه / دانشگاه', max_length=150)
+    start_date = models.CharField('از تاریخ', max_length=50, blank=True, null=True)
+    end_date = models.CharField('تا تاریخ', max_length=50, blank=True, null=True)
+    is_current = models.BooleanField('تا امروز', default=False)
+    description = models.TextField('توضیحات', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'سابقه تحصیلی'
+        verbose_name_plural = 'سوابق تحصیلی'
+        db_table = 'educations'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.degree} در {self.institution}"
+
+
 # ============================================================================
 # ۶. دسته‌بندی‌ها (Categories)
 # ============================================================================

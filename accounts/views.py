@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.conf import settings
 from django.db.models import Q
 
-from .models import User, Category, Skill, UserSkill, Project, Proposal, UserProfile, Portfolio, Certificate
+from .models import User, Category, Skill, UserSkill, Project, Proposal, UserProfile, Portfolio, Certificate, WorkExperience, Education
 from .forms import LoginForm, SignupForm, ForgotPasswordForm, ResetPasswordForm, RoleSelectionForm
 from .rate_limit import (
     is_login_rate_limited,
@@ -274,6 +274,8 @@ def profile_view(request):
     profile, _ = UserProfile.objects.get_or_create(user=user)
     user_skills = UserSkill.objects.filter(user=user).select_related('skill')
     portfolios = Portfolio.objects.filter(user=user).order_by('-created_at')
+    work_experiences = user.work_experiences.all()
+    educations = user.educations.all()
 
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -294,6 +296,46 @@ def profile_view(request):
             if title:
                 Portfolio.objects.create(user=user, title=title, description=desc, project_url=url)
                 messages.success(request, 'نمونه‌کار جدید با موفقیت اضافه شد.')
+        elif action == 'add_experience':
+            title = request.POST.get('title', '').strip()
+            company = request.POST.get('company', '').strip()
+            start_date = request.POST.get('start_date', '').strip()
+            end_date = request.POST.get('end_date', '').strip()
+            is_current = request.POST.get('is_current') == 'on'
+            description = request.POST.get('description', '').strip()
+            if title and company:
+                WorkExperience.objects.create(
+                    user=user,
+                    title=title,
+                    company=company,
+                    start_date=start_date,
+                    end_date='امروز' if is_current else end_date,
+                    is_current=is_current,
+                    description=description
+                )
+                messages.success(request, 'سابقه کاری جدید با موفقیت اضافه شد.')
+            else:
+                messages.error(request, 'لطفاً عنوان سمت و نام شرکت را وارد نمایید.')
+        elif action == 'add_education':
+            degree = request.POST.get('degree', '').strip()
+            institution = request.POST.get('institution', '').strip()
+            start_date = request.POST.get('start_date', '').strip()
+            end_date = request.POST.get('end_date', '').strip()
+            is_current = request.POST.get('is_current') == 'on'
+            description = request.POST.get('description', '').strip()
+            if degree and institution:
+                Education.objects.create(
+                    user=user,
+                    degree=degree,
+                    institution=institution,
+                    start_date=start_date,
+                    end_date='امروز' if is_current else end_date,
+                    is_current=is_current,
+                    description=description
+                )
+                messages.success(request, 'سابقه تحصیلی جدید با موفقیت اضافه شد.')
+            else:
+                messages.error(request, 'لطفاً مدرک و نام آموزشگاه را وارد نمایید.')
         elif action == 'upload_avatar':
             avatar_file = request.FILES.get('avatar_file')
             if not avatar_file:
@@ -332,6 +374,8 @@ def profile_view(request):
         'profile': profile,
         'user_skills': user_skills,
         'portfolios': portfolios,
+        'work_experiences': work_experiences,
+        'educations': educations,
         'user_initials': initials,
         'profile_percent': min(profile_percent, 100),
     })
