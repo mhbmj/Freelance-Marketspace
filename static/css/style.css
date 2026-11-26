@@ -2633,6 +2633,23 @@ body {
     display: flex !important;
 }
 
+/* Modal Base Card (پس‌زمینه کاملاً سفید و سایه برای تمامی مودال‌ها) */
+.modal-card {
+    background: #ffffff !important;
+    border: 1.5px solid var(--border-card) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2) !important;
+    max-width: 580px !important;
+    width: 95% !important;
+    position: relative !important;
+    margin: 30px auto !important;
+    padding: 28px 32px !important;
+    box-sizing: border-box !important;
+    animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    direction: rtl !important;
+    text-align: right !important;
+}
+
 /* Proposal Modal Styles (مطابق دقیق تصویر ۲۷ در مقیاس ۱۰۰٪) */
 .proposal-modal-card {
     background: #ffffff !important;

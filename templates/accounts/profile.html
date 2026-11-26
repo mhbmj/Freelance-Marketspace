@@ -440,71 +440,71 @@
 </div>
 
 <!-- مودال سوابق کاری مطابق تصویر ۳۹ پونیشا با تم پاستلی -->
-<div id="experience-modal" class="modal-backdrop" style="display: none;" onclick="if(event.target===this) closeModal('experience-modal')">
-    <div class="modal-card" style="max-width: 580px; width: 95%; padding: 28px 30px; border-radius: 18px; box-sizing: border-box;" onclick="event.stopPropagation()">
+<div id="experience-modal" class="modal-backdrop" style="display: none; align-items: center; justify-content: center;" onclick="if(event.target===this) closeModal('experience-modal')">
+    <div class="modal-card" style="background: #ffffff !important; max-width: 540px; width: 95%; padding: 28px 32px; border-radius: 16px; box-sizing: border-box; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22); position: relative; margin: 30px auto; direction: rtl; text-align: right;" onclick="event.stopPropagation()">
         <!-- هدر مودال -->
-        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1.5px solid var(--border-card); margin-bottom: 20px;">
-            <h3 style="font-size: 17px; font-weight: 800; color: var(--text-main); margin: 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1.5px solid #e2e8f0; margin-bottom: 22px;">
+            <h3 style="font-size: 17.5px; font-weight: 800; color: #1e293b; margin: 0;">
                 سوابق کاری
             </h3>
-            <button type="button" class="user-drawer-close-btn" onclick="closeModal('experience-modal')" title="بستن">✕</button>
+            <button type="button" class="user-drawer-close-btn" onclick="closeModal('experience-modal')" title="بستن" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #94a3b8;">✕</button>
         </div>
 
         <form method="post" action="{% url 'profile' %}">
             {% csrf_token %}
             <input type="hidden" name="action" value="add_experience">
 
-            <div class="form-group" style="margin-bottom: 16px;">
-                <label class="form-label" for="exp_title" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label class="form-label" for="exp_title" style="font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
                     سمت
                 </label>
-                <input type="text" name="title" id="exp_title" class="form-control" placeholder="مثال: توسعه‌دهنده فرانت‌اند یا فریلنسر" required style="font-size: 13.5px;">
+                <input type="text" name="title" id="exp_title" class="form-input" placeholder="مثال: توسعه‌دهنده فرانت‌اند یا فریلنسر" required style="width: 100% !important; box-sizing: border-box !important; height: 46px; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; font-size: 13.5px; font-family: inherit; background: #ffffff; color: #1e293b;">
             </div>
 
-            <div class="form-group" style="margin-bottom: 16px;">
-                <label class="form-label" for="exp_company" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label class="form-label" for="exp_company" style="font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
                     شرکت
                 </label>
-                <input type="text" name="company" id="exp_company" class="form-control" placeholder="مثال: دیجی‌کالا یا شرکت نرم‌افزاری" required style="font-size: 13.5px;">
+                <input type="text" name="company" id="exp_company" class="form-input" placeholder="مثال: دیجی‌کالا یا شرکت نرم‌افزاری" required style="width: 100% !important; box-sizing: border-box !important; height: 46px; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; font-size: 13.5px; font-family: inherit; background: #ffffff; color: #1e293b;">
             </div>
 
             <!-- ردیف تاریخ‌ها و چک‌باکس تا امروز -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 10px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 8px;">
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="exp_start_date" style="font-size: 12.5px; font-weight: 700; margin-bottom: 6px; display: block;">
+                    <label class="form-label" for="exp_start_date" style="font-size: 12.5px; font-weight: 700; color: #334155; margin-bottom: 6px; display: block;">
                         از تاریخ
                     </label>
-                    <input type="date" name="start_date" id="exp_start_date" class="form-control" style="font-size: 13px; direction: ltr; text-align: right;">
+                    <input type="date" name="start_date" id="exp_start_date" class="form-input" style="width: 100% !important; box-sizing: border-box !important; height: 46px; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: inherit; background: #ffffff; color: #1e293b; direction: ltr; text-align: right;">
                 </div>
 
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="exp_end_date" style="font-size: 12.5px; font-weight: 700; margin-bottom: 6px; display: block;">
+                    <label class="form-label" for="exp_end_date" style="font-size: 12.5px; font-weight: 700; color: #334155; margin-bottom: 6px; display: block;">
                         تا تاریخ
                     </label>
-                    <input type="date" name="end_date" id="exp_end_date" class="form-control" style="font-size: 13px; direction: ltr; text-align: right;">
+                    <input type="date" name="end_date" id="exp_end_date" class="form-input" style="width: 100% !important; box-sizing: border-box !important; height: 46px; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: inherit; background: #ffffff; color: #1e293b; direction: ltr; text-align: right;">
                 </div>
             </div>
 
             <div style="margin-bottom: 18px;">
                 <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #475569; cursor: pointer;">
-                    <input type="checkbox" name="is_current" id="exp_is_current" onchange="document.getElementById('exp_end_date').disabled = this.checked;" style="width: 17px; height: 17px; accent-color: var(--pastel-pink);">
+                    <input type="checkbox" name="is_current" id="exp_is_current" onchange="document.getElementById('exp_end_date').disabled = this.checked;" style="width: 18px; height: 18px; accent-color: var(--pastel-pink, #f472b6); cursor: pointer;">
                     <span>تا امروز</span>
                 </label>
             </div>
 
             <div class="form-group" style="margin-bottom: 24px;">
-                <label class="form-label" for="exp_description" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
+                <label class="form-label" for="exp_description" style="font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
                     توضیحات
                 </label>
-                <textarea name="description" id="exp_description" class="form-control" rows="4" placeholder="مسئولیت‌ها، تکنولوژی‌های استفاده‌شده و دستاوردهای کاری شما..." style="font-size: 13px; resize: vertical;"></textarea>
+                <textarea name="description" id="exp_description" class="form-input" rows="4" placeholder="مسئولیت‌ها، تکنولوژی‌های استفاده‌شده و دستاوردهای کاری شما..." style="width: 100% !important; box-sizing: border-box !important; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; font-size: 13px; font-family: inherit; background: #ffffff; color: #1e293b; resize: vertical;"></textarea>
             </div>
 
-            <!-- دکمه‌های انصراف و ذخیره با تم پاستلی سایت (حذف رنگ سبز) -->
+            <!-- دکمه‌های انصراف و ذخیره با تم پاستلی سایت -->
             <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
-                <button type="button" class="btn-cancel-modal" onclick="closeModal('experience-modal')">
+                <button type="button" class="btn-cancel-modal" onclick="closeModal('experience-modal')" style="background: transparent; border: 1.5px solid #cbd5e1; color: #475569; border-radius: 8px; padding: 10px 24px; font-size: 13.5px; font-weight: 700; cursor: pointer;">
                     لغو
                 </button>
-                <button type="submit" class="btn-submit-proposal" style="width: auto; padding: 10px 32px; font-size: 14px;">
+                <button type="submit" class="btn-submit-proposal" style="background: linear-gradient(135deg, var(--pastel-pink, #f472b6) 0%, var(--pastel-pink-hover, #db2777) 100%); color: #ffffff; border: none; border-radius: 8px; padding: 10px 32px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(244, 114, 182, 0.35);">
                     ذخیره
                 </button>
             </div>
@@ -513,71 +513,71 @@
 </div>
 
 <!-- مودال سوابق تحصیلی مطابق تصویر ۴۰ پونیشا با تم پاستلی -->
-<div id="education-modal" class="modal-backdrop" style="display: none;" onclick="if(event.target===this) closeModal('education-modal')">
-    <div class="modal-card" style="max-width: 580px; width: 95%; padding: 28px 30px; border-radius: 18px; box-sizing: border-box;" onclick="event.stopPropagation()">
+<div id="education-modal" class="modal-backdrop" style="display: none; align-items: center; justify-content: center;" onclick="if(event.target===this) closeModal('education-modal')">
+    <div class="modal-card" style="background: #ffffff !important; max-width: 540px; width: 95%; padding: 28px 32px; border-radius: 16px; box-sizing: border-box; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22); position: relative; margin: 30px auto; direction: rtl; text-align: right;" onclick="event.stopPropagation()">
         <!-- هدر مودال -->
-        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1.5px solid var(--border-card); margin-bottom: 20px;">
-            <h3 style="font-size: 17px; font-weight: 800; color: var(--text-main); margin: 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1.5px solid #e2e8f0; margin-bottom: 22px;">
+            <h3 style="font-size: 17.5px; font-weight: 800; color: #1e293b; margin: 0;">
                 سوابق تحصیلی
             </h3>
-            <button type="button" class="user-drawer-close-btn" onclick="closeModal('education-modal')" title="بستن">✕</button>
+            <button type="button" class="user-drawer-close-btn" onclick="closeModal('education-modal')" title="بستن" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #94a3b8;">✕</button>
         </div>
 
         <form method="post" action="{% url 'profile' %}">
             {% csrf_token %}
             <input type="hidden" name="action" value="add_education">
 
-            <div class="form-group" style="margin-bottom: 16px;">
-                <label class="form-label" for="edu_degree" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label class="form-label" for="edu_degree" style="font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
                     مدرک
                 </label>
-                <input type="text" name="degree" id="edu_degree" class="form-control" placeholder="مثال: کارشناسی مهندسی کامپیوتر یا دیپلم گرافیک" required style="font-size: 13.5px;">
+                <input type="text" name="degree" id="edu_degree" class="form-input" placeholder="مثال: کارشناسی مهندسی کامپیوتر یا دیپلم گرافیک" required style="width: 100% !important; box-sizing: border-box !important; height: 46px; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; font-size: 13.5px; font-family: inherit; background: #ffffff; color: #1e293b;">
             </div>
 
-            <div class="form-group" style="margin-bottom: 16px;">
-                <label class="form-label" for="edu_institution" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
+            <div class="form-group" style="margin-bottom: 18px;">
+                <label class="form-label" for="edu_institution" style="font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
                     نام آموزشگاه
                 </label>
-                <input type="text" name="institution" id="edu_institution" class="form-control" placeholder="مثال: دانشگاه تهران یا مجتمع فنی" required style="font-size: 13.5px;">
+                <input type="text" name="institution" id="edu_institution" class="form-input" placeholder="مثال: دانشگاه تهران یا مجتمع فنی" required style="width: 100% !important; box-sizing: border-box !important; height: 46px; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; font-size: 13.5px; font-family: inherit; background: #ffffff; color: #1e293b;">
             </div>
 
             <!-- ردیف تاریخ‌ها و چک‌باکس تا امروز -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 10px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 8px;">
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="edu_start_date" style="font-size: 12.5px; font-weight: 700; margin-bottom: 6px; display: block;">
+                    <label class="form-label" for="edu_start_date" style="font-size: 12.5px; font-weight: 700; color: #334155; margin-bottom: 6px; display: block;">
                         از تاریخ
                     </label>
-                    <input type="date" name="start_date" id="edu_start_date" class="form-control" style="font-size: 13px; direction: ltr; text-align: right;">
+                    <input type="date" name="start_date" id="edu_start_date" class="form-input" style="width: 100% !important; box-sizing: border-box !important; height: 46px; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: inherit; background: #ffffff; color: #1e293b; direction: ltr; text-align: right;">
                 </div>
 
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="edu_end_date" style="font-size: 12.5px; font-weight: 700; margin-bottom: 6px; display: block;">
+                    <label class="form-label" for="edu_end_date" style="font-size: 12.5px; font-weight: 700; color: #334155; margin-bottom: 6px; display: block;">
                         تا تاریخ
                     </label>
-                    <input type="date" name="end_date" id="edu_end_date" class="form-control" style="font-size: 13px; direction: ltr; text-align: right;">
+                    <input type="date" name="end_date" id="edu_end_date" class="form-input" style="width: 100% !important; box-sizing: border-box !important; height: 46px; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: inherit; background: #ffffff; color: #1e293b; direction: ltr; text-align: right;">
                 </div>
             </div>
 
             <div style="margin-bottom: 18px;">
                 <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #475569; cursor: pointer;">
-                    <input type="checkbox" name="is_current" id="edu_is_current" onchange="document.getElementById('edu_end_date').disabled = this.checked;" style="width: 17px; height: 17px; accent-color: var(--pastel-pink);">
+                    <input type="checkbox" name="is_current" id="edu_is_current" onchange="document.getElementById('edu_end_date').disabled = this.checked;" style="width: 18px; height: 18px; accent-color: var(--pastel-pink, #f472b6); cursor: pointer;">
                     <span>تا امروز</span>
                 </label>
             </div>
 
             <div class="form-group" style="margin-bottom: 24px;">
-                <label class="form-label" for="edu_description" style="font-size: 13px; font-weight: 700; margin-bottom: 6px; display: block;">
+                <label class="form-label" for="edu_description" style="font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
                     توضیحات
                 </label>
-                <textarea name="description" id="edu_description" class="form-control" rows="4" placeholder="توضیحات گرایش، معدل، پروژه‌های دانشجویی یا دوره‌های گذرانده‌شده..." style="font-size: 13px; resize: vertical;"></textarea>
+                <textarea name="description" id="edu_description" class="form-input" rows="4" placeholder="توضیحات گرایش، معدل، پروژه‌های دانشجویی یا دوره‌های گذرانده‌شده..." style="width: 100% !important; box-sizing: border-box !important; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; font-size: 13px; font-family: inherit; background: #ffffff; color: #1e293b; resize: vertical;"></textarea>
             </div>
 
-            <!-- دکمه‌های انصراف و ذخیره با تم پاستلی سایت (حذف رنگ سبز) -->
+            <!-- دکمه‌های انصراف و ذخیره با تم پاستلی سایت -->
             <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
-                <button type="button" class="btn-cancel-modal" onclick="closeModal('education-modal')">
+                <button type="button" class="btn-cancel-modal" onclick="closeModal('education-modal')" style="background: transparent; border: 1.5px solid #cbd5e1; color: #475569; border-radius: 8px; padding: 10px 24px; font-size: 13.5px; font-weight: 700; cursor: pointer;">
                     لغو
                 </button>
-                <button type="submit" class="btn-submit-proposal" style="width: auto; padding: 10px 32px; font-size: 14px;">
+                <button type="submit" class="btn-submit-proposal" style="background: linear-gradient(135deg, var(--pastel-pink, #f472b6) 0%, var(--pastel-pink-hover, #db2777) 100%); color: #ffffff; border: none; border-radius: 8px; padding: 10px 32px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(244, 114, 182, 0.35);">
                     ذخیره
                 </button>
             </div>
