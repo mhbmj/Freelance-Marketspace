@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ایجاد نمونه کار جدید | سامانه فریلنسری{% endblock %}
+
+{% block content %}
+<div class="home-page-container" style="max-width: 980px; margin: 0 auto; padding-bottom: 60px;">
+
+    <!-- نوار هدر بالای صفحه ایجاد نمونه‌کار -->
+    <header style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0 24px; border-bottom: 1.5px solid var(--border-card); margin-bottom: 28px;">
+        <!-- دکمه ضربدر بستن و بازگشت به پروفایل در سمت چپ -->
+        <a href="{% url 'profile' %}" class="btn-cancel-modal" style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; padding: 0; border-radius: 8px; text-decoration: none; font-size: 16px;" title="بازگشت به پروفایل">
+            ✕
+        </a>
+
+        <!-- لوگوی سامانه در سمت راست -->
+        <a href="{% url 'home' %}" class="nav-brand-logo" title="صفحه اصلی">
+            <img src="{% static 'images/logo.png' %}" alt="لوگو" class="nav-logo-img">
+            <span class="nav-brand-text">فریلنسـ‌مارکت</span>
+        </a>
+    </header>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'success' }}{% endif %}" style="margin-bottom: 20px;">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- عنوان اصلی صفحه مطابق تصویر ۴۳ -->
+    <div style="text-align: center; margin-bottom: 24px;">
+        <h1 style="font-size: 26px; font-weight: 800; color: var(--text-main); margin: 0;">
+            ایجاد نمونه کار
+        </h1>
+    </div>
+
+    <!-- فرم جامع ایجاد نمونه کار مطابق تصاویر ۴۳ و ۴۴ -->
+    <form method="post" action="{% url 'portfolio_create' %}" enctype="multipart/form-data" id="portfolio-create-form">
+        {% csrf_token %}
+
+        <!-- کارت سفید زمینه محتوا -->
+        <div class="ponisha-card" style="padding: 34px 38px; border-radius: 18px; margin-bottom: 24px; background: #ffffff;">
+
+            <!-- کادر اعلان سبز/پاستلی راهنما مطابق بالای تصویر ۴۳ -->
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px 18px; font-size: 13px; color: #15803d; display: flex; align-items: center; gap: 8px; margin-bottom: 28px;">
+                <span>ℹ️</span>
+                <span>یک نمونه‌کار خوب و پربازدید چه ویژگی‌هایی دارد؟</span>
+                <a href="javascript:void(0)" onclick="alert('یک نمونه‌کار خوب دارای عنوان گویا، تصاویر واضح با کیفیت، توضیح چالش‌ها و لینک فعال است.')" style="color: #15803d; font-weight: 700; text-decoration: underline; margin-right: 4px;">
+                    مشاهده راهنمای ثبت نمونه‌کار
+                </a>
+            </div>
+
+            <!-- ۱. عنوان نمونه کار -->
+            <div class="form-group" style="margin-bottom: 26px;">
+                <label class="form-label" for="portfolio_title" style="font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: block;">
+                    عنوان نمونه کار <span style="color: #e11d48;">*</span>
+                </label>
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+                    یک عنوان کوتاه و دقیق انتخاب کنید که نوع پروژه و تخصص شما را نشان دهد. مثال: «طراحی رابط کاربری اپلیکیشن فین‌تک».
+                </div>
+                <input type="text" name="title" id="portfolio_title" class="form-input" placeholder="عنوان نمونه‌کار خود را وارد کنید..." maxlength="80" required oninput="updateCharCount('portfolio_title', 'title_counter', 80)" style="font-size: 14px; height: 46px;">
+                <div style="font-size: 11.5px; color: var(--text-muted); text-align: left; margin-top: 4px;" dir="ltr">
+                    <span id="title_counter">۰</span> از ۸۰
+                </div>
+            </div>
+
+            <!-- ۲. نوع سرویس -->
+            <div class="form-group" style="margin-bottom: 26px;">
+                <label class="form-label" for="service_type" style="font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: block;">
+                    نوع سرویس <span style="color: #e11d48;">*</span>
+                </label>
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+                    نوع خدماتی که در این پروژه ارائه کرده‌اید را انتخاب کنید؛ مثلاً طراحی گرافیک، برنامه‌نویسی وب، تولید محتوا و...
+                </div>
+                <select name="service_type" id="service_type" class="form-input custom-select" required style="font-size: 13.5px; height: 46px;">
+                    <option value="" disabled selected>-- نوع سرویس را انتخاب کنید --</option>
+                    <option value="طراحی رابط کاربری UI/UX">طراحی رابط کاربری UI/UX</option>
+                    <option value="برنامه‌نویسی و توسعه وب">برنامه‌نویسی و توسعه وب</option>
+                    <option value="طراحی اپلیکیشن موبایل">طراحی اپلیکیشن موبایل</option>
+                    <option value="طراحی گرافیک و هویت بصری">طراحی گرافیک و هویت بصری</option>
+                    <option value="تولید محتوا و سئو">تولید محتوا و سئو</option>
+                    <option value="مدل‌سازی و انیمیشن">مدل‌سازی و انیمیشن</option>
+                    <option value="ترجمه و نگارش">ترجمه و نگارش</option>
+                    <option value="مهندسی و معماری">مهندسی و معماری</option>
+                </select>
+            </div>
+
+            <!-- ۳. نقش شما -->
+            <div class="form-group" style="margin-bottom: 26px;">
+                <label class="form-label" for="user_role" style="font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: block;">
+                    نقش شما <span style="color: #e11d48;">*</span>
+                </label>
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+                    نقش و مسئولیت خودتان در پروژه را مشخص کنید. مثلاً: طراح رابط کاربری، توسعه‌دهنده فرانت‌اند، مشاور سئو، تولیدکننده محتوا یا مسئول تست نرم‌افزار.
+                </div>
+                <input type="text" name="user_role" id="user_role" class="form-input" placeholder="مثال: طراح رابط کاربری، برنامه‌نویس فول‌استک" maxlength="30" required oninput="updateCharCount('user_role', 'role_counter', 30)" style="font-size: 14px; height: 46px;">
+                <div style="font-size: 11.5px; color: var(--text-muted); text-align: left; margin-top: 4px;" dir="ltr">
+                    <span id="role_counter">۰</span> از ۳۰
+                </div>
+            </div>
+
+            <!-- ۴. توضیحات -->
+            <div class="form-group" style="margin-bottom: 26px;">
+                <label class="form-label" for="portfolio_description" style="font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: block;">
+                    توضیحات <span style="color: #e11d48;">*</span>
+                </label>
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+                    پروژه را به‌صورت خلاصه معرفی کنید: هدف پروژه، چالش‌ها، نحوه انجام کار، نتیجه نهایی و مهارت‌هایی که استفاده کرده‌اید.
+                </div>
+                <textarea name="description" id="portfolio_description" class="form-input" rows="6" placeholder="توضیحات کامل پروژه را اینجا بنویسید..." required style="font-size: 13.5px; line-height: 1.8; resize: vertical;"></textarea>
+            </div>
+
+            <hr style="border: none; border-top: 1.5px solid var(--border-card); margin: 32px 0;">
+
+            <!-- ۵. مهارت‌ها مطابق بالای تصویر ۴۴ -->
+            <div class="form-group" style="margin-bottom: 26px;">
+                <label class="form-label" for="portfolio_skills" style="font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: block;">
+                    مهارت‌ها <span style="color: #e11d48;">*</span>
+                </label>
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+                    مهارت‌هایی که در انجام این پروژه به‌کار برده‌اید را وارد کنید؛ مثلاً HTML ، ترجمه تخصصی، Excel و...
+                </div>
+                <input type="text" name="skills" id="portfolio_skills" class="form-input" placeholder="مهارت‌ها را با کاما جدا کنید (مثال: Python, Django, React, UI/UX)" required style="font-size: 14px; height: 46px;">
+            </div>
+
+            <!-- ۶. برچسب‌ها -->
+            <div class="form-group" style="margin-bottom: 26px;">
+                <label class="form-label" for="portfolio_tags" style="font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: block;">
+                    برچسب‌ها <span style="color: #e11d48;">*</span>
+                </label>
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+                    چند برچسب مرتبط وارد کنید تا نمونه‌کار شما بهتر قابل جستجو باشد؛ مثل «فروشگاه اینترنتی»، «لوگو مینیمال»، «اپلیکیشن اندروید».
+                </div>
+                <input type="text" name="tags" id="portfolio_tags" class="form-input" placeholder="جستجو یا ورود برچسب‌ها..." style="font-size: 14px; height: 46px;">
+            </div>
+
+            <!-- ۷. پروژه انجام شده مرتبط در پونیشا -->
+            <div class="form-group" style="margin-bottom: 26px;">
+                <label class="form-label" for="related_project" style="font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: block;">
+                    پروژه انجام شده مرتبط در پونیشا
+                </label>
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+                    اگر این پروژه را از طریق پونیشا انجام داده‌اید، می‌توانید آن را از لیست پروژه‌های قبلی خود انتخاب کنید.
+                </div>
+                <select name="related_project" id="related_project" class="form-input custom-select" style="font-size: 13.5px; height: 46px;">
+                    <option value="">-- پروژه‌ای انتخاب نشده است --</option>
+                    {% for cp in completed_projects %}
+                        <option value="{{ cp.id }}">{{ cp.title }}</option>
+                    {% empty %}
+                        <option value="" disabled>هنوز پروژه تکمیل‌شده‌ای در پلتفرم ثبت نشده است</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- ۸. ردیف دو ستونه: مدت زمان انجام و محدوده قیمت مطابق تصویر ۴۴ -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                <!-- مدت زمان انجام پروژه -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 13.5px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: block;">
+                        مدت زمان انجام پروژه
+                    </label>
+                    <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">
+                        مدت تقریبی انجام پروژه را وارد کنید. (اختیاری)
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" name="duration_number" placeholder="تعداد" class="form-input" min="1" style="flex: 2; height: 46px; font-size: 13.5px;">
+                        <select name="duration_unit" class="form-input custom-select" style="flex: 1.5; height: 46px; font-size: 13px;">
+                            <option value="روز" selected>روز</option>
+                            <option value="هفته">هفته</option>
+                            <option value="ماه">ماه</option>
+                            <option value="ساعت">ساعت</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- محدوده قیمت (تومان) -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 13.5px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: block;">
+                        محدوده قیمت (تومان)
+                    </label>
+                    <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">
+                        بازه حدودی هزینه‌ای که برای این پروژه دریافت کرده‌اید. (اختیاری)
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="number" name="min_price" placeholder="از" class="form-input" min="0" style="flex: 1; height: 46px; font-size: 13.5px;">
+                        <span style="color: var(--text-muted); font-size: 12px;">تا</span>
+                        <input type="number" name="max_price" placeholder="تا" class="form-input" min="0" style="flex: 1; height: 46px; font-size: 13.5px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ۹. بخش فایل‌های نمونه‌کار مطابق پایین تصویر ۴۴ -->
+            <div style="margin-bottom: 15px;">
+                <label class="form-label" style="font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: block;">
+                    فایل‌های نمونه‌کار
+                </label>
+                <p style="font-size: 12.5px; color: #4b5563; line-height: 1.8; margin-bottom: 6px;">
+                    توصیه می‌کنیم <strong style="color: #059669;">حداقل ۱ فایل</strong> مربوط به پروژه بارگذاری کنید تا نمونه‌کار شما کامل‌تر و قابل اعتمادتر باشد. می‌توانید تصاویر، ویدئو، صوت یا اسناد متنی مرتبط را آپلود کنید، یا لینک آنلاین نمونه‌کار را قرار دهید.
+                </p>
+                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 16px;">
+                    فرمت‌های مجاز: JPG, PNG, PDF, MP4, MP3 و لینک‌های معتبر. حداکثر حجم هر فایل: ۲۰ مگابایت.
+                </div>
+
+                <!-- کادر انتخاب فایل با آیکون‌های نوع رسانه -->
+                <div style="border: 1.5px dashed var(--pastel-pink-border, #fbcfe8); border-radius: 14px; background: #fffbfe; padding: 24px; text-align: center; margin-bottom: 16px;">
+                    <input type="file" name="portfolio_file" id="portfolio_file_input" style="display: none;" onchange="showPortfolioFileChosen(this)">
+
+                    <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px;">
+                        <button type="button" class="btn-cancel-modal" onclick="document.getElementById('portfolio_file_input').click()" style="padding: 10px 18px; font-size: 12.5px; display: flex; align-items: center; gap: 6px;">
+                            <span>🖼️</span>
+                            <span>آپلود تصویر / فایل</span>
+                        </button>
+                    </div>
+
+                    <div id="portfolio-file-status" style="font-size: 13px; color: #64748b; font-weight: 500;">
+                        هنوز فایلی انتخاب نشده است
+                    </div>
+                </div>
+
+                <!-- فیلد لینک آنلاین پروژه -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="project_url" style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; display: block;">
+                        لینک آنلاین نمونه‌کار (وبسایت یا گیت‌هاب):
+                    </label>
+                    <input type="url" name="project_url" id="project_url" class="form-input" placeholder="https://example.com/project" dir="ltr" style="font-size: 13.5px; height: 44px;">
+                </div>
+            </div>
+
+        </div>
+
+        <!-- نوار دکمه اقدام پایین صفحه مطابق اسکرین‌شات ۴۳ و ۴۴ با تم پاستلی سایت -->
+        <div style="background: #ffffff; border: 1.5px solid var(--border-card); border-radius: 14px; padding: 18px 26px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; box-shadow: var(--shadow-minimal);">
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--text-muted);">
+                <span style="font-size: 20px;">📄</span>
+                <span>
+                    ثبت نمونه‌کار به منزله مطالعه و قبول <a href="{% url 'terms' %}" target="_blank" class="link-pink">قوانین فریلنسـ‌مارکت</a> و مرام‌نامه و قوانین ثبت نمونه‌کار است.
+                </span>
+            </div>
+
+            <button type="submit" class="btn-submit-proposal" style="padding: 12px 34px; font-size: 14.5px; border-radius: 10px;">
+                مرحله بعد: ذخیره و انتشار نمونه‌کار ←
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+function updateCharCount(inputId, counterId, max) {
+    const el = document.getElementById(inputId);
+    const counter = document.getElementById(counterId);
+    if (el && counter) {
+        counter.textContent = el.value.length.toLocaleString('fa-IR');
+    }
+}
+
+function showPortfolioFileChosen(input) {
+    const status = document.getElementById('portfolio-file-status');
+    if (input.files && input.files[0]) {
+        const f = input.files[0];
+        status.innerHTML = `<span style="color: #be185d; font-weight: 700;">فایل انتخاب شد:</span> ${f.name} (${(f.size / 1024 / 1024).toFixed(2)} MB)`;
+    }
+}
+</script>
+
+{% if user.is_authenticated %}
+    {% include 'includes/user_drawer.html' %}
+{% endif %}
+{% endblock %}

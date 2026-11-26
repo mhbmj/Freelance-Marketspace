@@ -226,22 +226,67 @@
                 {% endif %}
             </div>
 
-            <!-- بخش ۵: نمونه‌کارها -->
+            <!-- بخش ۵: نمونه‌کارها (مطابق تصاویر ۴۳ و ۴۴) -->
             <div class="profile-section-card">
                 <div class="profile-section-header">
                     <h2 class="profile-section-title">نمونه‌کارها</h2>
-                    <button type="button" class="btn-add-section" onclick="openModal('portfolio-modal')">
+                    <a href="{% url 'portfolio_create' %}" class="btn-add-section" style="text-decoration: none;">
                         + افزودن نمونه‌کار
-                    </button>
+                    </a>
                 </div>
 
                 {% if portfolios %}
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
                         {% for pf in portfolios %}
-                            <div class="ponisha-card" style="padding: 16px; border: 1px solid var(--border-card);">
-                                <h4 style="font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">{{ pf.title }}</h4>
-                                {% if pf.description %}<p style="font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 8px;">{{ pf.description }}</p>{% endif %}
-                                {% if pf.project_url %}<a href="{{ pf.project_url }}" target="_blank" class="link-pink" style="font-size: 11.5px;">مشاهده پروژه ↗</a>{% endif %}
+                            <div class="ponisha-card" style="padding: 18px 20px; border: 1.5px solid var(--border-card); background: #ffffff; display: flex; flex-direction: column; justify-content: space-between;">
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 8px;">
+                                        <h4 style="font-size: 15px; font-weight: 800; color: var(--text-main); margin: 0;">{{ pf.title }}</h4>
+                                        {% if pf.duration %}
+                                            <span style="font-size: 11px; background: #fdf2f8; color: #be185d; padding: 2px 8px; border-radius: 6px; white-space: nowrap;">
+                                                ⏱️ {{ pf.duration }}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+
+                                    {% if pf.service_type or pf.user_role %}
+                                        <div style="font-size: 12px; color: var(--pastel-pink-hover); font-weight: 600; margin-bottom: 8px;">
+                                            {{ pf.service_type|default:'' }}{% if pf.service_type and pf.user_role %} • {% endif %}{{ pf.user_role|default:'' }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if pf.description %}
+                                        <p style="font-size: 12.5px; color: #4b5563; line-height: 1.7; margin-bottom: 12px;">
+                                            {{ pf.description|truncatewords:24 }}
+                                        </p>
+                                    {% endif %}
+
+                                    {% if pf.skills %}
+                                        <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px;">
+                                            <span style="font-size: 11px; color: var(--text-muted);">مهارت‌ها: </span>
+                                            <span class="user-skill-pill" style="font-size: 10.5px; padding: 2px 8px;">{{ pf.skills }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px dashed var(--border-card); font-size: 12px;">
+                                    {% if pf.min_price or pf.max_price %}
+                                        <span style="color: #854d0e; font-weight: 700;">
+                                            💰 {{ pf.min_price|default:''|floatformat:0 }}{% if pf.min_price and pf.max_price %} تا {% endif %}{{ pf.max_price|default:''|floatformat:0 }} تومان
+                                        </span>
+                                    {% else %}
+                                        <span></span>
+                                    {% endif %}
+
+                                    <div style="display: flex; gap: 8px;">
+                                        {% if pf.file %}
+                                            <a href="{{ pf.file.url }}" target="_blank" class="link-pink" style="font-size: 11.5px; font-weight: 700;">فایل ضمیمه 📎</a>
+                                        {% endif %}
+                                        {% if pf.project_url %}
+                                            <a href="{{ pf.project_url }}" target="_blank" class="link-pink" style="font-size: 11.5px; font-weight: 700;">مشاهده پروژه ↗</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
                         {% endfor %}
                     </div>
@@ -254,9 +299,9 @@
                         <p class="empty-tab-text" style="margin-bottom: 14px;">
                             نمونه‌کارهای خفن و باکیفیت خودت رو بگذار
                         </p>
-                        <button type="button" class="btn-add-section" style="font-size: 13.5px;" onclick="openModal('portfolio-modal')">
+                        <a href="{% url 'portfolio_create' %}" class="btn-add-section" style="font-size: 13.5px; text-decoration: none; display: inline-block;">
                             + افزودن نمونه‌کار
-                        </button>
+                        </a>
                     </div>
                 {% endif %}
             </div>

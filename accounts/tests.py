@@ -458,6 +458,35 @@ class AuthenticationTests(TestCase):
         self.assertContains(res_edu, 'کارشناسی مهندسی نرم‌افزار')
         self.assertContains(res_edu, 'دانشگاه صنعتی شریف')
 
+        # ۶. ایجاد نمونه‌کار جامع مطابق تصاویر ۴۳ و ۴۴ پونیشا
+        res_pf_get = self.client.get(reverse('portfolio_create'))
+        self.assertEqual(res_pf_get.status_code, 200)
+        self.assertContains(res_pf_get, 'ایجاد نمونه کار')
+        self.assertContains(res_pf_get, 'عنوان نمونه کار')
+        self.assertContains(res_pf_get, 'نوع سرویس')
+        self.assertContains(res_pf_get, 'نقش شما')
+        self.assertContains(res_pf_get, 'مهارت‌ها')
+        self.assertContains(res_pf_get, 'محدوده قیمت')
+
+        res_pf_post = self.client.post(reverse('portfolio_create'), {
+            'title': 'طراحی پنل کاربری فین‌تک',
+            'service_type': 'طراحی رابط کاربری UI/UX',
+            'user_role': 'طراح ارشد محصول',
+            'description': 'طراحی وایرفریم‌ها، پروتوتایپ و دیزاین سیستم فین‌تک',
+            'skills': 'Figma, UI/UX, React',
+            'tags': 'فین‌تک، داشبورد',
+            'duration_number': '15',
+            'duration_unit': 'روز',
+            'min_price': '15000000',
+            'max_price': '25000000',
+            'project_url': 'https://github.com/mahtab/fintech-ui'
+        }, follow=True)
+        self.assertEqual(res_pf_post.status_code, 200)
+        self.assertContains(res_pf_post, 'نمونه‌کار جدید با موفقیت ایجاد و ثبت گردید')
+        self.assertContains(res_pf_post, 'طراحی پنل کاربری فین‌تک')
+        self.assertContains(res_pf_post, 'طراح ارشد محصول')
+        self.assertContains(res_pf_post, '15 روز')
+
     def test_avatar_upload_valid_and_invalid_formats(self):
         """آزمون آپلود تصویر پروفایل مطابق شرایط عکس ۲۰ (حجم ۵MB و فرمت‌های مجاز)"""
         from django.core.files.uploadedfile import SimpleUploadedFile

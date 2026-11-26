@@ -156,7 +156,15 @@ class UserProfile(models.Model):
 class Portfolio(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='portfolios')
     title = models.CharField('عنوان نمونه‌کار', max_length=150)
+    service_type = models.CharField('نوع سرویس', max_length=100, blank=True, null=True)
+    user_role = models.CharField('نقش شما در پروژه', max_length=100, blank=True, null=True)
     description = models.TextField('توضیحات', blank=True, null=True)
+    skills = models.CharField('مهارت‌ها', max_length=255, blank=True, null=True)
+    tags = models.CharField('برچسب‌ها', max_length=255, blank=True, null=True)
+    duration = models.CharField('مدت زمان انجام', max_length=50, blank=True, null=True)
+    min_price = models.DecimalField('حداقل قیمت', max_digits=12, decimal_places=0, blank=True, null=True)
+    max_price = models.DecimalField('حداکثر قیمت', max_digits=12, decimal_places=0, blank=True, null=True)
+    file = models.FileField('فایل نمونه‌کار', upload_to='portfolios/', blank=True, null=True)
     project_url = models.URLField('لینک پروژه', max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -164,6 +172,7 @@ class Portfolio(models.Model):
         verbose_name = 'نمونه‌کار'
         verbose_name_plural = 'نمونه‌کارها'
         db_table = 'portfolios'
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.title

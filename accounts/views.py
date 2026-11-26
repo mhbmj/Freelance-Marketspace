@@ -382,6 +382,68 @@ def profile_view(request):
 
 
 @login_required
+def portfolio_create_view(request):
+    """صفحه ایجاد نمونه کار جامع مطابق با تصاویر ۴۳ و ۴۴ پونیشا"""
+    user = request.user
+
+    # پروژه‌های انجام‌شده کاربر در پلتفرم برای بخش «پروژه انجام شده مرتبط در پونیشا»
+    completed_projects = Project.objects.filter(
+        proposals__freelancer=user,
+        proposals__status='ACCEPTED'
+    ).distinct()
+
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        service_type = request.POST.get('service_type', '').strip()
+        user_role = request.POST.get('user_role', '').strip()
+        description = request.POST.get('description', '').strip()
+        skills = request.POST.get('skills', '').strip()
+        tags = request.POST.get('tags', '').strip()
+        duration_number = request.POST.get('duration_number', '').strip()
+        duration_unit = request.POST.get('duration_unit', 'روز').strip()
+        min_price_str = request.POST.get('min_price', '').strip().replace(',', '')
+        max_price_str = request.POST.get('max_price', '').strip().replace(',', '')
+        project_url = request.POST.get('project_url', '').strip()
+        uploaded_file = request.FILES.get('portfolio_file')
+
+        if not title:
+            messages.error(request, 'عنوان نمونه‌کار الزامی است.')
+            return redirect('portfolio_create')
+
+        min_price = float(min_price_str) if min_price_str and min_price_str.isdigit() else None
+        max_price = float(max_price_str) if max_price_str and max_price_str.isdigit() else None
+        duration = f"{duration_number} {duration_unit}" if duration_number else None
+
+        portfolio = Portfolio.objects.create(
+            user=user,
+            title=title,
+            service_type=service_type or 'طراحی و توسعه نرم‌افزار',
+            user_role=user_role,
+            description=description,
+            skills=skills,
+            tags=tags,
+            duration=duration,
+            min_price=min_price,
+            max_price=max_price,
+            project_url=project_url,
+            file=uploaded_file
+        )
+
+        messages.success(request, 'نمونه‌کار جدید با موفقیت ایجاد و ثبت گردید!')
+        return redirect('profile')
+
+    initials = "MA"
+    if user.first_name and user.last_name:
+        initials = (user.first_name[0] + user.last_name[0]).upper()
+
+    return render(request, 'accounts/portfolio_create.html', {
+        'user': user,
+        'user_initials': initials,
+        'completed_projects': completed_projects,
+    })
+
+
+@login_required
 def welcome_view(request):
     """ریدایرکت به داشبورد اصلی"""
     return redirect('dashboard')

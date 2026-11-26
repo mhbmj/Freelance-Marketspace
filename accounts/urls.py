@@ -12,6 +12,7 @@ urlpatterns = [
     path('dashboard/notifications/', views.notifications_redirect_view, name='dashboard_notifications'),
     path('dashboard/messages/', views.messages_redirect_view, name='dashboard_messages'),
     path('profile/', views.profile_view, name='profile'),
+    path('profile/portfolio/new/', views.portfolio_create_view, name='portfolio_create'),
     path('projects/', views.projects_list_view, name='projects_list'),
     path('projects/<int:project_id>/', views.project_detail_view, name='project_detail'),
     path('categories/', views.categories_view, name='categories'),
