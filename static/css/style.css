@@ -3416,8 +3416,8 @@ body {
 }
 
 .messages-drawer-tab.active {
-    color: var(--text-main);
-    border-bottom-color: #10b981;
+    color: var(--pastel-pink-hover);
+    border-bottom-color: var(--pastel-pink);
 }
 
 .messages-drawer-close {
@@ -3464,7 +3464,7 @@ body {
 
 .messages-drawer-search-input:focus {
     outline: none;
-    border-color: #10b981;
+    border-color: var(--pastel-pink);
     background: #ffffff;
 }
 
@@ -3494,22 +3494,23 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background: #047857;
+    background: linear-gradient(135deg, var(--pastel-pink) 0%, var(--pastel-pink-hover) 100%);
     color: #ffffff;
-    border: none;
-    border-radius: 8px;
+    border: 1.5px solid var(--pastel-pink-border);
+    border-radius: 10px;
     padding: 12px 18px;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(4, 120, 87, 0.2);
+    box-shadow: 0 4px 14px rgba(244, 114, 182, 0.35);
     font-family: inherit;
 }
 
 .btn-new-ticket:hover {
-    background: #065f46;
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, var(--pastel-pink-hover) 0%, #db2777 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(244, 114, 182, 0.45);
 }
 
 .drawer-announcement-card {

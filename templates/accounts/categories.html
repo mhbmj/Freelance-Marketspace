@@ -54,12 +54,12 @@
                     </button>
 
                     <!-- آیکون زنگوله اطلاعیه‌ها -->
-                    <button type="button" class="nav-icon-btn" onclick="toggleMessagesDrawer(true, 'support')" title="اطلاعیه‌ها و پیام‌های پشتیبانی" aria-label="اطلاعیه‌ها" style="background: transparent; border: none; padding: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: #4b5563; border-radius: 8px; line-height: 1; outline: none;">
+                    <a href="{% url 'dashboard' %}?section=announcements" class="nav-icon-btn" title="اطلاعیه‌ها" aria-label="اطلاعیه‌ها" style="background: transparent; border: none; padding: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: #4b5563; border-radius: 8px; line-height: 1; outline: none; text-decoration: none;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                             <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                         </svg>
-                    </button>
+                    </a>
                 {% else %}
                     <a href="{% url 'login' %}" class="btn-pink btn-outline-pink" style="padding: 8px 18px; font-size: 13px; width: auto; text-decoration: none;">ورود</a>
                     <a href="{% url 'signup' %}" class="btn-pink" style="padding: 8px 18px; font-size: 13px; width: auto; text-decoration: none;">ثبت‌نام</a>
