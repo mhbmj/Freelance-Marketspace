@@ -1,0 +1,398 @@
+<!-- دراور کشویی پیام‌ها و پشتیبانی (Messages & Support Drawer) مطابق تصاویر ۳۳ و ۳۴ پونیشا -->
+<style>
+/* استایل‌های تضمینی و مستقل دراور پیام‌ها و پشتیبانی */
+.messages-drawer-backdrop {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(15, 23, 42, 0.45) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    z-index: 2400 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.25s ease, visibility 0.25s ease !important;
+}
+
+.messages-drawer-backdrop.open {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.messages-drawer {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 350px !important;
+    max-width: 90vw !important;
+    height: 100vh !important;
+    background: #ffffff !important;
+    z-index: 2500 !important;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.18) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    direction: rtl !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.messages-drawer.open {
+    transform: translateX(0) !important;
+}
+
+.messages-drawer-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-bottom: 1.5px solid #e2e8f0 !important;
+    padding: 0 16px !important;
+    background: #ffffff !important;
+    flex-shrink: 0 !important;
+    height: 52px !important;
+    box-sizing: border-box !important;
+}
+
+.messages-drawer-tabs {
+    display: flex !important;
+    gap: 4px !important;
+    height: 100% !important;
+}
+
+.messages-drawer-tab {
+    padding: 0 14px !important;
+    height: 100% !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 2.5px solid transparent !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    color: #64748b !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    font-family: inherit !important;
+    display: flex !important;
+    align-items: center !important;
+    outline: none !important;
+}
+
+.messages-drawer-tab:hover {
+    color: #1e293b !important;
+}
+
+.messages-drawer-tab.active {
+    color: #1e293b !important;
+    border-bottom-color: #10b981 !important;
+}
+
+.messages-drawer-close {
+    background: transparent !important;
+    border: none !important;
+    font-size: 18px !important;
+    color: #9ca3af !important;
+    cursor: pointer !important;
+    padding: 6px !important;
+    border-radius: 6px !important;
+    transition: color 0.15s ease !important;
+    outline: none !important;
+}
+
+.messages-drawer-close:hover {
+    color: #1e293b !important;
+}
+
+.messages-drawer-content {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    overflow-y: auto !important;
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+}
+
+.messages-drawer-search {
+    padding: 12px 16px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    flex-shrink: 0 !important;
+}
+
+.messages-drawer-search-input {
+    width: 100% !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    padding: 9px 14px !important;
+    font-size: 13px !important;
+    font-family: inherit !important;
+    color: #1e293b !important;
+    box-sizing: border-box !important;
+    transition: border-color 0.2s ease, background 0.2s ease !important;
+}
+
+.messages-drawer-search-input:focus {
+    outline: none !important;
+    border-color: #10b981 !important;
+    background: #ffffff !important;
+}
+
+.messages-drawer-empty {
+    flex: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 40px 24px !important;
+    text-align: center !important;
+    color: #64748b !important;
+    font-size: 13.5px !important;
+    line-height: 1.8 !important;
+}
+
+.messages-drawer-footer {
+    padding: 14px 16px !important;
+    border-top: 1px solid #e2e8f0 !important;
+    background: #ffffff !important;
+    margin-top: auto !important;
+    flex-shrink: 0 !important;
+}
+
+.btn-new-ticket {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    background: #047857 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 12px 18px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 4px 12px rgba(4, 120, 87, 0.2) !important;
+    font-family: inherit !important;
+    outline: none !important;
+}
+
+.btn-new-ticket:hover {
+    background: #065f46 !important;
+    transform: translateY(-1px) !important;
+}
+
+.drawer-announcement-card {
+    background: #fdfafc !important;
+    border: 1.5px solid #f1e4ea !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
+    margin-bottom: 12px !important;
+}
+</style>
+
+<div class="messages-drawer-backdrop" id="messages-drawer-backdrop" onclick="toggleMessagesDrawer(false)"></div>
+
+<div class="messages-drawer" id="messages-drawer">
+    <!-- هدر دراور با تب‌های پیام‌ها و پیام‌های پشتیبانی و دکمه بستن -->
+    <div class="messages-drawer-header">
+        <div class="messages-drawer-tabs">
+            <button type="button" class="messages-drawer-tab active" id="md-tab-messages" onclick="switchMessagesDrawerTab('messages')">
+                پیام‌ها
+            </button>
+            <button type="button" class="messages-drawer-tab" id="md-tab-support" onclick="switchMessagesDrawerTab('support')">
+                پیام‌های پشتیبانی
+            </button>
+            <button type="button" class="messages-drawer-tab" id="md-tab-notifs" onclick="switchMessagesDrawerTab('notifs')">
+                اطلاعیه‌ها
+            </button>
+        </div>
+        <button type="button" class="messages-drawer-close" onclick="toggleMessagesDrawer(false)" title="بستن">
+            ✕
+        </button>
+    </div>
+
+    <!-- ۱. محتوای تب پیام‌ها (مطابق تصویر ۳۴ پونیشا) -->
+    <div class="messages-drawer-content" id="md-content-messages">
+        <div class="messages-drawer-search">
+            <input type="text" class="messages-drawer-search-input" placeholder="جست و جو...">
+        </div>
+        <div class="messages-drawer-empty">
+            شما هنوز مکالمه ای رو شروع نکردید
+        </div>
+    </div>
+
+    <!-- ۲. محتوای تب پیام‌های پشتیبانی (مطابق تصویر ۳۳ پونیشا) -->
+    <div class="messages-drawer-content" id="md-content-support" style="display: none;">
+        <div class="messages-drawer-search">
+            <input type="text" class="messages-drawer-search-input" placeholder="جست و جو...">
+        </div>
+
+        <div class="messages-drawer-empty" id="support-empty-state">
+            تیکتی یافت نشد، برای شروع میتوانید تیکتی ارسال کنید
+        </div>
+
+        <div id="support-tickets-container" style="display: none; padding: 14px 16px; overflow-y: auto; flex: 1;">
+            <!-- لیست تیکت‌های ارسالی کاربر به صورت پویا در اینجا درج می‌شود -->
+        </div>
+
+        <!-- دکمه سبز تیکت جدید مطابق پایین تصویر ۳۳ پونیشا -->
+        <div class="messages-drawer-footer">
+            <button type="button" class="btn-new-ticket" onclick="openNewTicketModal()">
+                <span>✏️</span>
+                <span>تیکت جدید</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ۳. محتوای تب اطلاعیه‌ها -->
+    <div class="messages-drawer-content" id="md-content-notifs" style="display: none; padding: 16px;">
+        <div class="drawer-announcement-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 13.5px; font-weight: 800; color: var(--text-main);">به فریلنسـ‌مارکت خوش آمدید 👋</span>
+                <span style="font-size: 11px; color: var(--text-muted);">۲۳ آبان ۱۴۰۵</span>
+            </div>
+            <p style="font-size: 12.5px; color: #4b5563; line-height: 1.8; margin-bottom: 12px; text-align: justify;">
+                پروفایل خود را تکمیل کنید، مهارت‌های خود را انتخاب نمایید و برای پروژه‌های باز پیشنهاد ارسال کنید.
+            </p>
+            <a href="{% url 'dashboard' %}?section=announcements" class="link-pink" style="font-size: 12px; font-weight: 700; text-decoration: none;">
+                مشاهده متن کامل اطلاعیه ←
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- مودال ثبت تیکت جدید پشتیبانی -->
+<div class="modal-backdrop" id="ticket-modal" style="display: none;" onclick="if(event.target===this) closeNewTicketModal()">
+    <div class="modal-card" style="max-width: 500px; width: 95%; padding: 26px 28px; border-radius: 16px; box-sizing: border-box;" onclick="event.stopPropagation()">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1.5px solid var(--border-card); margin-bottom: 18px;">
+            <h3 style="font-size: 16.5px; font-weight: 800; color: var(--text-main); margin: 0;">
+                ارسال تیکت پشتیبانی جدید
+            </h3>
+            <button type="button" class="user-drawer-close-btn" onclick="closeNewTicketModal()" title="بستن">✕</button>
+        </div>
+
+        <form onsubmit="submitNewTicket(event)">
+            <div class="form-group" style="margin-bottom: 14px;">
+                <label class="form-label" for="ticket_subject">موضوع تیکت</label>
+                <input type="text" id="ticket_subject" class="form-control" placeholder="مثال: سوال در مورد تسویه‌حساب یا پروژه" required style="font-size: 13px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 14px;">
+                <label class="form-label" for="ticket_department">دپارتمان</label>
+                <select id="ticket_department" class="form-control" style="font-size: 13px;">
+                    <option value="technical">پشتیبانی فنی</option>
+                    <option value="financial">امور مالی و پرداخت‌ها</option>
+                    <option value="general">راهنمای عمومی و حساب کاربری</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label class="form-label" for="ticket_message">متن پیام تیکت</label>
+                <textarea id="ticket_message" class="form-control" rows="4" placeholder="شرح کامل موضوع خود را اینجا بنویسید..." required style="font-size: 13px; resize: vertical;"></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+                <button type="button" class="btn-cancel-modal" onclick="closeNewTicketModal()">
+                    انصراف
+                </button>
+                <button type="submit" class="btn-submit-proposal" style="width: auto; padding: 10px 28px; font-size: 13.5px;">
+                    ثبت تیکت 📨
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function toggleMessagesDrawer(show, initialTab = 'support') {
+    const drawer = document.getElementById('messages-drawer');
+    const backdrop = document.getElementById('messages-drawer-backdrop');
+
+    if (show) {
+        if (drawer) drawer.classList.add('open');
+        if (backdrop) backdrop.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        if (initialTab) {
+            switchMessagesDrawerTab(initialTab);
+        }
+    } else {
+        if (drawer) drawer.classList.remove('open');
+        if (backdrop) backdrop.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+}
+
+function switchMessagesDrawerTab(tabName) {
+    const tabs = ['messages', 'support', 'notifs'];
+    tabs.forEach(t => {
+        const tabBtn = document.getElementById('md-tab-' + t);
+        const content = document.getElementById('md-content-' + t);
+        if (tabBtn) {
+            if (t === tabName) {
+                tabBtn.classList.add('active');
+            } else {
+                tabBtn.classList.remove('active');
+            }
+        }
+        if (content) {
+            content.style.display = (t === tabName) ? 'flex' : 'none';
+        }
+    });
+}
+
+function openNewTicketModal() {
+    const m = document.getElementById('ticket-modal');
+    if (m) {
+        m.style.display = 'flex';
+        m.classList.add('open');
+    }
+}
+
+function closeNewTicketModal() {
+    const m = document.getElementById('ticket-modal');
+    if (m) {
+        m.style.display = 'none';
+        m.classList.remove('open');
+    }
+}
+
+function submitNewTicket(e) {
+    e.preventDefault();
+    const subject = document.getElementById('ticket_subject').value.trim();
+    const dept = document.getElementById('ticket_department');
+    const deptText = dept.options[dept.selectedIndex].text;
+    const msg = document.getElementById('ticket_message').value.trim();
+
+    if (!subject || !msg) return;
+
+    const emptyBox = document.getElementById('support-empty-state');
+    const container = document.getElementById('support-tickets-container');
+
+    if (emptyBox) emptyBox.style.display = 'none';
+    if (container) {
+        container.style.display = 'flex';
+        container.style.flexDirection = 'column';
+        container.style.gap = '10px';
+
+        const ticketCard = document.createElement('div');
+        ticketCard.style.cssText = 'background: #ffffff; border: 1.5px solid var(--border-card); border-radius: 10px; padding: 12px 14px; text-align: right; box-shadow: 0 2px 6px rgba(0,0,0,0.03);';
+        ticketCard.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <strong style="font-size: 13.5px; color: var(--text-main);">${subject}</strong>
+                <span style="font-size: 11px; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 10px; font-weight: 700;">در حال بررسی</span>
+            </div>
+            <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 6px;">دپارتمان: ${deptText} • زمان: هم‌اکنون</div>
+            <p style="font-size: 12px; color: #4b5563; line-height: 1.7; margin: 0;">${msg}</p>
+        `;
+        container.prepend(ticketCard);
+    }
+
+    closeNewTicketModal();
+    alert('تیکت شما با موفقیت ثبت شد و به زودی توسط کارشناسان بررسی خواهد شد.');
+    document.getElementById('ticket_subject').value = '';
+    document.getElementById('ticket_message').value = '';
+}
+</script>

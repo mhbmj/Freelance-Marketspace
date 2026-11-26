@@ -660,3 +660,11 @@ class AuthenticationTests(TestCase):
         self.assertNotContains(res_clinic, 'پروفایل برجسته')
         self.assertNotContains(res_home, 'پروفایل برجسته')
 
+        # ۶. دراور کشویی پیام‌ها و پشتیبانی در تمام صفحات (تصاویر ۳۳ و ۳۴)
+        self.assertContains(res_home, 'messages-drawer')
+        self.assertContains(res_home, 'پیام‌های پشتیبانی')
+        self.assertContains(res_home, 'تیکتی یافت نشد، برای شروع میتوانید تیکتی ارسال کنید')
+        self.assertContains(res_home, 'تیکت جدید')
+        self.assertContains(res_home, 'شما هنوز مکالمه ای رو شروع نکردید')
+        self.assertContains(res_home, 'toggleMessagesDrawer')
+

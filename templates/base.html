@@ -12,13 +12,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1.2">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2.1">
 </head>
 <body>
     <div class="auth-wrapper">
         {% block content %}
         {% endblock %}
     </div>
+
+    {% if user.is_authenticated %}
+        {% include 'includes/messages_drawer.html' %}
+    {% endif %}
 
     <script src="{% static 'js/main.js' %}?v=1.1"></script>
 </body>
