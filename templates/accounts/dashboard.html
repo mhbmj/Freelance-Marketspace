@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load persian_tags %}
 
 {% block title %}داشبورد کاربری | سامانه بازار کار فریلنسری{% endblock %}
 
@@ -594,7 +595,7 @@
                                     </h4>
                                     <div class="badge-pricing">
                                         <span>مبلغ پیشنهادی:</span>
-                                        <span class="pricing-amount">{{ pr.bid_amount|floatformat:0 }} تومان</span>
+                                        <span class="pricing-amount">{{ pr.bid_amount|price_en }} تومان</span>
                                     </div>
                                 </div>
                                 <p class="project-desc">{{ pr.cover_letter }}</p>
@@ -683,7 +684,7 @@
 
                                     <div class="badge-pricing">
                                         <span>بودجه: </span>
-                                        <span class="pricing-amount">{{ proj.budget|floatformat:0 }} تومان</span>
+                                        <span class="pricing-amount">{{ proj.budget|price_en }} تومان</span>
                                     </div>
                                 </div>
 
@@ -692,7 +693,7 @@
                                 <div class="project-card-footer" style="padding-top: 14px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                                     <div style="display: flex; align-items: center; gap: 14px; font-size: 12.5px; color: var(--text-muted);">
                                         <span>📨 پیشنهادهای دریافتی: <strong style="color: var(--text-main);">{{ proj.proposals.count }}</strong></span>
-                                        <span>ثبت: {{ proj.created_at|date:"Y/m/d" }}</span>
+                                        <span>ثبت: {{ proj.created_at|to_jalali }}</span>
                                     </div>
 
                                     <div style="display: flex; align-items: center; gap: 8px;">
@@ -757,7 +758,7 @@
                                         </h4>
                                         <div class="badge-pricing">
                                             <span>بودجه: </span>
-                                            <span class="pricing-amount">{{ proj.budget|floatformat:0 }} تومان</span>
+                                            <span class="pricing-amount">{{ proj.budget|price_en }} تومان</span>
                                         </div>
                                     </div>
 

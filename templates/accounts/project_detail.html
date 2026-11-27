@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load persian_tags %}
 
 {% block title %}{{ project.title }} | سامانه بازار کار فریلنسری{% endblock %}
 
@@ -125,7 +126,7 @@
                 <div class="project-meta-item">
                     <span>💼</span>
                     <span>
-                        بودجه: <strong>{{ project.budget|floatformat:0 }} تومان</strong>
+                        بودجه: <strong>{{ project.budget|price_en }} تومان</strong>
                         <span style="font-size: 11.5px; color: var(--text-muted); font-weight: normal;">({{ project.get_pricing_type_display }})</span>
                     </span>
                 </div>
@@ -196,7 +197,7 @@
                         </span>
                     {% elif user_proposal %}
                         <span class="btn-bid-submitted">
-                            ✔ پیشنهاد شما به مبلغ {{ user_proposal.bid_amount|floatformat:0 }} تومان ثبت شده است
+                            ✔ پیشنهاد شما به مبلغ {{ user_proposal.bid_amount|price_en }} تومان ثبت شده است
                         </span>
                     {% else %}
                         <button type="button" class="btn-send-proposal" onclick="openModal('proposal-modal')">
@@ -244,7 +245,7 @@
                     <div style="text-align: left; font-size: 12.5px; color: var(--text-muted); line-height: 1.8;">
                         <div>
                             <span>مبلغ پیشنهادی: </span>
-                            <strong style="color: var(--text-main);">{{ prop.bid_amount|floatformat:0 }} تومان</strong>
+                            <strong style="color: var(--text-main);">{{ prop.bid_amount|price_en }} تومان</strong>
                         </div>
                         <div>
                             <span>زمان تحویل: </span>

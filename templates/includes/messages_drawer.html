@@ -250,12 +250,17 @@
 
         {% if employer_received_proposals %}
             <!-- لیست پیام‌های پیشنهادهای جدید دریافتی کارفرما -->
-            <div style="padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; flex: 1;">
+            <div style="padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; flex: 1;" id="proposals-messages-list">
                 <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); padding: 0 4px;">
                     پیشنهادهای جدید دریافتی شما:
                 </div>
                 {% for prop in employer_received_proposals %}
-                    <a href="{% url 'project_detail' prop.project.id %}" class="proposal-message-card" style="background: {% if prop.status == 'PENDING' %}#fff5f8{% else %}#ffffff{% endif %}; border: 1.5px solid {% if prop.status == 'PENDING' %}#fbcfe8{% else %}#e2e8f0{% endif %};">
+                    <a href="{% url 'project_detail' prop.project.id %}"
+                       class="proposal-message-card"
+                       id="prop-msg-card-{{ prop.id }}"
+                       data-prop-id="{{ prop.id }}"
+                       onclick="markProposalAsRead('{{ prop.id }}')"
+                       style="background: #fff5f8; border: 1.5px solid #fbcfe8; display: flex; gap: 12px; padding: 12px 14px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.2s ease;">
                         <div style="width: 42px; height: 42px; border-radius: 50%; background: #9ca3af; color: #fff; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
                             {% if prop.freelancer.avatar_url %}
                                 <img src="{{ prop.freelancer.avatar_url }}" alt="آواتار" style="width: 100%; height: 100%; object-fit: cover;">
@@ -280,15 +285,9 @@
                                 <span style="color: var(--pastel-pink-hover); font-weight: 700;">
                                     مبلغ: {{ prop.bid_amount|floatformat:0 }} تومان
                                 </span>
-                                {% if prop.status == 'PENDING' %}
-                                    <span style="background: #e11d48; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800;">
-                                        جدید
-                                    </span>
-                                {% else %}
-                                    <span style="color: var(--text-muted); font-size: 11px;">
-                                        {{ prop.get_status_display }}
-                                    </span>
-                                {% endif %}
+                                <span class="badge-new-tag" id="prop-new-badge-{{ prop.id }}" style="background: #e11d48; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800;">
+                                    جدید
+                                </span>
                             </div>
                         </div>
                     </a>
@@ -322,42 +321,37 @@
     </div>
 </div>
 
-<!-- مودال ثبت تیکت جدید پشتیبانی -->
-<div class="modal-backdrop" id="ticket-modal" style="display: none;" onclick="if(event.target===this) closeNewTicketModal()">
-    <div class="modal-card" style="max-width: 500px; width: 95%; padding: 26px 28px; border-radius: 16px; box-sizing: border-box;" onclick="event.stopPropagation()">
-        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1.5px solid var(--border-card, #f3e8ee); margin-bottom: 18px;">
-            <h3 style="font-size: 16.5px; font-weight: 800; color: var(--text-main, #1e293b); margin: 0;">
-                ارسال تیکت پشتیبانی جدید
+<!-- مودال ارتباط با پشتیبانی (مطابق دقیق تصویر ۶۲ پونیشا بدون آپلود فایل) -->
+<div class="modal-backdrop" id="ticket-modal" style="display: none; align-items: center; justify-content: center;" onclick="if(event.target===this) closeNewTicketModal()">
+    <div class="modal-card" style="background: #ffffff !important; max-width: 560px; width: 95%; padding: 28px 32px; border-radius: 18px; box-sizing: border-box; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22); position: relative; margin: 30px auto; direction: rtl; text-align: right;" onclick="event.stopPropagation()">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 1.5px solid #e2e8f0; margin-bottom: 22px;">
+            <h3 style="font-size: 18px; font-weight: 800; color: #1e293b; margin: 0;">
+                ارتباط با پشتیبانی
             </h3>
-            <button type="button" class="user-drawer-close-btn" onclick="closeNewTicketModal()" title="بستن">✕</button>
+            <button type="button" class="user-drawer-close-btn" onclick="closeNewTicketModal()" title="بستن" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #94a3b8;">✕</button>
         </div>
 
         <form onsubmit="submitNewTicket(event)">
-            <div class="form-group" style="margin-bottom: 14px;">
-                <label class="form-label" for="ticket_subject">موضوع تیکت</label>
-                <input type="text" id="ticket_subject" class="form-control" placeholder="مثال: سوال در مورد تسویه‌حساب یا پروژه" required style="font-size: 13px;">
-            </div>
-
-            <div class="form-group" style="margin-bottom: 14px;">
-                <label class="form-label" for="ticket_department">دپارتمان</label>
-                <select id="ticket_department" class="form-control" style="font-size: 13px;">
-                    <option value="technical">پشتیبانی فنی</option>
-                    <option value="financial">امور مالی و پرداخت‌ها</option>
-                    <option value="general">راهنمای عمومی و حساب کاربری</option>
-                </select>
-            </div>
-
             <div class="form-group" style="margin-bottom: 20px;">
-                <label class="form-label" for="ticket_message">متن پیام تیکت</label>
-                <textarea id="ticket_message" class="form-control" rows="4" placeholder="شرح کامل موضوع خود را اینجا بنویسید..." required style="font-size: 13px; resize: vertical;"></textarea>
+                <label class="form-label" for="ticket_subject" style="font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
+                    موضوع
+                </label>
+                <input type="text" id="ticket_subject" class="form-input" placeholder="موضوع تیکت خود را وارد کنید..." required style="width: 100% !important; box-sizing: border-box !important; height: 46px; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 10px 14px; font-size: 13.5px; font-family: inherit; background: #ffffff; color: #1e293b;">
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                <button type="button" class="btn-cancel-modal" onclick="closeNewTicketModal()">
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label class="form-label" for="ticket_message" style="font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
+                    توضیحات
+                </label>
+                <textarea id="ticket_message" class="form-input" rows="6" placeholder="شرح کامل پیام، درخواست یا سوال خود را اینجا بنویسید..." required style="width: 100% !important; box-sizing: border-box !important; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; font-size: 13.5px; font-family: inherit; line-height: 1.8; resize: vertical; background: #ffffff; color: #1e293b;"></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
+                <button type="button" class="btn-cancel-modal" onclick="closeNewTicketModal()" style="background: transparent; border: 1.5px solid #cbd5e1; color: #475569; border-radius: 8px; padding: 10px 24px; font-size: 13.5px; font-weight: 700; cursor: pointer;">
                     انصراف
                 </button>
-                <button type="submit" class="btn-submit-proposal" style="width: auto; padding: 10px 28px; font-size: 13.5px;">
-                    ثبت تیکت 📨
+                <button type="submit" class="btn-submit-proposal" style="background: linear-gradient(135deg, var(--pastel-pink, #f472b6) 0%, var(--pastel-pink-hover, #db2777) 100%); color: #ffffff; border: none; border-radius: 8px; padding: 11px 34px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(244, 114, 182, 0.35);">
+                    تایید ✔
                 </button>
             </div>
         </form>
@@ -424,8 +418,6 @@ function closeNewTicketModal() {
 function submitNewTicket(e) {
     e.preventDefault();
     const subject = document.getElementById('ticket_subject').value.trim();
-    const dept = document.getElementById('ticket_department');
-    const deptText = dept.options[dept.selectedIndex].text;
     const msg = document.getElementById('ticket_message').value.trim();
 
     if (!subject || !msg) return;
@@ -440,13 +432,13 @@ function submitNewTicket(e) {
         container.style.gap = '10px';
 
         const ticketCard = document.createElement('div');
-        ticketCard.style.cssText = 'background: #ffffff; border: 1.5px solid var(--border-card, #f3e8ee); border-radius: 10px; padding: 12px 14px; text-align: right; box-shadow: 0 2px 6px rgba(0,0,0,0.03);';
+        ticketCard.style.cssText = 'background: #ffffff; border: 1.5px solid var(--border-card, #f3e8ee); border-radius: 10px; padding: 14px 16px; text-align: right; box-shadow: 0 2px 6px rgba(0,0,0,0.03);';
         ticketCard.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                 <strong style="font-size: 13.5px; color: var(--text-main, #1e293b);">${subject}</strong>
-                <span style="font-size: 11px; background: #fdf2f8; color: #be185d; border: 1px solid #fbcfe8; padding: 2px 8px; border-radius: 10px; font-weight: 700;">در حال بررسی</span>
+                <span style="font-size: 11px; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 10px; font-weight: 700;">در حال بررسی</span>
             </div>
-            <div style="font-size: 11.5px; color: var(--text-muted, #64748b); margin-bottom: 6px;">دپارتمان: ${deptText} • زمان: هم‌اکنون</div>
+            <div style="font-size: 11.5px; color: var(--text-muted, #64748b); margin-bottom: 6px;">زمان ارسال: هم‌اکنون</div>
             <p style="font-size: 12px; color: #4b5563; line-height: 1.7; margin: 0;">${msg}</p>
         `;
         container.prepend(ticketCard);
@@ -457,4 +449,64 @@ function submitNewTicket(e) {
     document.getElementById('ticket_subject').value = '';
     document.getElementById('ticket_message').value = '';
 }
+
+// مدیریت خوانده شدن اعلان‌های پیشنهاد و حذف نشانگر قرمز
+function getReadProposals() {
+    try {
+        const stored = localStorage.getItem('read_proposals_list');
+        return stored ? JSON.parse(stored) : [];
+    } catch(e) {
+        return [];
+    }
+}
+
+function markProposalAsRead(propId) {
+    let readList = getReadProposals();
+    if (!readList.includes(propId)) {
+        readList.push(propId);
+        try {
+            localStorage.setItem('read_proposals_list', JSON.stringify(readList));
+        } catch(e) {}
+    }
+
+    applyReadStateToCard(propId);
+    checkIfAllProposalsRead();
+}
+
+function applyReadStateToCard(propId) {
+    const card = document.getElementById('prop-msg-card-' + propId);
+    const badge = document.getElementById('prop-new-badge-' + propId);
+    if (card) {
+        card.style.background = '#ffffff';
+        card.style.borderColor = '#e2e8f0';
+    }
+    if (badge) {
+        badge.style.display = 'none';
+    }
+}
+
+function checkIfAllProposalsRead() {
+    const cards = document.querySelectorAll('.proposal-message-card');
+    const readList = getReadProposals();
+    let hasUnread = false;
+
+    cards.forEach(card => {
+        const id = card.getAttribute('data-prop-id');
+        if (id && !readList.includes(id)) {
+            hasUnread = true;
+        }
+    });
+
+    if (!hasUnread) {
+        dismissMessageDot();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const readList = getReadProposals();
+    readList.forEach(id => {
+        applyReadStateToCard(id);
+    });
+    checkIfAllProposalsRead();
+});
 </script>

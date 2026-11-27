@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load persian_tags %}
 
 {% block title %}لیست تمام پروژه‌ها | سامانه بازار کار فریلنسری{% endblock %}
 
@@ -270,7 +271,7 @@
                                     نرخ ساعتی:
                                 {% endif %}
                             </span>
-                            <span class="pricing-amount">{{ proj.budget|floatformat:0 }} تومان</span>
+                            <span class="pricing-amount">{{ proj.budget|price_en }} تومان</span>
                         </div>
                     </div>
 

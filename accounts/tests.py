@@ -558,7 +558,7 @@ class AuthenticationTests(TestCase):
         res = self.client.get(detail_url)
         self.assertEqual(res.status_code, 200)
         self.assertContains(res, 'توسعه اپلیکیشن IoT با ESP32')
-        self.assertContains(res, '25000000 تومان')
+        self.assertContains(res, '25,000,000 تومان')
         self.assertContains(res, 'C++')
         self.assertContains(res, 'ارسال پیشنهاد')
 

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load persian_tags %}
 
 {% block title %}پروفایل کاربری | سامانه بازار کار فریلنسری{% endblock %}
 
@@ -281,7 +282,7 @@
                                 <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px dashed var(--border-card); font-size: 12px;">
                                     {% if pf.min_price or pf.max_price %}
                                         <span style="color: #854d0e; font-weight: 700;">
-                                            💰 {{ pf.min_price|default:''|floatformat:0 }}{% if pf.min_price and pf.max_price %} تا {% endif %}{{ pf.max_price|default:''|floatformat:0 }} تومان
+                                            💰 {{ pf.min_price|default:''|price_en }}{% if pf.min_price and pf.max_price %} تا {% endif %}{{ pf.max_price|default:''|price_en }} تومان
                                         </span>
                                     {% else %}
                                         <span></span>
