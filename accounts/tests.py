@@ -353,11 +353,12 @@ class AuthenticationTests(TestCase):
         self.assertEqual(res_dash.headers.get('Location'), reverse('dashboard'))
 
     def test_dashboard_view_authenticated(self):
-        """مشاهده داشبورد فریلنسر با نمایش پروژه‌ها و مهارت‌ها"""
+        """مشاهده داشبورد با نمایش پروژه‌های من و تب‌ها"""
         self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
         res = self.client.get(reverse('dashboard'))
         self.assertEqual(res.status_code, 200)
-        self.assertContains(res, 'جدیدترین پروژه‌های ثبت‌شده')
+        self.assertContains(res, 'پروژه‌های من')
+        self.assertContains(res, 'پیش‌نویس‌ها')
 
     # ------------------------------------------------------------------------
     # ۶. آزمون‌های صفحه لیست پروژه‌ها و جستجو (/projects/)
@@ -806,6 +807,60 @@ class AuthenticationTests(TestCase):
         p_draft = Project.objects.filter(title='طراحی آزمایشی در حالت پیش‌نویس').first()
         self.assertIsNotNone(p_draft)
         self.assertEqual(p_draft.status, 'DRAFT')
+
+    # ------------------------------------------------------------------------
+    # ۱۴. آزمون‌های پروژه‌های من، انتشار Draft، انصراف فریلنسر و پذیرش اتمیک کارفرما (بند ۵.۲، ۷.۲ و ۸.۲)
+    # ------------------------------------------------------------------------
+    def test_employer_dashboard_draft_publish_and_atomic_proposals(self):
+        """تست مشاهده پروژه‌های من در داشبورد، انتشار Draft، انصراف فریلنسر و پذیرش اتمیک کارفرما"""
+        from accounts.models import Project, Proposal
+        # ۱. ورود به عنوان کارفرما و ایجاد یک پروژه DRAFT
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+        draft_proj = Project.objects.create(
+            employer=self.user,
+            title='پروژه پیش‌نویس داشبورد',
+            description='توضیحات پیش‌نویس',
+            pricing_type='FIXED_PRICE',
+            budget=12000000,
+            status='DRAFT'
+        )
+
+        # بررسی نمایش در داشبورد کاربر (تب my_projects و subtab=draft)
+        res_dash = self.client.get(reverse('dashboard') + '?tab=my_projects&subtab=draft')
+        self.assertEqual(res_dash.status_code, 200)
+        self.assertContains(res_dash, 'پروژه پیش‌نویس داشبورد')
+        self.assertContains(res_dash, 'انتشار پروژه')
+        self.assertContains(res_dash, 'ویرایش')
+
+        # ۲. انتشار پروژه DRAFT توسط کارفرما (بند ۵.۲)
+        res_pub = self.client.get(reverse('project_publish', args=[draft_proj.id]), follow=True)
+        self.assertEqual(res_pub.status_code, 200)
+        draft_proj.refresh_from_db()
+        self.assertEqual(draft_proj.status, 'OPEN')
+
+        # ۳. ارسال دو پیشنهاد توسط دو فریلنسر مجزا
+        f1 = User.objects.create_user(email='fl1@test.com', password='Password123', first_name='فرزاد', last_name='راد', username='farzadr')
+        f2 = User.objects.create_user(email='fl2@test.com', password='Password123', first_name='شایان', last_name='نیک', username='shayann')
+
+        prop1 = Proposal.objects.create(project=draft_proj, freelancer=f1, bid_amount=10000000, estimated_duration=5, cover_letter='پیشنهاد ۱', status='PENDING')
+        prop2 = Proposal.objects.create(project=draft_proj, freelancer=f2, bid_amount=11000000, estimated_duration=7, cover_letter='پیشنهاد ۲', status='PENDING')
+
+        # ۴. انصراف فریلنسر از پیشنهاد خود (Withdraw - بند ۷.۲)
+        self.client.login(email='fl2@test.com', password='Password123')
+        res_wd = self.client.get(reverse('proposal_withdraw', args=[prop2.id]), follow=True)
+        self.assertEqual(res_wd.status_code, 200)
+        prop2.refresh_from_db()
+        self.assertEqual(prop2.status, 'WITHDRAWN')
+
+        # ۵. پذیرش اتمیک پیشنهاد ۱ توسط کارفرما (Accept Transaction - بند ۸.۲)
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+        res_acc = self.client.post(reverse('proposal_review', args=[prop1.id]), {'action': 'accept'}, follow=True)
+        self.assertEqual(res_acc.status_code, 200)
+
+        prop1.refresh_from_db()
+        draft_proj.refresh_from_db()
+        self.assertEqual(prop1.status, 'ACCEPTED')
+        self.assertEqual(draft_proj.status, 'IN_PROGRESS')
 
     # ------------------------------------------------------------------------
     # ۱۳. آزمون‌های تغییر نقش کاربری و تطبیق سایدبار کشویی (تصاویر ۴۸، ۴۹ و ۵۰)

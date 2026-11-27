@@ -240,13 +240,47 @@
 
                     <div style="text-align: left; font-size: 12.5px; color: var(--text-muted); line-height: 1.8;">
                         <div>
+                            <span>مبلغ پیشنهادی: </span>
+                            <strong style="color: var(--text-main);">{{ prop.bid_amount|floatformat:0 }} تومان</strong>
+                        </div>
+                        <div>
                             <span>زمان تحویل: </span>
                             <strong style="color: var(--text-main);">{{ prop.estimated_duration|default:1 }} روز</strong>
                         </div>
                         <div>
-                            <span>ارسال پیشنهاد در: </span>
-                            <span>{{ prop.created_at|date:"Y/m/d H:i" }}</span>
+                            <span>وضعیت: </span>
+                            {% if prop.status == 'ACCEPTED' %}
+                                <span style="color: #059669; font-weight: 700;">پذیرفته‌شده ✔</span>
+                            {% elif prop.status == 'REJECTED' %}
+                                <span style="color: #dc2626; font-weight: 700;">رد شده ✕</span>
+                            {% elif prop.status == 'WITHDRAWN' %}
+                                <span style="color: #94a3b8; font-weight: 700;">انصراف داده شده</span>
+                            {% else %}
+                                <span style="color: #d97706; font-weight: 700;">در انتظار بررسی</span>
+                            {% endif %}
                         </div>
+
+                        <!-- عملیات کارفرما در بررسی پیشنهاد (پذیرش اتمیک / رد - بند ۸.۲) -->
+                        {% if user.is_authenticated and project.employer_id == user.id %}
+                            {% if prop.status == 'PENDING' and project.status == 'OPEN' %}
+                                <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end;">
+                                    <form method="post" action="{% url 'proposal_review' prop.id %}" style="margin: 0;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="accept">
+                                        <button type="submit" onclick="return confirm('آیا مایلید این پیشنهاد را بپذیرید؟ وضعیت پروژه به «در حال انجام» تغییر خواهد یافت.');" class="btn-submit-proposal" style="padding: 6px 14px; font-size: 12px; border-radius: 8px;">
+                                            پذیرش پیشنهاد ✔
+                                        </button>
+                                    </form>
+                                    <form method="post" action="{% url 'proposal_review' prop.id %}" style="margin: 0;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="reject">
+                                        <button type="submit" onclick="return confirm('آیا از رد این پیشنهاد اطمینان دارید؟');" class="btn-cancel-modal" style="padding: 6px 14px; font-size: 12px; border-radius: 8px; color: #dc2626; border-color: #fecaca;">
+                                            رد ✕
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
             {% empty %}

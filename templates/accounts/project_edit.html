@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ویرایش پروژه {{ project.title }} | سامانه فریلنسری{% endblock %}
+
+{% block content %}
+<div class="home-page-container" style="max-width: 900px; margin: 0 auto; padding-bottom: 60px;">
+
+    <!-- هدر بالای صفحه -->
+    <header style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0 24px; border-bottom: 1.5px solid var(--border-card); margin-bottom: 28px;">
+        <a href="{% url 'dashboard' %}" class="btn-cancel-modal" style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; padding: 0; border-radius: 8px; text-decoration: none; font-size: 16px;" title="بازگشت به داشبورد">
+            ✕
+        </a>
+
+        <a href="{% url 'home' %}" class="nav-brand-logo" title="صفحه اصلی">
+            <img src="{% static 'images/logo.png' %}" alt="لوگو" class="nav-logo-img">
+            <span class="nav-brand-text">فریلنسـ‌مارکت</span>
+        </a>
+    </header>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'success' }}{% endif %}" style="margin-bottom: 20px;">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div style="text-align: right; margin-bottom: 24px;">
+        <h1 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin: 0 0 6px 0;">
+            ویرایش پروژه: {{ project.title }}
+        </h1>
+        <span style="font-size: 12.5px; color: var(--text-muted);">
+            وضعیت پروژه: <strong>{{ project.get_status_display }}</strong>
+        </span>
+    </div>
+
+    <form method="post" action="{% url 'project_edit' project.id %}">
+        {% csrf_token %}
+
+        <div class="ponisha-card" style="padding: 34px 38px; border-radius: 18px; background: #ffffff; margin-bottom: 24px;">
+            <!-- عنوان پروژه -->
+            <div class="form-group" style="margin-bottom: 22px;">
+                <label class="form-label" for="edit_title" style="font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
+                    عنوان پروژه <span style="color: #e11d48;">*</span>
+                </label>
+                <input type="text" name="title" id="edit_title" value="{{ project.title }}" class="form-input" required style="width: 100%; height: 46px; font-size: 14px;">
+            </div>
+
+            <!-- توضیحات کامل پروژه -->
+            <div class="form-group" style="margin-bottom: 22px;">
+                <label class="form-label" for="edit_description" style="font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
+                    توضیحات کامل پروژه <span style="color: #e11d48;">*</span>
+                </label>
+                <textarea name="description" id="edit_description" class="form-input" rows="6" required style="width: 100%; font-size: 13.5px; line-height: 1.8; resize: vertical;">{{ project.description }}</textarea>
+            </div>
+
+            <!-- بودجه پروژه -->
+            <div class="form-group" style="margin-bottom: 22px;">
+                <label class="form-label" for="edit_budget" style="font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
+                    بودجه پروژه (تومان) <span style="color: #e11d48;">*</span>
+                </label>
+                <input type="number" name="budget" id="edit_budget" value="{{ project.budget|floatformat:0 }}" class="form-input" min="1000" required style="width: 100%; height: 46px; font-size: 14px;">
+            </div>
+
+            <!-- نوع قیمت‌گذاری -->
+            <div style="padding-top: 10px; display: flex; align-items: center; gap: 20px;">
+                <span style="font-size: 13px; font-weight: 700; color: #334155;">نوع قرارداد:</span>
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
+                    <input type="radio" name="pricing_type" value="FIXED_PRICE" {% if project.pricing_type == 'FIXED_PRICE' %}checked{% endif %} style="accent-color: var(--pastel-pink);">
+                    <span>قیمت ثابت</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
+                    <input type="radio" name="pricing_type" value="HOURLY" {% if project.pricing_type == 'HOURLY' %}checked{% endif %} style="accent-color: var(--pastel-pink);">
+                    <span>نرخ ساعتی</span>
+                </label>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; background: #ffffff; border: 1.5px solid var(--border-card); border-radius: 14px; padding: 18px 24px; box-shadow: var(--shadow-minimal);">
+            <a href="{% url 'dashboard' %}" class="btn-cancel-modal" style="text-decoration: none;">
+                انصراف
+            </a>
+
+            <button type="submit" class="btn-submit-proposal" style="padding: 12px 34px; font-size: 14px; border-radius: 10px;">
+                ذخیره تغییرات 💾
+            </button>
+        </div>
+    </form>
+</div>
+
+{% if user.is_authenticated %}
+    {% include 'includes/user_drawer.html' %}
+{% endif %}
+{% endblock %}

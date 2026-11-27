@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib import messages
 from django.conf import settings
+from django.db import transaction
 from django.db.models import Q
 
 from .models import (
@@ -210,43 +211,50 @@ def switch_role_view(request):
     return JsonResponse({'status': 'error', 'message': 'درخواست نامعتبر است.'}, status=400)
 
 
-    user_skills_ids = list(UserSkill.objects.filter(user=user).values_list('skill_id', flat=True))
-    return render(request, 'accounts/onboarding_skills.html', {
-        'skills': skills,
-        'user_skills_ids': user_skills_ids,
-        'next_url': next_url,
-    })
-
-
 @login_required
 def dashboard_view(request):
-    """داشبورد اصلی پلتفرم فریلنسری منطبق با ساختار پونیشا و تم پاستلی"""
+    """داشبورد اصلی پلتفرم فریلنسری: نمایش پروژه‌های من (با وضعیت پیش‌نویس/باز)، پیشنهادات و اتاق کار"""
     user = request.user
     user_skills = UserSkill.objects.filter(user=user).select_related('skill')
 
-    projects = Project.objects.filter(status='OPEN').order_by('-created_at')
-
-    # جستجوی زنده در پروژه‌ها
-    query = request.GET.get('q', '').strip()
-    if query:
-        projects = projects.filter(title__icontains=query)
-
     # تب فعال (پروژه‌های من / پیشنهادات / محصولات)
     active_tab = request.GET.get('tab', 'my_projects')
-    active_subtab = request.GET.get('subtab', 'active')
+    active_subtab = request.GET.get('subtab', 'all' if active_tab == 'my_projects' else 'active')
 
+    # ۱. پروژه‌های ثبت‌شده توسط خود کاربر (بند ۵.۲: My Projects / Employer Dashboard)
+    my_projects = Project.objects.filter(employer=user).prefetch_related('proposals', 'projectskill_set__skill').order_by('-created_at')
+
+    # فیلتر جستجو در پروژه‌های من
+    query = request.GET.get('q', '').strip()
+    if query:
+        my_projects = my_projects.filter(title__icontains=query)
+
+    drafts_count = Project.objects.filter(employer=user, status='DRAFT').count()
+    open_count = Project.objects.filter(employer=user, status__in=['OPEN', 'IN_PROGRESS']).count()
+    total_my_projects = Project.objects.filter(employer=user).count()
+
+    if active_tab == 'my_projects':
+        if active_subtab == 'draft':
+            my_projects = my_projects.filter(status='DRAFT')
+        elif active_subtab == 'open':
+            my_projects = my_projects.filter(status__in=['OPEN', 'IN_PROGRESS'])
+        elif active_subtab == 'completed':
+            my_projects = my_projects.filter(status='COMPLETED')
+
+    # ۲. پیشنهادهای ثبت‌شده توسط کاربر در نقش فریلنسر (بند ۷.۲: My Proposals)
     user_proposals = Proposal.objects.filter(freelancer=user).select_related('project')
-    if active_subtab == 'active':
-        user_proposals = user_proposals.filter(status__in=['PENDING', 'ACCEPTED'])
-    elif active_subtab == 'inactive':
-        user_proposals = user_proposals.filter(status__in=['REJECTED', 'WITHDRAWN'])
+    if active_tab == 'proposals':
+        if active_subtab == 'active':
+            user_proposals = user_proposals.filter(status__in=['PENDING', 'ACCEPTED'])
+        elif active_subtab == 'inactive':
+            user_proposals = user_proposals.filter(status__in=['REJECTED', 'WITHDRAWN'])
+
+    # ۳. جدیدترین پروژه‌های عمومی برای نمایش جهت پیشنهاددهی
+    explore_projects = Project.objects.filter(status='OPEN').exclude(employer=user).order_by('-created_at')[:6]
 
     profile, _ = UserProfile.objects.get_or_create(user=user)
-
-    # محاسبه اینیشیال آواتار (مانند MA در پونیشا)
     initials = user.initials
 
-    # محاسبه درصد تکمیل پروفایل (همگام با صفحه پروفایل)
     profile_percent = 30
     if user.username:
         profile_percent += 15
@@ -259,24 +267,146 @@ def dashboard_view(request):
     if profile.avatar:
         profile_percent += 15
 
-    # بخش فعال سایدبار (اتاق کار / اطلاعیه‌ها / پیام‌ها) مطابق تصاویر ۲۹ و ۳۰
+    # بخش فعال سایدبار (اتاق کار / اطلاعیه‌ها / پیام‌ها / کلینیک)
     active_section = request.GET.get('section', 'workspace')
 
     return render(request, 'accounts/dashboard.html', {
         'user': user,
         'profile': profile,
         'user_skills': user_skills,
-        'projects': projects,
+        'my_projects': my_projects,
+        'explore_projects': explore_projects,
         'user_proposals': user_proposals,
         'query': query,
         'active_section': active_section,
         'active_tab': active_tab,
         'active_subtab': active_subtab,
+        'drafts_count': drafts_count,
+        'open_count': open_count,
+        'total_my_projects': total_my_projects,
         'user_initials': initials,
         'profile_percent': profile_percent,
         'remaining_proposals': 5,
         'remaining_days': 0,
     })
+
+
+@login_required
+def publish_project_view(request, project_id):
+    """انتشار پروژه پیش‌نویس (Draft) توسط کارفرما (بند ۵.۲)"""
+    project = get_object_or_404(Project, id=project_id, employer=request.user)
+    if project.status != 'DRAFT':
+        messages.warning(request, 'این پروژه قبلاً منتشر شده است.')
+    else:
+        project.status = 'OPEN'
+        project.save(update_fields=['status'])
+        messages.success(request, f'پروژه «{project.title}» با موفقیت با نشان "باز" منتشر گردید!')
+    return redirect(f"{reverse('dashboard')}?tab=my_projects&subtab=open")
+
+
+@login_required
+def project_edit_view(request, project_id):
+    """ویرایش پروژه توسط مالک آن در وضعیت مجاز (بند ۴.۲ و ۵.۲)"""
+    project = get_object_or_404(Project, id=project_id, employer=request.user)
+    if project.status not in ['DRAFT', 'OPEN']:
+        messages.error(request, 'پروژه‌های در حال انجام یا تکمیل‌شده قابل ویرایش نیستند.')
+        return redirect('dashboard')
+
+    categories = Category.objects.all().order_by('id')
+    skills = Skill.objects.all().order_by('name')
+
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        description = request.POST.get('description', '').strip()
+        budget_str = request.POST.get('budget', '').strip().replace(',', '')
+        pricing_type = request.POST.get('pricing_type', project.pricing_type).strip()
+
+        if title and description:
+            project.title = title
+            project.description = description
+            if budget_str and budget_str.isdigit() and float(budget_str) > 0:
+                project.budget = float(budget_str)
+            project.pricing_type = pricing_type
+            project.save()
+            messages.success(request, 'تغییرات پروژه با موفقیت ذخیره شد.')
+            return redirect('dashboard')
+        else:
+            messages.error(request, 'عنوان و توضیحات پروژه الزامی است.')
+
+    initials = "MA"
+    if request.user.first_name and request.user.last_name:
+        initials = (request.user.first_name[0] + request.user.last_name[0]).upper()
+
+    return render(request, 'accounts/project_edit.html', {
+        'project': project,
+        'categories': categories,
+        'skills': skills,
+        'user_initials': initials,
+    })
+
+
+@login_required
+def withdraw_proposal_view(request, proposal_id):
+    """انصراف فریلنسر از پیشنهاد در وضعیت Pending (بند ۷.۲)"""
+    proposal = get_object_or_404(Proposal, id=proposal_id, freelancer=request.user)
+    if proposal.status != 'PENDING':
+        messages.error(request, 'تنها پیشنهادهای در انتظار (Pending) قابل انصراف هستند.')
+    else:
+        proposal.status = 'WITHDRAWN'
+        proposal.save(update_fields=['status'])
+        messages.success(request, f'پیشنهاد شما برای پروژه «{proposal.project.title}» با موفقیت پس گرفته شد (انصراف).')
+    return redirect(f"{reverse('dashboard')}?tab=proposals&subtab=inactive")
+
+
+@login_required
+def review_proposal_view(request, proposal_id):
+    """بررسی، پذیرش یا رد پیشنهاد توسط کارفرما با رعایت عملیات اتمیک (بند ۸.۲)"""
+    proposal = get_object_or_404(
+        Proposal.objects.select_related('project', 'freelancer'),
+        id=proposal_id
+    )
+    project = proposal.project
+
+    # تنها مالک پروژه مجاز به بررسی و تغییر وضعیت است
+    if project.employer_id != request.user.id:
+        messages.error(request, 'شما مجاز به بررسی پیشنهادهای این پروژه نیستید.')
+        return redirect('dashboard')
+
+    action = request.POST.get('action') or request.GET.get('action')
+
+    if action == 'accept':
+        if project.status != 'OPEN':
+            messages.error(request, 'پیشنهاد فقط برای پروژه‌های باز قابل پذیرش است.')
+            return redirect('project_detail', project_id=project.id)
+
+        if proposal.status != 'PENDING':
+            messages.error(request, 'تنها پیشنهادهای در وضعیت انتظار (Pending) قابل پذیرش هستند.')
+            return redirect('project_detail', project_id=project.id)
+
+        with transaction.atomic():
+            # ۱. وضعیت پیشنهاد انتخابی -> ACCEPTED
+            proposal.status = 'ACCEPTED'
+            proposal.save(update_fields=['status'])
+
+            # ۲. وضعیت پروژه -> IN_PROGRESS
+            project.status = 'IN_PROGRESS'
+            project.save(update_fields=['status'])
+
+            # ۳. سایر پیشنهادهای PENDING همین پروژه -> REJECTED
+            Proposal.objects.filter(project=project, status='PENDING').exclude(id=proposal.id).update(status='REJECTED')
+
+        messages.success(request, f'پیشنهاد فریلنسر {proposal.freelancer.full_name or proposal.freelancer.username} با موفقیت پذیرفته شد و پروژه وارد فاز "در حال انجام" گردید.')
+
+    elif action == 'reject':
+        if proposal.status != 'PENDING':
+            messages.error(request, 'تنها پیشنهادهای در انتظار قابل رد کردن هستند.')
+        else:
+            proposal.status = 'REJECTED'
+            proposal.save(update_fields=['status'])
+            messages.success(request, 'پیشنهاد مورد نظر با موفقیت رد شد.')
+
+    return redirect('project_detail', project_id=project.id)
+
 
 
 @login_required
