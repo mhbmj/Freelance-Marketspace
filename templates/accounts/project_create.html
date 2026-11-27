@@ -674,15 +674,175 @@
                         <span>مرحله قبل</span>
                     </button>
 
-                    <button type="submit" name="submit_action" value="publish" style="background: none; border: none; font-size: 13.5px; font-weight: 700; color: #64748b; cursor: pointer; padding: 6px 10px;">
+                    <button type="button" onclick="goToStep4()" style="background: none; border: none; font-size: 13.5px; font-weight: 700; color: #64748b; cursor: pointer; padding: 6px 10px;">
                         رد کردن و ادامه
                     </button>
                 </div>
 
                 <!-- دکمه بازبینی نهایی در سمت چپ -->
                 <div>
-                    <button type="submit" name="submit_action" value="publish" class="btn-submit-proposal" style="padding: 12px 38px; font-size: 14.5px; font-weight: 700; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px;">
-                        <span>بازبینی نهایی و انتشار</span>
+                    <button type="button" onclick="goToStep4()" class="btn-submit-proposal" style="padding: 12px 38px; font-size: 14.5px; font-weight: 700; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px;">
+                        <span>بازبینی نهایی</span>
+                        <span>←</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- =====================================================================
+             مرحله ۴: بازبینی نهایی و ثبت پروژه (مطابق تصاویر ۶۳ و ۶۴ پونیشا)
+             ===================================================================== -->
+        <div id="section-step-4" style="display: none;">
+
+            <div class="ponisha-card" style="padding: 38px 42px; border-radius: 18px; background: #ffffff; margin-bottom: 26px;">
+                <h2 style="font-size: 22px; font-weight: 800; color: var(--text-main); margin: 0 0 10px 0;">
+                    بازبینی نهایی و ثبت پروژه
+                </h2>
+                <p style="font-size: 13.5px; color: var(--text-muted); margin: 0 0 32px 0;">
+                    اطلاعات پروژه و هزینه ثبت را مرور کنید. پیش از انتشار می‌توانید هر بخش را ویرایش کنید.
+                </p>
+
+                <!-- ۱. عنوان پروژه -->
+                <div class="review-row-block">
+                    <div class="review-row-header">
+                        <span class="review-row-label">عنوان پروژه</span>
+                        <button type="button" class="review-edit-link" onclick="goToStep2()">
+                            <span>ویرایش</span>
+                            <span>✏️</span>
+                        </button>
+                    </div>
+                    <h3 class="review-row-value" id="review-title-display">
+                        طراحی پلتفرم کتابداری آنلاین
+                    </h3>
+                </div>
+
+                <!-- ۲. توضیحات کامل -->
+                <div class="review-row-block">
+                    <div class="review-row-header">
+                        <span class="review-row-label">توضیحات کامل</span>
+                        <button type="button" class="review-edit-link" onclick="goToStep2()">
+                            <span>ویرایش</span>
+                            <span>✏️</span>
+                        </button>
+                    </div>
+                    <p class="review-row-value" id="review-desc-display" style="white-space: pre-line; line-height: 1.9; font-weight: 500;">
+                        توضیحات پروژه...
+                    </p>
+                </div>
+
+                <!-- ۳. دسته‌بندی و مهارت‌ها -->
+                <div class="review-row-block">
+                    <div class="review-row-header">
+                        <span class="review-row-label">دسته‌بندی و مهارت‌ها</span>
+                        <button type="button" class="review-edit-link" onclick="goToStep2()">
+                            <span>ویرایش</span>
+                            <span>✏️</span>
+                        </button>
+                    </div>
+                    <div style="font-size: 14.5px; font-weight: 700; color: var(--text-main); margin-bottom: 10px;" id="review-category-display">
+                        برنامه نویسی و توسعه نرم افزار
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="review-skills-display">
+                        <!-- تگ‌های مهارت در اینجا درج می‌شوند -->
+                    </div>
+                </div>
+
+                <!-- ۴. بودجه مطابق تصویر ۶۴ -->
+                <div class="review-row-block">
+                    <div class="review-row-header">
+                        <span class="review-row-label">بودجه</span>
+                        <button type="button" class="review-edit-link" onclick="goToStep2()">
+                            <span>ویرایش</span>
+                            <span>✏️</span>
+                        </button>
+                    </div>
+                    <div class="review-row-value" id="review-budget-display">
+                        ۱۵,۰۰۰,۰۰۰ تا ۳۰,۰۰۰,۰۰۰ تومان
+                    </div>
+                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-top: 4px;">
+                        این بازه برای دستمزد فریلنسر است و اکنون پرداخت نمی‌شود.
+                    </span>
+                </div>
+
+                <!-- ۵. اولویت پروژه -->
+                <div class="review-row-block">
+                    <div class="review-row-header">
+                        <span class="review-row-label">اولویت پروژه</span>
+                        <button type="button" class="review-edit-link" onclick="goToStep2()">
+                            <span>ویرایش</span>
+                            <span>✏️</span>
+                        </button>
+                    </div>
+                    <div class="review-row-value" id="review-priority-display">
+                        ترکیبی از کیفیت و قیمت اهمیت دارد
+                    </div>
+                </div>
+
+                <!-- ۶. پیوست‌ها -->
+                <div class="review-row-block">
+                    <div class="review-row-header">
+                        <span class="review-row-label">پیوست‌ها</span>
+                        <button type="button" class="review-edit-link" onclick="goToStep2()">
+                            <span>ویرایش</span>
+                            <span>✏️</span>
+                        </button>
+                    </div>
+                    <div class="review-row-value" id="review-files-display">
+                        فایلی پیوست نشده است
+                    </div>
+                </div>
+
+                <!-- ۷. خدمات ارتقا پروژه -->
+                <div class="review-row-block">
+                    <div class="review-row-header">
+                        <span class="review-row-label">خدمات ارتقا پروژه</span>
+                        <button type="button" class="review-edit-link" onclick="goToStep3()">
+                            <span>ویرایش</span>
+                            <span>✏️</span>
+                        </button>
+                    </div>
+                    <div class="review-row-value" id="review-services-display">
+                        هیچ خدمتی انتخاب نشده است
+                    </div>
+                </div>
+
+                <!-- ۸. مبلغ قابل پرداخت برای ثبت پروژه مطابق تصویر ۶۴ -->
+                <div style="background: #fdfafc; border: 1.5px solid var(--border-card); border-radius: 14px; padding: 22px 24px; margin-top: 30px;">
+                    <h3 style="font-size: 15.5px; font-weight: 800; color: var(--text-main); margin: 0 0 16px 0;">
+                        مبلغ قابل پرداخت برای ثبت پروژه
+                    </h3>
+
+                    <div style="display: flex; justify-content: space-between; font-size: 13.5px; color: #475569; margin-bottom: 10px;">
+                        <span>ایجاد پروژه</span>
+                        <span>۲۹۹,۰۰۰ تومان</span>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; font-size: 13.5px; color: #475569; margin-bottom: 14px;">
+                        <span>مالیات بر ارزش افزوده</span>
+                        <span>۲۹,۹۰۰ تومان</span>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; font-size: 16px; font-weight: 800; color: var(--text-main); padding-top: 12px; border-top: 1.5px solid #f1e4ea;">
+                        <span>مبلغ قابل پرداخت</span>
+                        <span style="color: var(--pastel-pink-hover); font-size: 18px;" id="review-total-payable">۳۲۸,۹۰۰ تومان</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- نوار دکمه‌های پایین صفحه مرحله ۴ مطابق تصویر ۶۴ با تم پاستلی سایت -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; background: #ffffff; border: 1.5px solid var(--border-card); border-radius: 14px; padding: 18px 24px; box-shadow: var(--shadow-minimal);">
+                <!-- دکمه مرحله قبل در سمت راست -->
+                <button type="button" class="link-clinic-start" onclick="goToStep3()" style="background: none; border: none; font-size: 14px; font-weight: 700; color: var(--accent-teal); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <span>→</span>
+                    <span>مرحله قبل</span>
+                </button>
+
+                <!-- دکمه تایید پروژه و ادامه به پرداخت (با کلیک مستقیم آپلود و منتشر می‌شود) -->
+                <div>
+                    <button type="submit" name="submit_action" value="publish" class="btn-submit-proposal" style="padding: 13px 42px; font-size: 14.5px; font-weight: 700; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px;">
+                        <span>تأیید پروژه و ادامه به پرداخت</span>
                         <span>←</span>
                     </button>
                 </div>
@@ -791,6 +951,54 @@
     line-height: 1.7;
     margin: 0;
     max-width: 620px;
+}
+
+/* Review Step 4 Styles (Images 63 & 64) */
+.review-row-block {
+    padding: 18px 0;
+    border-bottom: 1.5px solid #f1f5f9;
+}
+
+.review-row-block:last-child {
+    border-bottom: none;
+}
+
+.review-row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.review-row-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.review-edit-link {
+    background: none;
+    border: none;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--accent-teal);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.15s ease;
+}
+
+.review-edit-link:hover {
+    color: #047857;
+    transform: translateX(-2px);
+}
+
+.review-row-value {
+    font-size: 15.5px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0;
 }
 </style>
 
@@ -1013,23 +1221,104 @@ document.addEventListener('click', function(e) {
     }
 });
 
+function goToStep4() {
+    document.getElementById('section-step-1').style.display = 'none';
+    document.getElementById('section-step-2').style.display = 'none';
+    document.getElementById('section-step-3').style.display = 'none';
+    document.getElementById('section-step-4').style.display = 'block';
+
+    // به‌روزرسانی نوار مراحل
+    document.getElementById('stepper-step-1').classList.remove('active');
+    document.getElementById('step-1-check').style.display = 'inline-block';
+
+    document.getElementById('stepper-step-2').classList.remove('active');
+    document.getElementById('step-2-check').style.display = 'inline-block';
+
+    document.getElementById('stepper-step-3').classList.remove('active');
+    document.getElementById('step-3-check').style.display = 'inline-block';
+
+    document.getElementById('stepper-step-4').classList.add('active');
+    document.getElementById('stepper-line-4').style.background = 'linear-gradient(90deg, var(--pastel-pink, #f472b6) 0%, var(--accent-teal, #18bead) 100%)';
+    document.getElementById('stepper-label-4').style.color = 'var(--text-main)';
+    document.getElementById('stepper-label-4').style.fontWeight = '800';
+
+    // پر کردن داده‌های بازبینی نهایی
+    populateReviewData();
+
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+}
+
+function populateReviewData() {
+    const titleVal = document.getElementById('proj_title_input').value.trim() || 'کتابداری آنلاین';
+    const descVal = document.getElementById('proj_desc_input').value.trim() || 'برای ثبت سیستم ها و مدیریت منابع...';
+    const catSelect = document.getElementById('category_select');
+    const catText = catSelect.selectedIndex > 0 ? catSelect.options[catSelect.selectedIndex].text : 'برنامه نویسی و توسعه نرم افزار';
+    const prioritySelect = document.getElementById('priority_select');
+    const priorityText = prioritySelect.options[prioritySelect.selectedIndex].text;
+
+    document.getElementById('review-title-display').textContent = titleVal;
+    document.getElementById('review-desc-display').textContent = descVal;
+    document.getElementById('review-category-display').textContent = catText;
+    document.getElementById('review-priority-display').textContent = priorityText;
+
+    // مهارت‌ها
+    const skillsContainer = document.getElementById('review-skills-display');
+    skillsContainer.innerHTML = '';
+    if (selectedSkillsList.length > 0) {
+        selectedSkillsList.forEach(s => {
+            const span = document.createElement('span');
+            span.className = 'user-skill-pill';
+            span.style.cssText = 'font-size: 12px; padding: 4px 12px; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px;';
+            span.textContent = s;
+            skillsContainer.appendChild(span);
+        });
+    } else {
+        skillsContainer.innerHTML = '<span style="font-size: 13px; color: var(--text-muted);">مهارتی انتخاب نشده است</span>';
+    }
+
+    // بودجه
+    const budgetSelect = document.getElementById('budget_range_select');
+    const minVal = document.getElementById('budget_min_input').value.trim();
+    const maxVal = document.getElementById('budget_max_input').value.trim();
+    const budgetDisplay = document.getElementById('review-budget-display');
+
+    if (budgetSelect.value === 'custom' && (minVal || maxVal)) {
+        const minStr = minVal ? parseInt(minVal).toLocaleString('fa-IR') : '۰';
+        const maxStr = maxVal ? parseInt(maxVal).toLocaleString('fa-IR') : '...';
+        budgetDisplay.textContent = minStr + ' تا ' + maxStr + ' تومان';
+    } else if (budgetSelect.selectedIndex > 0) {
+        budgetDisplay.textContent = budgetSelect.options[budgetSelect.selectedIndex].text;
+    } else {
+        budgetDisplay.textContent = '۱,۰۰۰,۰۰۰ تا ۲,۰۰۰,۰۰۰ تومان';
+    }
+
+    // فایل‌ها
+    const fileInput = document.getElementById('proj_files_input');
+    const fileDisplay = document.getElementById('review-files-display');
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+        fileDisplay.textContent = fileInput.files.length.toLocaleString('fa-IR') + ' فایل آپلود شده';
+    } else {
+        fileDisplay.textContent = '۱ فایل آپلود شده (پروژه)';
+    }
+
+    // خدمات ارتقا
+    const checkedServices = document.querySelectorAll('input[name="services"]:checked');
+    const servicesDisplay = document.getElementById('review-services-display');
+    if (checkedServices.length > 0) {
+        servicesDisplay.textContent = checkedServices.length.toLocaleString('fa-IR') + ' خدمت ارتقا انتخاب شده است';
+    } else {
+        servicesDisplay.textContent = 'هیچ خدمتی انتخاب نشده است';
+    }
+}
+
 // اگر پارامتر step در آدرس بود مرحله مربوطه فعال شود
 window.addEventListener('DOMContentLoaded', function() {
     {% if step == '2' %}
         goToStep2();
     {% elif step == '3' %}
-        document.getElementById('section-step-1').style.display = 'none';
-        document.getElementById('section-step-2').style.display = 'none';
-        document.getElementById('section-step-3').style.display = 'block';
-
-        document.getElementById('stepper-step-1').classList.remove('active');
-        document.getElementById('step-1-check').style.display = 'inline-block';
-        document.getElementById('stepper-step-2').classList.remove('active');
-        document.getElementById('step-2-check').style.display = 'inline-block';
-        document.getElementById('stepper-step-3').classList.add('active');
-        document.getElementById('stepper-line-3').style.background = 'linear-gradient(90deg, var(--pastel-pink, #f472b6) 0%, var(--accent-teal, #18bead) 100%)';
-        document.getElementById('stepper-label-3').style.color = 'var(--text-main)';
-        document.getElementById('stepper-label-3').style.fontWeight = '800';
+        goToStep3();
+    {% elif step == '4' %}
+        goToStep4();
     {% endif %}
 });
 </script>

@@ -767,9 +767,17 @@ class AuthenticationTests(TestCase):
         self.assertContains(res_step3, 'پشتیبانی اجرای پروژه')
         self.assertContains(res_step3, 'بی‌نهایت')
         self.assertContains(res_step3, 'سرپرست پروژه')
-        self.assertContains(res_step3, 'بازبینی نهایی و انتشار')
+        self.assertContains(res_step3, 'بازبینی نهایی')
 
-        # ۵. ارسال فرم مرحله ۲ و ۳ و انتشار مستقیم پروژه
+        # ۵. دسترسی به مرحله ۴: بازبینی نهایی و ثبت پروژه (تصاویر ۶۳ و ۶۴)
+        res_step4 = self.client.get(reverse('project_create') + '?step=4')
+        self.assertEqual(res_step4.status_code, 200)
+        self.assertContains(res_step4, 'بازبینی نهایی و ثبت پروژه')
+        self.assertContains(res_step4, 'اطلاعات پروژه و هزینه ثبت را مرور کنید')
+        self.assertContains(res_step4, 'تأیید پروژه و ادامه به پرداخت')
+        self.assertContains(res_step4, 'مبلغ قابل پرداخت')
+
+        # ۶. ارسال فرم و انتشار مستقیم پروژه
         res_publish = self.client.post(reverse('project_create'), {
             'title': 'طراحی پلتفرم کتابداری آنلاین',
             'description': 'هدف این پروژه، طراحی و پیاده‌سازی سامانه تحت وب کتابداری با امکان دسته‌بندی و مدیریت امانت است.',

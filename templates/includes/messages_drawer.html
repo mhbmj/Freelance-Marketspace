@@ -228,7 +228,7 @@
             <button type="button" class="messages-drawer-tab active" id="md-tab-messages" onclick="switchMessagesDrawerTab('messages')">
                 <span>پیام‌ها</span>
                 {% if unread_notifications_count > 0 %}
-                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #e11d48; color: #fff; font-size: 10px; font-weight: 800; margin-right: 6px;">
+                    <span id="md-tab-messages-badge" style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #e11d48; color: #fff; font-size: 10px; font-weight: 800; margin-right: 6px;">
                         {{ unread_notifications_count }}
                     </span>
                 {% endif %}
@@ -283,7 +283,7 @@
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px;">
                                 <span style="color: var(--pastel-pink-hover); font-weight: 700;">
-                                    مبلغ: {{ prop.bid_amount|floatformat:0 }} تومان
+                                    مبلغ: {{ prop.bid_amount|price_en }} تومان
                                 </span>
                                 <span class="badge-new-tag" id="prop-new-badge-{{ prop.id }}" style="background: #e11d48; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800;">
                                     جدید
@@ -488,17 +488,27 @@ function applyReadStateToCard(propId) {
 function checkIfAllProposalsRead() {
     const cards = document.querySelectorAll('.proposal-message-card');
     const readList = getReadProposals();
-    let hasUnread = false;
+    let unreadCount = 0;
 
     cards.forEach(card => {
         const id = card.getAttribute('data-prop-id');
         if (id && !readList.includes(id)) {
-            hasUnread = true;
+            unreadCount++;
         }
     });
 
-    if (!hasUnread) {
-        dismissMessageDot();
+    const dots = document.querySelectorAll('.nav-tiny-dot');
+    const badgeTab = document.getElementById('md-tab-messages-badge');
+
+    if (unreadCount === 0) {
+        dots.forEach(d => { d.style.display = 'none'; });
+        if (badgeTab) badgeTab.style.display = 'none';
+    } else {
+        dots.forEach(d => { d.style.display = 'block'; });
+        if (badgeTab) {
+            badgeTab.style.display = 'inline-flex';
+            badgeTab.textContent = unreadCount;
+        }
     }
 }
 
