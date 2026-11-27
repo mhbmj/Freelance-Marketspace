@@ -3377,6 +3377,20 @@ body {
     line-height: 1;
     pointer-events: none;
 }
+
+/* نقطه ریز نوتیفیکیشن پیام‌ها مطابق درخواست کاربر */
+.nav-tiny-dot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #e11d48;
+    box-shadow: 0 0 5px rgba(225, 29, 72, 0.7);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
     color: #be185d;
     transform: translateY(-1px);
 }

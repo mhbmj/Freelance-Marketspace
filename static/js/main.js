@@ -120,3 +120,23 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
     }, false);
 });
+
+// محو شدن نقطه اعلان پیام‌ها با کلیک روی آیکون
+function dismissMessageDot() {
+    const dots = document.querySelectorAll('.nav-tiny-dot');
+    dots.forEach(d => {
+        d.style.opacity = '0';
+        d.style.transform = 'scale(0)';
+        setTimeout(() => { d.style.display = 'none'; }, 200);
+    });
+    try {
+        sessionStorage.setItem('message_dot_dismissed', 'true');
+    } catch (e) {}
+}
+
+if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('message_dot_dismissed') === 'true') {
+    document.addEventListener('DOMContentLoaded', function () {
+        const dots = document.querySelectorAll('.nav-tiny-dot');
+        dots.forEach(d => { d.style.display = 'none'; });
+    });
+}
