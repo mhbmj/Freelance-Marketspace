@@ -756,9 +756,19 @@ class AuthenticationTests(TestCase):
         self.assertContains(res_step2, 'شرح پروژه')
         self.assertContains(res_step2, 'فایل‌های پروژه')
         self.assertContains(res_step2, 'اولویت و بودجه')
-        self.assertContains(res_step2, 'ادامه و انتشار پروژه')
+        self.assertContains(res_step2, 'ادامه به خدمات اختیاری')
 
-        # ۴. ارسال فرم مرحله ۲ و انتشار مستقیم پروژه
+        # ۴. دسترسی به مرحله ۳: خدمات اختیاری، افزایش بازدید و پشتیبانی (تصاویر ۵۷ تا ۵۹)
+        res_step3 = self.client.get(reverse('project_create') + '?step=3')
+        self.assertEqual(res_step3.status_code, 200)
+        self.assertContains(res_step3, 'افزایش بازدید و پشتیبانی')
+        self.assertContains(res_step3, 'افزایش بازدید')
+        self.assertContains(res_step3, 'پشتیبانی اجرای پروژه')
+        self.assertContains(res_step3, 'بی‌نهایت')
+        self.assertContains(res_step3, 'سرپرست پروژه')
+        self.assertContains(res_step3, 'بازبینی نهایی و انتشار')
+
+        # ۵. ارسال فرم مرحله ۲ و ۳ و انتشار مستقیم پروژه
         res_publish = self.client.post(reverse('project_create'), {
             'title': 'طراحی پلتفرم کتابداری آنلاین',
             'description': 'هدف این پروژه، طراحی و پیاده‌سازی سامانه تحت وب کتابداری با امکان دسته‌بندی و مدیریت امانت است.',
@@ -767,6 +777,7 @@ class AuthenticationTests(TestCase):
             'budget_min': '15000000',
             'budget_max': '30000000',
             'pricing_type': 'FIXED_PRICE',
+            'services': ['unlimited', 'supervisor'],
             'submit_action': 'publish'
         }, follow=True)
         self.assertEqual(res_publish.status_code, 200)
@@ -779,7 +790,7 @@ class AuthenticationTests(TestCase):
         self.assertEqual(p.status, 'OPEN')
         self.assertEqual(float(p.budget), 30000000.0)
 
-        # ۵. ذخیره پروژه به صورت پیش‌نویس (Draft)
+        # ۶. ذخیره پروژه به صورت پیش‌نویس (Draft)
         res_draft = self.client.post(reverse('project_create'), {
             'title': 'طراحی آزمایشی در حالت پیش‌نویس',
             'description': 'این یک پروژه تستی پیش‌نویس است.',

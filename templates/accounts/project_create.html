@@ -103,22 +103,22 @@
         <div class="wizard-step-item" id="stepper-step-2" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important;">
             <div class="wizard-step-line" id="stepper-line-2" style="height: 4.5px !important; border-radius: 4px !important; background: #e2e8f0 !important; width: 100% !important;"></div>
             <div class="wizard-step-label" id="stepper-label-2" style="font-size: 14px !important; font-weight: 600 !important; color: #94a3b8 !important; text-align: right !important;">
-                ۲. تنظیمات پروژه
+                ۲. تنظیمات پروژه <span id="step-2-check" style="display: none; color: #059669; font-weight: 800;">✔</span>
             </div>
         </div>
 
-        <!-- مرحله ۳: خدمات اختیاری -->
-        <div class="wizard-step-item" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important;">
-            <div class="wizard-step-line" style="height: 4.5px !important; border-radius: 4px !important; background: #e2e8f0 !important; width: 100% !important;"></div>
-            <div class="wizard-step-label" style="font-size: 14px !important; font-weight: 600 !important; color: #94a3b8 !important; text-align: right !important;">
-                ۳. خدمات اختیاری
+        <!-- مرحله ۳: خدمات اختیاری (مطابق تصاویر ۵۷ تا ۵۹) -->
+        <div class="wizard-step-item" id="stepper-step-3" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important;">
+            <div class="wizard-step-line" id="stepper-line-3" style="height: 4.5px !important; border-radius: 4px !important; background: #e2e8f0 !important; width: 100% !important;"></div>
+            <div class="wizard-step-label" id="stepper-label-3" style="font-size: 14px !important; font-weight: 600 !important; color: #94a3b8 !important; text-align: right !important;">
+                ۳. خدمات اختیاری <span id="step-3-check" style="display: none; color: #059669; font-weight: 800;">✔</span>
             </div>
         </div>
 
         <!-- مرحله ۴: بازبینی و ثبت -->
-        <div class="wizard-step-item" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important;">
-            <div class="wizard-step-line" style="height: 4.5px !important; border-radius: 4px !important; background: #e2e8f0 !important; width: 100% !important;"></div>
-            <div class="wizard-step-label" style="font-size: 14px !important; font-weight: 600 !important; color: #94a3b8 !important; text-align: right !important;">
+        <div class="wizard-step-item" id="stepper-step-4" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important;">
+            <div class="wizard-step-line" id="stepper-line-4" style="height: 4.5px !important; border-radius: 4px !important; background: #e2e8f0 !important; width: 100% !important;"></div>
+            <div class="wizard-step-label" id="stepper-label-4" style="font-size: 14px !important; font-weight: 600 !important; color: #94a3b8 !important; text-align: right !important;">
                 ۴. بازبینی و ثبت
             </div>
         </div>
@@ -401,24 +401,292 @@
                     <span>مرحله قبل</span>
                 </button>
 
-                <!-- دکمه‌های ذخیره پیش‌نویس و انتشار مستقیم در سمت چپ -->
+                <!-- دکمه‌های ذخیره پیش‌نویس و ادامه به مرحله ۳ -->
                 <div style="display: flex; gap: 10px;">
                     <button type="submit" name="submit_action" value="draft" class="btn-cancel-modal" style="padding: 12px 24px; font-size: 14px; font-weight: 700;">
                         ذخیره پیش‌نویس (Draft)
                     </button>
 
-                    <button type="submit" name="submit_action" value="publish" class="btn-submit-proposal" style="padding: 12px 36px; font-size: 14px; font-weight: 700; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px;">
-                        <span>ادامه و انتشار پروژه</span>
+                    <button type="button" class="btn-submit-proposal" onclick="goToStep3()" style="padding: 12px 36px; font-size: 14px; font-weight: 700; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px;">
+                        <span>ادامه به خدمات اختیاری (مرحله ۳)</span>
                         <span>←</span>
                     </button>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
 
+        <!-- =====================================================================
+             مرحله ۳: افزایش بازدید و پشتیبانی (مطابق تصاویر ۵۷ تا ۵۹ پونیشا)
+             ===================================================================== -->
+        <div id="section-step-3" style="display: {% if step == '3' %}block{% else %}none{% endif %};">
+
+            <!-- سربرگ مرحله ۳ مطابق تصویر ۵۷ -->
+            <div style="margin-bottom: 24px;">
+                <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin: 0 0 16px 0;">
+                    افزایش بازدید و پشتیبانی
+                </h2>
+
+                <!-- کادر اعلان آبی/سبز راهنما -->
+                <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 14px 20px; font-size: 13.5px; color: #15803d; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+                    <span>ℹ️</span>
+                    <span>خرید هیچ‌کدام از این خدمات برای انتشار پروژه الزامی نیست. گزینه‌های رایگان یا پیش‌فرض با برچسب خود مشخص شده‌اند.</span>
+                </div>
+            </div>
+
+            <!-- بخش ۱: افزایش بازدید مطابق تصاویر ۵۷ و ۵۸ -->
+            <div class="ponisha-card" style="padding: 28px 32px; border-radius: 18px; background: #ffffff; margin-bottom: 24px;">
+                <h3 style="font-size: 17.5px; font-weight: 800; color: var(--text-main); margin: 0 0 20px 0;">
+                    افزایش بازدید
+                </h3>
+
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+
+                    <!-- ۱. ایجاد پروژه (پیش‌فرض انتخاب شده) -->
+                    <label class="service-option-card active" style="cursor: default;">
+                        <div class="service-card-right">
+                            <input type="checkbox" checked disabled style="width: 18px; height: 18px; accent-color: var(--pastel-pink); cursor: default;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                    <span class="service-badge-tag" style="background: #f1f5f9; color: #475569;">ایجاد پروژه</span>
+                                </div>
+                                <p class="service-desc-text">
+                                    پروژه شما برای هزاران فریلنسر که مهارت انجام پروژه شما را دارند از طریق ایمیل ارسال می‌شود.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="service-card-left">
+                            <strong style="font-size: 14.5px; color: var(--text-main);">۲۹۹,۰۰۰ تومان</strong>
+                        </div>
+                    </label>
+
+                    <!-- ۲. بی‌نهایت -->
+                    <label class="service-option-card">
+                        <div class="service-card-right">
+                            <input type="checkbox" name="services" value="unlimited" onchange="toggleServiceCard(this)" style="width: 18px; height: 18px; accent-color: var(--pastel-pink); cursor: pointer;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                    <span class="service-badge-tag" style="background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe;">
+                                        ♾️ بی‌نهایت
+                                    </span>
+                                </div>
+                                <p class="service-desc-text">
+                                    در پروژه بی‌نهایت، کارفرما امکان تبادل اطلاعات تماس، ارتباط حضوری و استخدام فریلنسر را خواهد داشت.
+                                    <strong style="color: var(--text-main);">با انتخاب این گزینه، کمیسیون کارفرما صفر محاسبه می‌شود.</strong>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="service-card-left">
+                            <strong style="font-size: 14.5px; color: var(--text-main);">۲,۶۰۰,۰۰۰ تومان</strong>
+                            <span style="font-size: 12px; color: #94a3b8; text-decoration: line-through;">۵,۵۰۰,۰۰۰</span>
+                        </div>
+                    </label>
+
+                    <!-- ۳. فوری + برجسته -->
+                    <label class="service-option-card">
+                        <div class="service-card-right">
+                            <input type="checkbox" name="services" value="urgent_featured" onchange="toggleServiceCard(this)" style="width: 18px; height: 18px; accent-color: var(--pastel-pink); cursor: pointer;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                    <span class="service-badge-tag" style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca;">⚡ فوری</span>
+                                    <span class="service-badge-tag" style="background: #fffbeb; color: #d97706; border: 1px solid #fde68a;">🔥 برجسته</span>
+                                </div>
+                                <p class="service-desc-text">
+                                    این دو ویژگی را با هم انتخاب کنید و ۴۰٪ تخفیف دریافت کنید.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="service-card-left">
+                            <strong style="font-size: 14.5px; color: var(--text-main);">۳۸۹,۰۰۰ تومان</strong>
+                            <span style="font-size: 12px; color: #94a3b8; text-decoration: line-through;">۶۴۸,۰۰۰</span>
+                        </div>
+                    </label>
+
+                    <!-- ۴. فوری -->
+                    <label class="service-option-card">
+                        <div class="service-card-right">
+                            <input type="checkbox" name="services" value="urgent" onchange="toggleServiceCard(this)" style="width: 18px; height: 18px; accent-color: var(--pastel-pink); cursor: pointer;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                    <span class="service-badge-tag" style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca;">⚡ فوری</span>
+                                </div>
+                                <p class="service-desc-text">
+                                    پروژه فوری نشانگر عجله کارفرما برای انجام هرچه سریع تر پروژه است و مورد توجه فریلنسرهای حرفه ای که علاقه دارند زودتر پروژه دریافت کنند قرار می گیرد.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="service-card-left">
+                            <strong style="font-size: 14.5px; color: var(--text-main);">۱۹۹,۰۰۰ تومان</strong>
+                        </div>
+                    </label>
+
+                    <!-- ۵. برجسته -->
+                    <label class="service-option-card">
+                        <div class="service-card-right">
+                            <input type="checkbox" name="services" value="featured" onchange="toggleServiceCard(this)" style="width: 18px; height: 18px; accent-color: var(--pastel-pink); cursor: pointer;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                    <span class="service-badge-tag" style="background: #fffbeb; color: #d97706; border: 1px solid #fde68a;">🔥 برجسته</span>
+                                </div>
+                                <p class="service-desc-text">
+                                    پروژه برجسته به دلیل برجسته بودن بیشتر مورد توجه فریلنسرهای حرفه ای قرار می گیرد و فریلنسرهای بیشتری در پروژه شرکت خواهند کرد.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="service-card-left">
+                            <strong style="font-size: 14.5px; color: var(--text-main);">۴۴۹,۰۰۰ تومان</strong>
+                        </div>
+                    </label>
+
+                    <!-- ۶. متمایز -->
+                    <label class="service-option-card">
+                        <div class="service-card-right">
+                            <input type="checkbox" name="services" value="distinct" onchange="toggleServiceCard(this)" style="width: 18px; height: 18px; accent-color: var(--pastel-pink); cursor: pointer;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                    <span class="service-badge-tag" style="background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0;">🎓 متمایز</span>
+                                </div>
+                                <p class="service-desc-text">
+                                    رنگ پیش زمینه پروژه شما در فهرست پروژه ها متمایز از بقیه پروژه ها خواهد بود. این کار باعث می شود فریلنسرهای بیشتری به پروژه شما توجه کنند.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="service-card-left">
+                            <strong style="font-size: 14.5px; color: var(--text-main);">۱۴۹,۰۰۰ تومان</strong>
+                        </div>
+                    </label>
+
+                    <!-- ۷. حرفه‌ای -->
+                    <label class="service-option-card">
+                        <div class="service-card-right">
+                            <input type="checkbox" name="services" value="professional" onchange="toggleServiceCard(this)" style="width: 18px; height: 18px; accent-color: var(--pastel-pink); cursor: pointer;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                    <span class="service-badge-tag" style="background: #faf5ff; color: #9333ea; border: 1px solid #e9d5ff;">👑 حرفه‌ای</span>
+                                </div>
+                                <p class="service-desc-text">
+                                    پروژه شما توسط متخصصین ویرایش می‌شود تا توضیحات کامل و واضح‌تری نوشته شود و پیشنهادهای دقیق‌تری دریافت کنید.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="service-card-left">
+                            <strong style="font-size: 14.5px; color: var(--text-main);">۱۹۹,۰۰۰ تومان</strong>
+                        </div>
+                    </label>
+
+                </div>
+            </div>
+
+            <!-- بخش ۲: پشتیبانی اجرای پروژه مطابق تصاویر ۵۸ و ۵۹ -->
+            <div class="ponisha-card" style="padding: 28px 32px; border-radius: 18px; background: #ffffff; margin-bottom: 28px;">
+                <h3 style="font-size: 17.5px; font-weight: 800; color: var(--text-main); margin: 0 0 20px 0;">
+                    پشتیبانی اجرای پروژه
+                </h3>
+
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+
+                    <!-- ۱. سرپرست پروژه -->
+                    <label class="service-option-card">
+                        <div class="service-card-right">
+                            <input type="checkbox" name="services" value="supervisor" onchange="toggleServiceCard(this)" style="width: 18px; height: 18px; accent-color: var(--pastel-pink); cursor: pointer;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                    <span class="service-badge-tag" style="background: #fdf2f8; color: #be185d; border: 1px solid #fbcfe8;">📋 سرپرست پروژه</span>
+                                </div>
+                                <p class="service-desc-text">
+                                    با انتخاب سرپرست پروژه، یک متخصص از طرف ما اجرای پروژه شما را مرحله‌به‌مرحله پیگیری می‌کند. از انتخاب فریلنسر تا جلسات هفتگی و تحویل نهایی، همه‌چیز زیر نظر او پیش می‌رود تا کار منظم انجام شود.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="service-card-left">
+                            <strong style="font-size: 14.5px; color: var(--text-main);">۵,۹۹۰,۰۰۰ تومان</strong>
+                        </div>
+                    </label>
+
+                    <!-- ۲. سرپرست و کارشناس کیفیت پروژه -->
+                    <label class="service-option-card" style="flex-direction: column; align-items: stretch; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div class="service-card-right">
+                                <input type="checkbox" name="services" value="qa_supervisor" onchange="toggleServiceCard(this)" style="width: 18px; height: 18px; accent-color: var(--pastel-pink); cursor: pointer;">
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                        <span class="service-badge-tag" style="background: #fffbeb; color: #b45309; border: 1px solid #fde68a;">🛡️ سرپرست و کارشناس کیفیت پروژه</span>
+                                    </div>
+                                    <p class="service-desc-text">
+                                        قبل از آزادسازی پرداخت امن، خیالتان را از کیفیت کار راحت کنید. کارشناس کیفیت خروجی فریلنسر را بررسی و تست می‌کند تا نتیجه دقیقاً مطابق نیاز شما باشد.
+                                        پس از ثبت پروژه، برای هماهنگی با شما تماس می‌گیریم.
+                                    </p>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+                                        ۵,۹۹۰,۰۰۰ تومان + ساعتی ۱,۵۰۰,۰۰۰ تومان (حداقل ۵ ساعت)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-card-left">
+                                <strong style="font-size: 14.5px; color: var(--text-main);">۱۳,۴۹۰,۰۰۰ تومان</strong>
+                            </div>
+                        </div>
+                        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #15803d; line-height: 1.8;">
+                            ℹ️ هزینه کارشناسی کیفیت به صورت ساعتی محاسبه می‌شود؛ در زمان ثبت پروژه رایگان است و پس از تأیید، بر اساس مدت‌زمانی که با شما هماهنگ خواهد شد تعیین می‌گردد.
+                        </div>
+                    </label>
+
+                    <!-- ۳. مشاور کسب‌وکار -->
+                    <label class="service-option-card" style="flex-direction: column; align-items: stretch; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div class="service-card-right">
+                                <input type="checkbox" name="services" value="business_consultant" onchange="toggleServiceCard(this)" style="width: 18px; height: 18px; accent-color: var(--pastel-pink); cursor: pointer;">
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                        <span class="service-badge-tag" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">💼 مشاور کسب‌وکار</span>
+                                    </div>
+                                    <p class="service-desc-text">
+                                        با انتخاب این گزینه، مسیر مطمئن رشد خود را هموار می‌کنید. مشاور اختصاصی ایده و جزئیات پروژه‌تان را بررسی کرده و بهترین راهکارها را برای اجرای موفق و رسیدن به نتیجه به شما پیشنهاد می‌دهد.
+                                    </p>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+                                        ساعتی ۲,۹۰۰,۰۰۰ تومان
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-card-left">
+                                <strong style="font-size: 14.5px; color: var(--text-main);">۲,۹۰۰,۰۰۰ تومان</strong>
+                            </div>
+                        </div>
+                        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #15803d; line-height: 1.8;">
+                            ℹ️ در جلسه‌ی اول، مشاور با طرح پرسش‌های تخصصی، تصویر روشنی از وضعیت فعلی کسب‌وکار یا پروژه شما ارائه می‌کند و مهم‌ترین چالش‌ها، فرصت‌ها و اولویت‌های اصلی را مشخص می‌سازد. در صورت نیاز به تحلیل‌های عمیق‌تر، تهیه‌ی طرح رشد و همراهی مستمر، زمان و هزینه دقیق برآورد شده و این فرآیند تنها با هماهنگی و تأیید نهایی شما انجام خواهد شد.
+                        </div>
+                    </label>
+
+                </div>
+            </div>
+
+            <!-- نوار دکمه‌های پایین صفحه مرحله ۳ مطابق تصویر ۵۹ با تم پاستلی سایت -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; background: #ffffff; border: 1.5px solid var(--border-card); border-radius: 14px; padding: 18px 24px; box-shadow: var(--shadow-minimal);">
+                <!-- دکمه‌های سمت راست -->
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <button type="button" class="link-clinic-start" onclick="goToStep2()" style="background: none; border: none; font-size: 14px; font-weight: 700; color: var(--accent-teal); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <span>→</span>
+                        <span>مرحله قبل</span>
+                    </button>
+
+                    <button type="submit" name="submit_action" value="publish" style="background: none; border: none; font-size: 13.5px; font-weight: 700; color: #64748b; cursor: pointer; padding: 6px 10px;">
+                        رد کردن و ادامه
+                    </button>
+                </div>
+
+                <!-- دکمه بازبینی نهایی در سمت چپ -->
+                <div>
+                    <button type="submit" name="submit_action" value="publish" class="btn-submit-proposal" style="padding: 12px 38px; font-size: 14.5px; font-weight: 700; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px;">
+                        <span>بازبینی نهایی و انتشار</span>
+                        <span>←</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
 </div>
 
-<!-- استایل‌های چیپ‌های مهارت و المان‌های فرم مرحله ۲ -->
+<!-- استایل‌های چیپ‌های مهارت و المان‌های فرم مرحله ۲ و ۳ -->
 <style>
 .skill-dropdown-option {
     padding: 10px 16px;
@@ -459,6 +727,64 @@
 .chip-remove-btn:hover {
     color: #e11d48;
 }
+
+/* Service Options Cards (Step 3) */
+.service-option-card {
+    background: #ffffff;
+    border: 1.5px solid var(--border-card);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.service-option-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+}
+
+.service-option-card.active {
+    border-color: var(--pastel-pink);
+    background: #fffbfe;
+    box-shadow: 0 4px 16px rgba(244, 114, 182, 0.12);
+}
+
+.service-card-right {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    flex: 1;
+}
+
+.service-card-left {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.service-badge-tag {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.service-desc-text {
+    font-size: 12.5px;
+    color: #475569;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 620px;
+}
 </style>
 
 <script>
@@ -496,11 +822,19 @@ function goToStep2() {
     }
 
     document.getElementById('section-step-1').style.display = 'none';
+    document.getElementById('section-step-3').style.display = 'none';
     document.getElementById('section-step-2').style.display = 'block';
 
     // به‌روزرسانی نوار مراحل
     document.getElementById('stepper-step-1').classList.remove('active');
     document.getElementById('step-1-check').style.display = 'inline-block';
+
+    document.getElementById('stepper-step-3').classList.remove('active');
+    document.getElementById('stepper-line-3').style.background = '#e2e8f0';
+    document.getElementById('stepper-label-3').style.color = '#94a3b8';
+    document.getElementById('stepper-label-3').style.fontWeight = '600';
+    document.getElementById('step-2-check').style.display = 'none';
+
     document.getElementById('stepper-step-2').classList.add('active');
     document.getElementById('stepper-line-2').style.background = 'linear-gradient(90deg, var(--pastel-pink, #f472b6) 0%, var(--accent-teal, #18bead) 100%)';
     document.getElementById('stepper-label-2').style.color = 'var(--text-main)';
@@ -511,15 +845,58 @@ function goToStep2() {
 
 function goToStep1() {
     document.getElementById('section-step-2').style.display = 'none';
+    document.getElementById('section-step-3').style.display = 'none';
     document.getElementById('section-step-1').style.display = 'block';
 
     document.getElementById('stepper-step-2').classList.remove('active');
     document.getElementById('stepper-line-2').style.background = '#e2e8f0';
     document.getElementById('stepper-label-2').style.color = '#94a3b8';
     document.getElementById('stepper-label-2').style.fontWeight = '600';
+    document.getElementById('step-1-check').style.display = 'none';
     document.getElementById('stepper-step-1').classList.add('active');
 
     window.scrollTo({ top: 120, behavior: 'smooth' });
+}
+
+function goToStep3() {
+    const titleInput = document.getElementById('proj_title_input');
+    const descInput = document.getElementById('proj_desc_input');
+
+    if (!titleInput.value.trim()) {
+        alert('لطفاً ابتدا عنوان پروژه را وارد نمایید.');
+        titleInput.focus();
+        return;
+    }
+
+    if (!descInput.value.trim()) {
+        alert('لطفاً توضیحات کامل پروژه را وارد نمایید.');
+        descInput.focus();
+        return;
+    }
+
+    document.getElementById('section-step-1').style.display = 'none';
+    document.getElementById('section-step-2').style.display = 'none';
+    document.getElementById('section-step-3').style.display = 'block';
+
+    // به‌روزرسانی نوار مراحل
+    document.getElementById('stepper-step-2').classList.remove('active');
+    document.getElementById('step-2-check').style.display = 'inline-block';
+    document.getElementById('stepper-step-3').classList.add('active');
+    document.getElementById('stepper-line-3').style.background = 'linear-gradient(90deg, var(--pastel-pink, #f472b6) 0%, var(--accent-teal, #18bead) 100%)';
+    document.getElementById('stepper-label-3').style.color = 'var(--text-main)';
+    document.getElementById('stepper-label-3').style.fontWeight = '800';
+
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+}
+
+function toggleServiceCard(checkbox) {
+    const card = checkbox.closest('.service-option-card');
+    if (!card) return;
+    if (checkbox.checked) {
+        card.classList.add('active');
+    } else {
+        card.classList.remove('active');
+    }
 }
 
 function updateHeaderPreview(val) {
@@ -629,10 +1006,23 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// اگر پارامتر step=2 در آدرس بود مستقیما مرحله ۲ فعال شود
+// اگر پارامتر step در آدرس بود مرحله مربوطه فعال شود
 window.addEventListener('DOMContentLoaded', function() {
     {% if step == '2' %}
         goToStep2();
+    {% elif step == '3' %}
+        document.getElementById('section-step-1').style.display = 'none';
+        document.getElementById('section-step-2').style.display = 'none';
+        document.getElementById('section-step-3').style.display = 'block';
+
+        document.getElementById('stepper-step-1').classList.remove('active');
+        document.getElementById('step-1-check').style.display = 'inline-block';
+        document.getElementById('stepper-step-2').classList.remove('active');
+        document.getElementById('step-2-check').style.display = 'inline-block';
+        document.getElementById('stepper-step-3').classList.add('active');
+        document.getElementById('stepper-line-3').style.background = 'linear-gradient(90deg, var(--pastel-pink, #f472b6) 0%, var(--accent-teal, #18bead) 100%)';
+        document.getElementById('stepper-label-3').style.color = 'var(--text-main)';
+        document.getElementById('stepper-label-3').style.fontWeight = '800';
     {% endif %}
 });
 </script>
