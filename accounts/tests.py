@@ -742,6 +742,7 @@ class AuthenticationTests(TestCase):
         res_create = self.client.get(reverse('project_create'))
         self.assertEqual(res_create.status_code, 200)
         self.assertContains(res_create, 'ثبت پروژه جدید')
+        self.assertNotContains(res_create, 'در همین تب مرورگر')
         self.assertContains(res_create, 'روش ثبت پروژه را انتخاب کنید')
         self.assertContains(res_create, 'ثبت پروژه به‌صورت دستی')
         self.assertContains(res_create, 'با دستیار هوشمند')

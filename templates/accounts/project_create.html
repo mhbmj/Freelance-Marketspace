@@ -83,45 +83,42 @@
     {% endif %}
 
     <!-- سربرگ عنوان صفحه مطابق تصویر ۴۶ -->
-    <div style="text-align: right; margin-bottom: 28px;">
-        <h1 style="font-size: 26px; font-weight: 800; color: var(--text-main); margin: 0 0 8px 0;">
+    <div style="text-align: right; margin-bottom: 24px;">
+        <h1 style="font-size: 26px; font-weight: 800; color: var(--text-main); margin: 0;">
             ثبت پروژه جدید
         </h1>
-        <p style="font-size: 13px; color: var(--text-muted); margin: 0;">
-            در همین تب مرورگر ذخیره شد؛ با رفرش قابل بازیابی است
-        </p>
     </div>
 
-    <!-- استپ‌بار ۴ مرحله‌ای پروژه مطابق تصویر ۴۶ پونیشا با تم اختصاصی -->
-    <div class="wizard-stepper-container">
+    <!-- استپ‌بار ۴ مرحله‌ای افقی پروژه مطابق تصویر ۴۶ پونیشا با تم اختصاصی -->
+    <div class="wizard-stepper-container" style="display: flex !important; flex-direction: row !important; gap: 14px !important; margin-bottom: 28px !important; width: 100% !important; box-sizing: border-box !important;">
         <!-- مرحله ۱: شرح و جزئیات (فعال) -->
-        <div class="wizard-step-item active">
-            <div class="wizard-step-line"></div>
-            <div class="wizard-step-label">
+        <div class="wizard-step-item active" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important;">
+            <div class="wizard-step-line" style="height: 4.5px !important; border-radius: 4px !important; background: linear-gradient(90deg, var(--pastel-pink, #f472b6) 0%, var(--accent-teal, #18bead) 100%) !important; width: 100% !important;"></div>
+            <div class="wizard-step-label" style="font-size: 14px !important; font-weight: 800 !important; color: var(--text-main) !important; text-align: right !important;">
                 ۱. شرح و جزئیات
             </div>
         </div>
 
         <!-- مرحله ۲: تنظیمات پروژه -->
-        <div class="wizard-step-item">
-            <div class="wizard-step-line"></div>
-            <div class="wizard-step-label">
+        <div class="wizard-step-item" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important;">
+            <div class="wizard-step-line" style="height: 4.5px !important; border-radius: 4px !important; background: #e2e8f0 !important; width: 100% !important;"></div>
+            <div class="wizard-step-label" style="font-size: 14px !important; font-weight: 600 !important; color: #94a3b8 !important; text-align: right !important;">
                 ۲. تنظیمات پروژه
             </div>
         </div>
 
         <!-- مرحله ۳: خدمات اختیاری -->
-        <div class="wizard-step-item">
-            <div class="wizard-step-line"></div>
-            <div class="wizard-step-label">
+        <div class="wizard-step-item" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important;">
+            <div class="wizard-step-line" style="height: 4.5px !important; border-radius: 4px !important; background: #e2e8f0 !important; width: 100% !important;"></div>
+            <div class="wizard-step-label" style="font-size: 14px !important; font-weight: 600 !important; color: #94a3b8 !important; text-align: right !important;">
                 ۳. خدمات اختیاری
             </div>
         </div>
 
         <!-- مرحله ۴: بازبینی و ثبت -->
-        <div class="wizard-step-item">
-            <div class="wizard-step-line"></div>
-            <div class="wizard-step-label">
+        <div class="wizard-step-item" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important;">
+            <div class="wizard-step-line" style="height: 4.5px !important; border-radius: 4px !important; background: #e2e8f0 !important; width: 100% !important;"></div>
+            <div class="wizard-step-label" style="font-size: 14px !important; font-weight: 600 !important; color: #94a3b8 !important; text-align: right !important;">
                 ۴. بازبینی و ثبت
             </div>
         </div>
@@ -137,9 +134,9 @@
         </p>
 
         <!-- دو کارت انتخاب روش ثبت (دستی / دستیار هوشمند) -->
-        <div class="project-method-grid">
+        <div class="project-method-grid" style="display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important;">
             <!-- کارت اول: ثبت پروژه به‌صورت دستی (پیش‌فرض انتخاب شده) -->
-            <div class="project-method-card active" id="method-card-manual" onclick="selectProjectMethod('manual')">
+            <div class="project-method-card active" id="method-card-manual" onclick="selectProjectMethod('manual')" style="border-radius: 14px; padding: 24px 22px; cursor: pointer; transition: all 0.25s ease;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                     <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin: 0;">
                         ثبت پروژه به‌صورت دستی
@@ -152,7 +149,7 @@
             </div>
 
             <!-- کارت دوم: با دستیار هوشمند -->
-            <div class="project-method-card" id="method-card-ai" onclick="selectProjectMethod('ai')">
+            <div class="project-method-card" id="method-card-ai" onclick="selectProjectMethod('ai')" style="border-radius: 14px; padding: 24px 22px; cursor: pointer; transition: all 0.25s ease;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                     <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin: 0;">
                         با دستیار هوشمند
