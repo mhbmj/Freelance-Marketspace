@@ -127,7 +127,7 @@ class AuthenticationTests(TestCase):
         }
         response = self.client.post(reverse('login'), login_data, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'داشبورد من')
+        self.assertContains(response, 'ثبت سریع پروژه')
 
         # بررسی حفظ سشن
         self.assertTrue('_auth_user_id' in self.client.session)
@@ -724,4 +724,26 @@ class AuthenticationTests(TestCase):
         self.assertContains(res_home, 'تیکت جدید')
         self.assertContains(res_home, 'شما هنوز مکالمه ای رو شروع نکردید')
         self.assertContains(res_home, 'toggleMessagesDrawer')
+
+    # ------------------------------------------------------------------------
+    # ۱۲. آزمون‌های صفحه ثبت سریع پروژه (تصویر ۴۶) و جایگزینی دکمه هدر
+    # ------------------------------------------------------------------------
+    def test_project_create_view_and_header_button(self):
+        """مشاهده صفحه ایجاد پروژه جدید (مرحله ۱: انتخاب روش ثبت) و جایگزینی دکمه هدر"""
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+
+        # ۱. بررسی هدر صفحه اصلی (دکمه ثبت سریع پروژه جایگزین داشبورد من شده است)
+        res_home = self.client.get(reverse('home'))
+        self.assertEqual(res_home.status_code, 200)
+        self.assertContains(res_home, 'ثبت سریع پروژه')
+        self.assertNotContains(res_home, 'داشبورد من')
+
+        # ۲. دسترسی به صفحه ثبت پروژه جدید (/projects/new/)
+        res_create = self.client.get(reverse('project_create'))
+        self.assertEqual(res_create.status_code, 200)
+        self.assertContains(res_create, 'ثبت پروژه جدید')
+        self.assertContains(res_create, 'روش ثبت پروژه را انتخاب کنید')
+        self.assertContains(res_create, 'ثبت پروژه به‌صورت دستی')
+        self.assertContains(res_create, 'با دستیار هوشمند')
+        self.assertContains(res_create, 'ادامه به فرم ثبت دستی')
 

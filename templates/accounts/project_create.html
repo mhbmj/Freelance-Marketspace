@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ثبت پروژه جدید | سامانه بازار کار فریلنسری{% endblock %}
+
+{% block content %}
+<div class="home-page-container" style="max-width: 1040px; margin: 0 auto; padding-bottom: 60px;">
+
+    <!-- نوار منوی بالای سایت -->
+    <header class="top-navbar" style="border-radius: 14px; margin-bottom: 28px;">
+        <div class="top-navbar-container">
+            <div class="top-nav-right">
+                <a href="{% url 'home' %}" class="nav-brand-logo" title="صفحه اصلی">
+                    <img src="{% static 'images/logo.png' %}" alt="لوگو" class="nav-logo-img">
+                    <span class="nav-brand-text">فریلنسـ‌مارکت</span>
+                </a>
+
+                <span class="nav-divider" style="height: 22px; margin: 0 4px;"></span>
+
+                <a href="{% url 'projects_list' %}" class="nav-link-btn">
+                    <span>مشاهده پروژه‌ها</span>
+                </a>
+
+                <a href="{% url 'categories' %}" class="nav-link-btn">
+                    <span>دسته‌بندی‌ها</span>
+                </a>
+
+                <a href="{% url 'dashboard' %}" class="nav-link-btn">
+                    <span>داشبورد</span>
+                </a>
+            </div>
+
+            <div class="top-nav-left">
+                {% if user.is_authenticated %}
+                    <!-- دکمه ثبت سریع پروژه -->
+                    <a href="{% url 'project_create' %}" class="btn-quick-project">
+                        <span>ثبت سریع پروژه</span>
+                        <span style="font-size: 10px;">▾</span>
+                    </a>
+
+                    <!-- منوی کاربر لاگین‌شده -->
+                    <div class="user-menu-wrapper" onclick="toggleUserDrawer(true)" style="cursor: pointer;" title="مشاهده حساب کاربری و سایدبار">
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <div class="avatar-header-circle" style="width: 36px; height: 36px; min-width: 36px; max-width: 36px; min-height: 36px; max-height: 36px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                {% if user.avatar_url %}
+                                    <img src="{{ user.avatar_url }}" alt="آواتار" style="width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 50%; display: block;">
+                                {% else %}
+                                    {{ user.initials|default:user_initials|default:"MA" }}
+                                {% endif %}
+                            </div>
+                            <span style="font-size: 11px; color: #9ca3af;">▾</span>
+                        </div>
+                    </div>
+
+                    <!-- آیکون پیام‌ها -->
+                    <button type="button" class="nav-icon-btn" onclick="toggleMessagesDrawer(true, 'messages')" title="پیام‌ها" aria-label="پیام‌ها" style="background: transparent; border: none; padding: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: #4b5563; border-radius: 8px; line-height: 1; outline: none;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </button>
+
+                    <!-- آیکون زنگوله اطلاعیه‌ها -->
+                    <a href="{% url 'dashboard' %}?section=announcements" class="nav-icon-btn" title="اطلاعیه‌ها" aria-label="اطلاعیه‌ها" style="background: transparent; border: none; padding: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: #4b5563; border-radius: 8px; line-height: 1; outline: none; text-decoration: none;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-pink btn-outline-pink" style="padding: 8px 18px; font-size: 13px; width: auto; text-decoration: none;">ورود</a>
+                    <a href="{% url 'signup' %}" class="btn-pink" style="padding: 8px 18px; font-size: 13px; width: auto; text-decoration: none;">ثبت‌نام</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'success' }}{% endif %}" style="margin-bottom: 20px;">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- سربرگ عنوان صفحه مطابق تصویر ۴۶ -->
+    <div style="text-align: right; margin-bottom: 28px;">
+        <h1 style="font-size: 26px; font-weight: 800; color: var(--text-main); margin: 0 0 8px 0;">
+            ثبت پروژه جدید
+        </h1>
+        <p style="font-size: 13px; color: var(--text-muted); margin: 0;">
+            در همین تب مرورگر ذخیره شد؛ با رفرش قابل بازیابی است
+        </p>
+    </div>
+
+    <!-- استپ‌بار ۴ مرحله‌ای پروژه مطابق تصویر ۴۶ پونیشا با تم اختصاصی -->
+    <div class="wizard-stepper-container">
+        <!-- مرحله ۱: شرح و جزئیات (فعال) -->
+        <div class="wizard-step-item active">
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step-label">
+                ۱. شرح و جزئیات
+            </div>
+        </div>
+
+        <!-- مرحله ۲: تنظیمات پروژه -->
+        <div class="wizard-step-item">
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step-label">
+                ۲. تنظیمات پروژه
+            </div>
+        </div>
+
+        <!-- مرحله ۳: خدمات اختیاری -->
+        <div class="wizard-step-item">
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step-label">
+                ۳. خدمات اختیاری
+            </div>
+        </div>
+
+        <!-- مرحله ۴: بازبینی و ثبت -->
+        <div class="wizard-step-item">
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step-label">
+                ۴. بازبینی و ثبت
+            </div>
+        </div>
+    </div>
+
+    <!-- کادر اصلی انتخاب روش ثبت پروژه مطابق تصویر ۴۶ -->
+    <div class="ponisha-card" style="padding: 40px 42px; border-radius: 18px; background: #ffffff; margin-bottom: 26px;">
+        <h2 style="font-size: 20px; font-weight: 800; color: var(--text-main); margin: 0 0 10px 0;">
+            روش ثبت پروژه را انتخاب کنید
+        </h2>
+        <p style="font-size: 14px; color: var(--text-muted); margin: 0 0 32px 0;">
+            برای ثبت پروژه، جزئیات آن را در فرم ثبت دستی وارد کنید.
+        </p>
+
+        <!-- دو کارت انتخاب روش ثبت (دستی / دستیار هوشمند) -->
+        <div class="project-method-grid">
+            <!-- کارت اول: ثبت پروژه به‌صورت دستی (پیش‌فرض انتخاب شده) -->
+            <div class="project-method-card active" id="method-card-manual" onclick="selectProjectMethod('manual')">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin: 0;">
+                        ثبت پروژه به‌صورت دستی
+                    </h3>
+                    <span class="method-radio-indicator" id="radio-manual">✔</span>
+                </div>
+                <p style="font-size: 13px; color: #64748b; line-height: 1.7; margin: 0;">
+                    عنوان، دسته‌بندی، مهارت‌ها و بودجه را خودتان وارد می‌کنید.
+                </p>
+            </div>
+
+            <!-- کارت دوم: با دستیار هوشمند -->
+            <div class="project-method-card" id="method-card-ai" onclick="selectProjectMethod('ai')">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin: 0;">
+                        با دستیار هوشمند
+                    </h3>
+                    <span class="method-radio-indicator" id="radio-ai" style="display: none;">✔</span>
+                </div>
+                <p style="font-size: 13px; color: #64748b; line-height: 1.7; margin: 0;">
+                    دستیار با چند سؤال، شرح پروژه را آماده می‌کند.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- دکمه اقدام پایین صفحه مطابق تصویر ۴۶ با استایل تم پاستلی سایت -->
+    <div style="display: flex; justify-content: flex-start;">
+        <button type="button" class="btn-submit-proposal" id="btn-continue-step" onclick="handleContinueStep()" style="padding: 13px 36px; font-size: 14.5px; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px;">
+            <span id="btn-continue-text">ادامه به فرم ثبت دستی</span>
+            <span>←</span>
+        </button>
+    </div>
+
+</div>
+
+<script>
+let currentMethod = 'manual';
+
+function selectProjectMethod(method) {
+    currentMethod = method;
+    const manualCard = document.getElementById('method-card-manual');
+    const aiCard = document.getElementById('method-card-ai');
+    const radioManual = document.getElementById('radio-manual');
+    const radioAi = document.getElementById('radio-ai');
+    const btnText = document.getElementById('btn-continue-text');
+
+    if (method === 'manual') {
+        manualCard.classList.add('active');
+        aiCard.classList.remove('active');
+        radioManual.style.display = 'inline-block';
+        radioAi.style.display = 'none';
+        btnText.textContent = 'ادامه به فرم ثبت دستی';
+    } else {
+        aiCard.classList.add('active');
+        manualCard.classList.remove('active');
+        radioAi.style.display = 'inline-block';
+        radioManual.style.display = 'none';
+        btnText.textContent = 'شروع گفتگو با دستیار هوشمند';
+    }
+}
+
+function handleContinueStep() {
+    if (currentMethod === 'manual') {
+        alert('مرحله ۱ انتخاب شد! در مرحله بعدی باهم فرم فیلدهای تفصیلی پروژه (عنوان، بودجه، دسته‌بندی و مهارت‌ها) را طراحی خواهیم کرد.');
+    } else {
+        alert('قابلیت دستیار هوشمند ثبت پروژه در مراحل بعدی طراحی خواهد شد.');
+    }
+}
+</script>
+
+{% if user.is_authenticated %}
+    {% include 'includes/user_drawer.html' %}
+{% endif %}
+{% endblock %}

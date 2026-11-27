@@ -3537,3 +3537,99 @@ body {
     padding: 16px;
     margin-bottom: 12px;
 }
+
+/* ==========================================================================
+   Project Creation Wizard (ثبت پروژه جدید - مطابق تصویر ۴۶ پونیشا)
+   ========================================================================== */
+.wizard-stepper-container {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 26px;
+}
+
+@media (max-width: 640px) {
+    .wizard-stepper-container {
+        gap: 8px;
+    }
+}
+
+.wizard-step-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.wizard-step-line {
+    height: 4.5px;
+    border-radius: 4px;
+    background: #e2e8f0;
+    width: 100%;
+    transition: all 0.25s ease;
+}
+
+.wizard-step-item.active .wizard-step-line {
+    background: linear-gradient(90deg, var(--pastel-pink) 0%, var(--accent-teal) 100%);
+}
+
+.wizard-step-label {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #94a3b8;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.wizard-step-item.active .wizard-step-label {
+    color: var(--text-main);
+    font-weight: 800;
+}
+
+.project-method-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 640px) {
+    .project-method-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.project-method-card {
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 24px 22px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.project-method-card:hover {
+    border-color: #fbcfe8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+}
+
+.project-method-card.active {
+    border-color: var(--pastel-pink);
+    background: #fffbfe;
+    box-shadow: 0 4px 18px rgba(244, 114, 182, 0.16);
+}
+
+.method-radio-indicator {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fdf2f8;
+    border: 1.5px solid var(--pastel-pink-border);
+    color: var(--pastel-pink-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+}

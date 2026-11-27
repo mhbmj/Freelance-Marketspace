@@ -32,7 +32,10 @@
 
             <div class="top-nav-left">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'dashboard' %}" class="btn-quick-project"><span>داشبورد من</span></a>
+                    <a href="{% url 'project_create' %}" class="btn-quick-project">
+                        <span>ثبت سریع پروژه</span>
+                        <span style="font-size: 10px;">▾</span>
+                    </a>
                     <div class="user-menu-wrapper" onclick="toggleUserDrawer(true)" style="cursor: pointer;" title="مشاهده حساب کاربری">
                         <div style="display: flex; align-items: center; gap: 4px;">
                             <div class="avatar-header-circle" style="width: 36px; height: 36px; min-width: 36px; max-width: 36px; min-height: 36px; max-height: 36px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">

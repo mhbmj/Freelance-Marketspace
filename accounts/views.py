@@ -443,6 +443,22 @@ def portfolio_create_view(request):
     })
 
 
+def project_create_view(request):
+    """صفحه ایجاد و ثبت پروژه جدید (مرحله ۱: انتخاب روش ثبت) مطابق تصویر ۴۶ پونیشا با تم پاستلی"""
+    if not request.user.is_authenticated:
+        messages.info(request, 'برای ثبت پروژه، لطفاً ابتدا وارد حساب کاربری خود شوید یا ثبت‌نام کنید.')
+        return redirect('login')
+
+    initials = "MA"
+    if request.user.first_name and request.user.last_name:
+        initials = (request.user.first_name[0] + request.user.last_name[0]).upper()
+
+    return render(request, 'accounts/project_create.html', {
+        'user': request.user,
+        'user_initials': initials,
+    })
+
+
 @login_required
 def welcome_view(request):
     """ریدایرکت به داشبورد اصلی"""
