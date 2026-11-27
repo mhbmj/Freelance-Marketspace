@@ -748,3 +748,28 @@ class AuthenticationTests(TestCase):
         self.assertContains(res_create, 'با دستیار هوشمند')
         self.assertContains(res_create, 'ادامه به فرم ثبت دستی')
 
+    # ------------------------------------------------------------------------
+    # ۱۳. آزمون‌های تغییر نقش کاربری و تطبیق سایدبار کشویی (تصاویر ۴۸، ۴۹ و ۵۰)
+    # ------------------------------------------------------------------------
+    def test_switch_role_endpoint_and_drawer(self):
+        """تغییر نقش کاربر بین فریلنسر و کارفرما و نمایش اعلان تایید"""
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+
+        # ۱. تغییر نقش به کارفرما
+        res_to_emp = self.client.post(reverse('switch_role'), {'role': 'EMPLOYER'})
+        self.assertEqual(res_to_emp.status_code, 200)
+        self.assertEqual(res_to_emp.json().get('status'), 'ok')
+        self.assertEqual(res_to_emp.json().get('role'), 'EMPLOYER')
+
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.role, 'EMPLOYER')
+
+        # ۲. تغییر نقش مجدد به فریلنسر
+        res_to_fl = self.client.post(reverse('switch_role'), {'role': 'FREELANCER'})
+        self.assertEqual(res_to_fl.status_code, 200)
+        self.assertEqual(res_to_fl.json().get('role'), 'FREELANCER')
+
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.role, 'FREELANCER')
+
+

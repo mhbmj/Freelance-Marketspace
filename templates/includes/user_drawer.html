@@ -12,15 +12,15 @@
 
     <!-- سوئیچر نقش کاربر: فریلنسر / کارفرما -->
     <div class="drawer-role-tabs">
-        <button type="button" class="drawer-role-tab {% if user.role != 'EMPLOYER' %}active{% endif %}" onclick="switchDrawerRole('FREELANCER')">
+        <button type="button" class="drawer-role-tab {% if user.role != 'EMPLOYER' %}active{% endif %}" id="tab-role-freelancer" onclick="requestRoleSwitch('FREELANCER')">
             فریلنسر
         </button>
-        <button type="button" class="drawer-role-tab {% if user.role == 'EMPLOYER' %}active{% endif %}" onclick="switchDrawerRole('EMPLOYER')">
+        <button type="button" class="drawer-role-tab {% if user.role == 'EMPLOYER' %}active{% endif %}" id="tab-role-employer" onclick="requestRoleSwitch('EMPLOYER')">
             کارفرما
         </button>
     </div>
 
-    <!-- کارت مشخصات کاربر با فضای کافی -->
+    <!-- کارت مشخصات کاربر -->
     <div class="ponisha-card user-profile-widget">
         <div class="avatar-circle-initials" style="width: 78px; height: 78px; min-width: 78px; max-width: 78px; min-height: 78px; max-height: 78px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; flex-shrink: 0;">
             {% if user.avatar_url %}
@@ -32,7 +32,8 @@
         <div class="user-display-username">
             {{ user.username|default:"mahtabmrj" }}
         </div>
-        <div class="user-follow-stats">
+        <!-- آمار دنبال‌کنندگان (فقط در حالت فریلنسر مطابق تصویر ۴۸، در حالت کارفرما پنهان است مطابق تصویر ۵۰) -->
+        <div class="user-follow-stats" id="drawer-user-stats" style="{% if user.role == 'EMPLOYER' %}display: none;{% endif %}">
             ۰ دنبال شونده • ۰ دنبال کننده
         </div>
     </div>
@@ -56,8 +57,14 @@
         </div>
     </div>
 
-    <!-- ویجت عضویت عادی با فضای باز برای دکمه -->
-    <div class="ponisha-card membership-widget">
+    <!-- دکمه «+ ثبت سریع پروژه» مخصوص حالت کارفرما (مطابق تصویر ۵۰ پونیشا) -->
+    <a href="{% url 'project_create' %}" id="drawer-employer-project-btn" style="display: {% if user.role == 'EMPLOYER' %}flex{% else %}none{% endif %}; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 44px; background: #ffffff; border: 1.5px solid var(--border-card); border-radius: 10px; font-size: 13.5px; font-weight: 700; color: var(--text-main); text-decoration: none; box-sizing: border-box; box-shadow: var(--shadow-minimal); margin-bottom: 2px; transition: all 0.2s ease;">
+        <span style="font-size: 18px; color: var(--accent-teal);">+</span>
+        <span>ثبت سریع پروژه</span>
+    </a>
+
+    <!-- ویجت عضویت عادی مخصوص حالت فریلنسر (مطابق تصویر ۴۸ پونیشا) -->
+    <div class="ponisha-card membership-widget" id="drawer-membership-widget" style="display: {% if user.role == 'EMPLOYER' %}none{% else %}block{% endif %};">
         <div class="membership-title">
             عضویت عادی
         </div>
@@ -113,14 +120,15 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </a>
 
-            <!-- ۴. کلینیک پروفایل -->
-            <a href="{% url 'dashboard' %}?section=clinic" class="sidebar-nav-item">
+            <!-- ۴. کلینیک پروفایل (فقط در حالت فریلنسر مطابق تصویر ۴۸، در تصویر ۵۰ کارفرما وجود ندارد) -->
+            <a href="{% url 'dashboard' %}?section=clinic" class="sidebar-nav-item" id="drawer-item-clinic" style="display: {% if user.role == 'EMPLOYER' %}none{% else %}flex{% endif %};">
                 <div class="nav-item-content">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                         <polyline points="14 2 14 8 20 8"></polyline>
                         <line x1="16" y1="13" x2="8" y2="13"></line>
                         <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
                     <span>کلینیک پروفایل</span>
                 </div>
@@ -139,7 +147,7 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </a>
 
-            <!-- ۷. تنظیمات -->
+            <!-- ۶. تنظیمات -->
             <a href="javascript:void(0)" class="sidebar-nav-item" onclick="alert('قابلیت تنظیمات در فازهای بعدی پلتفرم فعال خواهد شد!')">
                 <div class="nav-item-content">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -154,7 +162,7 @@
             <!-- خط جداکننده -->
             <div style="border-top: 1px solid #f1e4ea; margin: 4px 0;"></div>
 
-            <!-- ۸. پیدا کردن پروژه -->
+            <!-- ۷. پیدا کردن پروژه -->
             <a href="{% url 'projects_list' %}" class="sidebar-nav-item">
                 <div class="nav-item-content">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -166,7 +174,7 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
             </a>
 
-            <!-- ۹. پروفایل -->
+            <!-- ۸. پروفایل -->
             <a href="{% url 'profile' %}" class="sidebar-nav-item">
                 <div class="nav-item-content">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -181,7 +189,7 @@
             <!-- خط جداکننده -->
             <div style="border-top: 1px solid #f1e4ea; margin: 4px 0;"></div>
 
-            <!-- ۱۰. خروج -->
+            <!-- ۹. خروج -->
             <form method="post" action="{% url 'logout' %}" style="margin: 0;">
                 {% csrf_token %}
                 <button type="submit" class="sidebar-nav-item" style="width: 100%; border: none; background: none; text-align: right; color: #dc2626; cursor: pointer;">
@@ -199,7 +207,69 @@
     </div>
 </div>
 
+<!-- مودال تایید تغییر نقش کاربر -->
+<div class="modal-backdrop" id="role-confirm-modal" style="display: none; align-items: center; justify-content: center; z-index: 3100;" onclick="if(event.target===this) closeRoleConfirmModal()">
+    <div class="modal-card" style="max-width: 420px; width: 92%; padding: 26px 24px; border-radius: 16px; background: #ffffff !important; box-sizing: border-box; text-align: center;" onclick="event.stopPropagation()">
+        <div style="font-size: 32px; margin-bottom: 12px;">🔄</div>
+        <h3 style="font-size: 17px; font-weight: 800; color: var(--text-main); margin: 0 0 8px 0;" id="role-confirm-title">
+            تغییر نقش کاربری
+        </h3>
+        <p style="font-size: 13.5px; color: #4b5563; line-height: 1.8; margin: 0 0 22px 0;" id="role-confirm-desc">
+            آیا می‌خواهید به حالت کارفرما تغییر نقش دهید؟
+        </p>
+
+        <div style="display: flex; justify-content: center; gap: 10px;">
+            <button type="button" class="btn-cancel-modal" onclick="closeRoleConfirmModal()" style="padding: 10px 22px; font-size: 13.5px;">
+                انصراف
+            </button>
+            <button type="button" class="btn-submit-proposal" id="btn-role-confirm-accept" onclick="confirmRoleSwitch()" style="padding: 10px 26px; font-size: 13.5px;">
+                تایید و تغییر نقش
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- تست‌نوتفیکیشن تغییر نقش کاربری مطابق تصویر ۴۹ پونیشا -->
+<div id="role-switch-toast" style="display: none; position: fixed; top: 24px; left: 24px; z-index: 3200; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); width: 340px; max-width: 90vw; overflow: hidden; animation: slideToastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); direction: rtl;">
+    <div style="padding: 16px 18px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+        <!-- دکمه ضربدر بستن در سمت چپ -->
+        <button type="button" onclick="dismissRoleToast()" style="background: none; border: none; font-size: 15px; color: #94a3b8; cursor: pointer; padding: 2px; line-height: 1;">✕</button>
+
+        <!-- متن اعلان و آیکون تیک سبز دایره‌ای مطابق تصویر ۴۹ -->
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span id="role-toast-text" style="font-size: 13.5px; font-weight: 700; color: #334155; line-height: 1.6;">
+                پروفایل شما به عنوان کارفرما نمایش داده خواهد شد.
+            </span>
+            <div style="width: 26px; height: 26px; border-radius: 50%; background: #059669; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0;">
+                ✔
+            </div>
+        </div>
+    </div>
+
+    <!-- نوار پیشرفت سبز زمان محو شدن اعلان مطابق تصویر ۴۹ -->
+    <div style="height: 4px; background: #d1fae5; width: 100%;">
+        <div id="role-toast-progress" style="height: 100%; background: #059669; width: 100%; transition: width 4s linear;"></div>
+    </div>
+</div>
+
+<style>
+@keyframes slideToastIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+</style>
+
 <script>
+let pendingRole = null;
+let currentRole = "{{ user.role|default:'FREELANCER' }}";
+let toastTimer = null;
+
 function toggleUserDrawer(isOpen) {
     const backdrop = document.getElementById('user-drawer-backdrop');
     const drawer = document.getElementById('user-drawer');
@@ -216,9 +286,119 @@ function toggleUserDrawer(isOpen) {
     }
 }
 
-function switchDrawerRole(role) {
-    const tabs = document.querySelectorAll('.drawer-role-tab');
-    tabs.forEach(tab => tab.classList.remove('active'));
-    event.target.classList.add('active');
+function requestRoleSwitch(targetRole) {
+    if (targetRole === currentRole) return;
+    pendingRole = targetRole;
+
+    const modal = document.getElementById('role-confirm-modal');
+    const desc = document.getElementById('role-confirm-desc');
+
+    if (targetRole === 'EMPLOYER') {
+        desc.textContent = 'آیا مایلید نقش خود را به کارفرما تغییر دهید؟';
+    } else {
+        desc.textContent = 'آیا مایلید نقش خود را به فریلنسر تغییر دهید؟';
+    }
+
+    if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.add('open');
+    }
+}
+
+function closeRoleConfirmModal() {
+    const modal = document.getElementById('role-confirm-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('open');
+    }
+    pendingRole = null;
+}
+
+function confirmRoleSwitch() {
+    if (!pendingRole) return;
+    const roleToApply = pendingRole;
+    closeRoleConfirmModal();
+
+    // ارسال درخواست ذخیره در دیتابیس
+    fetch("{% url 'switch_role' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: "role=" + encodeURIComponent(roleToApply)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            applyDrawerRoleUI(roleToApply);
+            showRoleSwitchToast(roleToApply);
+        }
+    })
+    .catch(err => {
+        applyDrawerRoleUI(roleToApply);
+        showRoleSwitchToast(roleToApply);
+    });
+}
+
+function applyDrawerRoleUI(role) {
+    currentRole = role;
+    const tabFreelancer = document.getElementById('tab-role-freelancer');
+    const tabEmployer = document.getElementById('tab-role-employer');
+    const userStats = document.getElementById('drawer-user-stats');
+    const employerProjectBtn = document.getElementById('drawer-employer-project-btn');
+    const membershipWidget = document.getElementById('drawer-membership-widget');
+    const clinicItem = document.getElementById('drawer-item-clinic');
+
+    if (role === 'EMPLOYER') {
+        tabEmployer.classList.add('active');
+        tabFreelancer.classList.remove('active');
+        if (userStats) userStats.style.display = 'none';
+        if (employerProjectBtn) employerProjectBtn.style.display = 'flex';
+        if (membershipWidget) membershipWidget.style.display = 'none';
+        if (clinicItem) clinicItem.style.display = 'none';
+    } else {
+        tabFreelancer.classList.add('active');
+        tabEmployer.classList.remove('active');
+        if (userStats) userStats.style.display = 'block';
+        if (employerProjectBtn) employerProjectBtn.style.display = 'none';
+        if (membershipWidget) membershipWidget.style.display = 'block';
+        if (clinicItem) clinicItem.style.display = 'flex';
+    }
+}
+
+function showRoleSwitchToast(role) {
+    const toast = document.getElementById('role-switch-toast');
+    const toastText = document.getElementById('role-toast-text');
+    const progressBar = document.getElementById('role-toast-progress');
+    if (!toast) return;
+
+    if (role === 'EMPLOYER') {
+        toastText.textContent = 'پروفایل شما به عنوان کارفرما نمایش داده خواهد شد.';
+    } else {
+        toastText.textContent = 'پروفایل شما به عنوان فریلنسر نمایش داده خواهد شد.';
+    }
+
+    toast.style.display = 'block';
+    if (progressBar) {
+        progressBar.style.transition = 'none';
+        progressBar.style.width = '100%';
+        setTimeout(() => {
+            progressBar.style.transition = 'width 4s linear';
+            progressBar.style.width = '0%';
+        }, 50);
+    }
+
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+        dismissRoleToast();
+    }, 4000);
+}
+
+function dismissRoleToast() {
+    const toast = document.getElementById('role-switch-toast');
+    if (toast) {
+        toast.style.display = 'none';
+    }
 }
 </script>

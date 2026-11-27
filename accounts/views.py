@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
@@ -185,6 +186,26 @@ def onboarding_skills_view(request):
             if next_url:
                 return redirect(next_url)
             return redirect('home')
+
+    user_skills_ids = list(UserSkill.objects.filter(user=user).values_list('skill_id', flat=True))
+    return render(request, 'accounts/onboarding_skills.html', {
+        'skills': skills,
+        'next_url': next_url,
+        'user_skills_ids': user_skills_ids,
+    })
+
+
+@login_required
+def switch_role_view(request):
+    """تغییر نقش کاربر بین فریلنسر و کارفرما با پاسخ JSON"""
+    if request.method == 'POST':
+        role = request.POST.get('role', '').strip().upper()
+        if role in ['FREELANCER', 'EMPLOYER']:
+            request.user.role = role
+            request.user.save(update_fields=['role'])
+            return JsonResponse({'status': 'ok', 'role': role})
+    return JsonResponse({'status': 'error', 'message': 'درخواست نامعتبر است.'}, status=400)
+
 
     user_skills_ids = list(UserSkill.objects.filter(user=user).values_list('skill_id', flat=True))
     return render(request, 'accounts/onboarding_skills.html', {
