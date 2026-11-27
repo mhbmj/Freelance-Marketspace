@@ -845,6 +845,14 @@ class AuthenticationTests(TestCase):
         prop1 = Proposal.objects.create(project=draft_proj, freelancer=f1, bid_amount=10000000, estimated_duration=5, cover_letter='پیشنهاد ۱', status='PENDING')
         prop2 = Proposal.objects.create(project=draft_proj, freelancer=f2, bid_amount=11000000, estimated_duration=7, cover_letter='پیشنهاد ۲', status='PENDING')
 
+        # بررسی نمایش اعلان زنگوله و لیست پیام‌های پیشنهاد در دراور برای کارفرما
+        self.client.login(email='mahtabmj96@gmail.com', password=self.user_password)
+        res_emp_notif = self.client.get(reverse('home'))
+        self.assertEqual(res_emp_notif.status_code, 200)
+        self.assertContains(res_emp_notif, 'nav-badge-dot')
+        self.assertContains(res_emp_notif, 'پیشنهاد جدید برای پروژه')
+        self.assertContains(res_emp_notif, 'فرزاد راد')
+
         # ۴. انصراف فریلنسر از پیشنهاد خود (Withdraw - بند ۷.۲)
         self.client.login(email='fl2@test.com', password='Password123')
         res_wd = self.client.get(reverse('proposal_withdraw', args=[prop2.id]), follow=True)

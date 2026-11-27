@@ -116,14 +116,19 @@
     color: #1e293b !important;
 }
 
+/* تفکیک قطعی محتوای تب‌ها: تب غیرفعال قطعاً مخفی است */
 .messages-drawer-content {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    background: #ffffff;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.messages-drawer-content.active {
     display: flex !important;
-    flex-direction: column !important;
-    flex: 1 !important;
-    overflow-y: auto !important;
-    background: #ffffff !important;
-    box-sizing: border-box !important;
-    position: relative !important;
 }
 
 .messages-drawer-search {
@@ -158,7 +163,7 @@
     justify-content: center !important;
     padding: 40px 24px !important;
     text-align: center !important;
-    color: #475569 !important;
+    color: #64748b !important;
     font-size: 14px !important;
     line-height: 1.8 !important;
 }
@@ -171,7 +176,6 @@
     flex-shrink: 0 !important;
 }
 
-/* دکمه تیکت جدید با تم پاستلی صورتی و جذاب سایت (جایگزین رنگ سبز پونیشا) */
 .btn-new-ticket {
     width: 100% !important;
     display: flex !important;
@@ -197,6 +201,22 @@
     transform: translateY(-2px) !important;
     box-shadow: 0 6px 18px rgba(244, 114, 182, 0.45) !important;
 }
+
+.proposal-message-card {
+    display: flex;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.proposal-message-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
 </style>
 
 <div class="messages-drawer-backdrop" id="messages-drawer-backdrop" onclick="toggleMessagesDrawer(false)"></div>
@@ -206,10 +226,15 @@
     <div class="messages-drawer-header">
         <div class="messages-drawer-tabs">
             <button type="button" class="messages-drawer-tab active" id="md-tab-messages" onclick="switchMessagesDrawerTab('messages')">
-                پیام‌ها
+                <span>پیام‌ها</span>
+                {% if unread_notifications_count > 0 %}
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #e11d48; color: #fff; font-size: 10px; font-weight: 800; margin-right: 6px;">
+                        {{ unread_notifications_count }}
+                    </span>
+                {% endif %}
             </button>
             <button type="button" class="messages-drawer-tab" id="md-tab-support" onclick="switchMessagesDrawerTab('support')">
-                پیام‌های پشتیبانی
+                <span>پیام‌های پشتیبانی</span>
             </button>
         </div>
         <button type="button" class="messages-drawer-close" onclick="toggleMessagesDrawer(false)" title="بستن">
@@ -217,18 +242,68 @@
         </button>
     </div>
 
-    <!-- ۱. محتوای تب پیام‌ها (مطابق دقیق تصویر ۳۷ پونیشا) -->
-    <div class="messages-drawer-content" id="md-content-messages">
+    <!-- ۱. محتوای تب پیام‌ها (شامل پیام‌های پیشنهادهای دریافتی کارفرما یا حالت خالی تمیز) -->
+    <div class="messages-drawer-content active" id="md-content-messages">
         <div class="messages-drawer-search">
             <input type="text" class="messages-drawer-search-input" placeholder="جست و جو...">
         </div>
-        <div class="messages-drawer-empty">
-            شما هنوز مکالمه ای رو شروع نکردید
-        </div>
+
+        {% if employer_received_proposals %}
+            <!-- لیست پیام‌های پیشنهادهای جدید دریافتی کارفرما -->
+            <div style="padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; flex: 1;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); padding: 0 4px;">
+                    پیشنهادهای جدید دریافتی شما:
+                </div>
+                {% for prop in employer_received_proposals %}
+                    <a href="{% url 'project_detail' prop.project.id %}" class="proposal-message-card" style="background: {% if prop.status == 'PENDING' %}#fff5f8{% else %}#ffffff{% endif %}; border: 1.5px solid {% if prop.status == 'PENDING' %}#fbcfe8{% else %}#e2e8f0{% endif %};">
+                        <div style="width: 42px; height: 42px; border-radius: 50%; background: #9ca3af; color: #fff; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
+                            {% if prop.freelancer.avatar_url %}
+                                <img src="{{ prop.freelancer.avatar_url }}" alt="آواتار" style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
+                                {{ prop.freelancer.initials|default:"FL" }}
+                            {% endif %}
+                        </div>
+
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <strong style="font-size: 13.5px; color: var(--text-main);">
+                                    {{ prop.freelancer.full_name|default:prop.freelancer.username }}
+                                </strong>
+                                <span style="font-size: 11px; color: var(--text-muted);">
+                                    {{ prop.created_at|timesince }} پیش
+                                </span>
+                            </div>
+                            <div style="font-size: 12px; color: #475569; margin-bottom: 4px; line-height: 1.6;">
+                                پیشنهاد جدید برای پروژه <strong>«{{ prop.project.title|truncatechars:26 }}»</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px;">
+                                <span style="color: var(--pastel-pink-hover); font-weight: 700;">
+                                    مبلغ: {{ prop.bid_amount|floatformat:0 }} تومان
+                                </span>
+                                {% if prop.status == 'PENDING' %}
+                                    <span style="background: #e11d48; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800;">
+                                        جدید
+                                    </span>
+                                {% else %}
+                                    <span style="color: var(--text-muted); font-size: 11px;">
+                                        {{ prop.get_status_display }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- حالت خالی تمیز مطابق تصویر ۳۷ -->
+            <div class="messages-drawer-empty">
+                شما هنوز مکالمه ای رو شروع نکردید
+            </div>
+        {% endif %}
     </div>
 
-    <!-- ۲. محتوای تب پیام‌های پشتیبانی (مطابق دقیق تصویر ۳۸ پونیشا با دکمه تم پاستلی) -->
-    <div class="messages-drawer-content" id="md-content-support" style="display: none;">
+    <!-- ۲. محتوای تب پیام‌های پشتیبانی (مطابق دقیق تصویر ۳۸ پونیشا با دکمه تیکت جدید) -->
+    <div class="messages-drawer-content" id="md-content-support">
         <div class="messages-drawer-empty" id="support-empty-state">
             تیکتی یافت نشد، برای شروع میتوانید تیکتی ارسال کنید
         </div>
@@ -237,7 +312,7 @@
             <!-- لیست تیکت‌ها پس از ثبت در اینجا نمایش داده می‌شود -->
         </div>
 
-        <!-- دکمه تیکت جدید مطابق پایین تصویر ۳۸ با استایل پاستلی -->
+        <!-- دکمه تیکت جدید فقط در تب پشتیبانی -->
         <div class="messages-drawer-footer">
             <button type="button" class="btn-new-ticket" onclick="openNewTicketModal()">
                 <span>✏️</span>
@@ -321,7 +396,11 @@ function switchMessagesDrawerTab(tabName) {
             }
         }
         if (content) {
-            content.style.display = (t === tabName) ? 'flex' : 'none';
+            if (t === tabName) {
+                content.classList.add('active');
+            } else {
+                content.classList.remove('active');
+            }
         }
     });
 }
