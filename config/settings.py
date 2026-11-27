@@ -60,6 +60,12 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'accounts.context_processors.notifications_processor',
             ],
+            'libraries': {
+                'persian_tags': 'accounts.templatetags.persian_tags',
+            },
+            'builtins': [
+                'accounts.templatetags.persian_tags',
+            ],
         },
     },
 ]
