@@ -3633,3 +3633,44 @@ body {
     font-size: 12px;
     font-weight: 800;
 }
+
+/* Step 2 Form Styles (Images 51-56) */
+.skill-dropdown-option {
+    padding: 10px 16px;
+    font-size: 13.5px;
+    color: #334155;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.skill-dropdown-option:hover {
+    background: #fdf2f8;
+    color: var(--pastel-pink-hover);
+    font-weight: 700;
+}
+
+.skill-chip-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.chip-remove-btn {
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 800;
+    transition: color 0.15s ease;
+}
+
+.chip-remove-btn:hover {
+    color: #e11d48;
+}

@@ -343,7 +343,7 @@
         <div class="slider-scroll-track">
 
             <!-- کارت اول اسلایدر: پروژه خود را ثبت کنید (Action Card مطابق اسکرین‌شات) -->
-            <div class="slider-project-card slider-action-card">
+            <div class="slider-project-card slider-action-card" onclick="window.location.href='{% url 'project_create' %}'" style="cursor: pointer;">
                 <div class="slider-action-icon">
                     📝
                 </div>
@@ -353,7 +353,7 @@
                         با ایجاد پروژه امکان همکاری با هزاران نیروی متخصص را خواهید داشت.
                     </p>
                 </div>
-                <a href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'signup' %}{% endif %}" class="btn-slider-action">
+                <a href="{% url 'project_create' %}" class="btn-slider-action">
                     ثبت پروژه
                 </a>
             </div>

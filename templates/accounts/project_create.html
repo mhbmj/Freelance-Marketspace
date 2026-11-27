@@ -82,27 +82,27 @@
         {% endfor %}
     {% endif %}
 
-    <!-- سربرگ عنوان صفحه مطابق تصویر ۴۶ -->
+    <!-- سربرگ عنوان صفحه مطابق تصویر ۴۶ و ۵۱ -->
     <div style="text-align: right; margin-bottom: 24px;">
         <h1 style="font-size: 26px; font-weight: 800; color: var(--text-main); margin: 0;">
             ثبت پروژه جدید
         </h1>
     </div>
 
-    <!-- استپ‌بار ۴ مرحله‌ای افقی پروژه مطابق تصویر ۴۶ پونیشا با تم اختصاصی -->
+    <!-- استپ‌بار ۴ مرحله‌ای افقی پروژه مطابق تصویر ۴۶ و ۵۱ پونیشا با تم پاستلی -->
     <div class="wizard-stepper-container" style="display: flex !important; flex-direction: row !important; gap: 14px !important; margin-bottom: 28px !important; width: 100% !important; box-sizing: border-box !important;">
-        <!-- مرحله ۱: شرح و جزئیات (فعال) -->
-        <div class="wizard-step-item active" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important;">
-            <div class="wizard-step-line" style="height: 4.5px !important; border-radius: 4px !important; background: linear-gradient(90deg, var(--pastel-pink, #f472b6) 0%, var(--accent-teal, #18bead) 100%) !important; width: 100% !important;"></div>
-            <div class="wizard-step-label" style="font-size: 14px !important; font-weight: 800 !important; color: var(--text-main) !important; text-align: right !important;">
-                ۱. شرح و جزئیات
+        <!-- مرحله ۱: شرح و جزئیات -->
+        <div class="wizard-step-item" id="stepper-step-1" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important;">
+            <div class="wizard-step-line" id="stepper-line-1" style="height: 4.5px !important; border-radius: 4px !important; background: linear-gradient(90deg, var(--pastel-pink, #f472b6) 0%, var(--accent-teal, #18bead) 100%) !important; width: 100% !important;"></div>
+            <div class="wizard-step-label" id="stepper-label-1" style="font-size: 14px !important; font-weight: 800 !important; color: var(--text-main) !important; text-align: right !important;">
+                ۱. شرح و جزئیات <span id="step-1-check" style="display: none; color: #059669; font-weight: 800;">✔</span>
             </div>
         </div>
 
         <!-- مرحله ۲: تنظیمات پروژه -->
-        <div class="wizard-step-item" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important;">
-            <div class="wizard-step-line" style="height: 4.5px !important; border-radius: 4px !important; background: #e2e8f0 !important; width: 100% !important;"></div>
-            <div class="wizard-step-label" style="font-size: 14px !important; font-weight: 600 !important; color: #94a3b8 !important; text-align: right !important;">
+        <div class="wizard-step-item" id="stepper-step-2" style="flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 10px !important;">
+            <div class="wizard-step-line" id="stepper-line-2" style="height: 4.5px !important; border-radius: 4px !important; background: #e2e8f0 !important; width: 100% !important;"></div>
+            <div class="wizard-step-label" id="stepper-label-2" style="font-size: 14px !important; font-weight: 600 !important; color: #94a3b8 !important; text-align: right !important;">
                 ۲. تنظیمات پروژه
             </div>
         </div>
@@ -124,57 +124,346 @@
         </div>
     </div>
 
-    <!-- کادر اصلی انتخاب روش ثبت پروژه مطابق تصویر ۴۶ -->
-    <div class="ponisha-card" style="padding: 40px 42px; border-radius: 18px; background: #ffffff; margin-bottom: 26px;">
-        <h2 style="font-size: 20px; font-weight: 800; color: var(--text-main); margin: 0 0 10px 0;">
-            روش ثبت پروژه را انتخاب کنید
-        </h2>
-        <p style="font-size: 14px; color: var(--text-muted); margin: 0 0 32px 0;">
-            برای ثبت پروژه، جزئیات آن را در فرم ثبت دستی وارد کنید.
-        </p>
 
-        <!-- دو کارت انتخاب روش ثبت (دستی / دستیار هوشمند) -->
-        <div class="project-method-grid" style="display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important;">
-            <!-- کارت اول: ثبت پروژه به‌صورت دستی (پیش‌فرض انتخاب شده) -->
-            <div class="project-method-card active" id="method-card-manual" onclick="selectProjectMethod('manual')" style="border-radius: 14px; padding: 24px 22px; cursor: pointer; transition: all 0.25s ease;">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                    <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin: 0;">
-                        ثبت پروژه به‌صورت دستی
-                    </h3>
-                    <span class="method-radio-indicator" id="radio-manual">✔</span>
-                </div>
-                <p style="font-size: 13px; color: #64748b; line-height: 1.7; margin: 0;">
-                    عنوان، دسته‌بندی، مهارت‌ها و بودجه را خودتان وارد می‌کنید.
-                </p>
-            </div>
+    <!-- =====================================================================
+         مرحله ۱: انتخاب روش ثبت پروژه (مطابق تصویر ۴۶ پونیشا)
+         ===================================================================== -->
+    <div id="section-step-1" style="display: {% if step == '2' %}none{% else %}block{% endif %};">
+        <div class="ponisha-card" style="padding: 40px 42px; border-radius: 18px; background: #ffffff; margin-bottom: 26px;">
+            <h2 style="font-size: 20px; font-weight: 800; color: var(--text-main); margin: 0 0 10px 0;">
+                روش ثبت پروژه را انتخاب کنید
+            </h2>
+            <p style="font-size: 14px; color: var(--text-muted); margin: 0 0 32px 0;">
+                برای ثبت پروژه، جزئیات آن را در فرم ثبت دستی وارد کنید.
+            </p>
 
-            <!-- کارت دوم: با دستیار هوشمند -->
-            <div class="project-method-card" id="method-card-ai" onclick="selectProjectMethod('ai')" style="border-radius: 14px; padding: 24px 22px; cursor: pointer; transition: all 0.25s ease;">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                    <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin: 0;">
-                        با دستیار هوشمند
-                    </h3>
-                    <span class="method-radio-indicator" id="radio-ai" style="display: none;">✔</span>
+            <div class="project-method-grid" style="display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 20px !important;">
+                <!-- کارت اول: ثبت دستی -->
+                <div class="project-method-card active" id="method-card-manual" onclick="selectProjectMethod('manual')" style="border-radius: 14px; padding: 24px 22px; cursor: pointer; transition: all 0.25s ease;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin: 0;">
+                            ثبت پروژه به‌صورت دستی
+                        </h3>
+                        <span class="method-radio-indicator" id="radio-manual">✔</span>
+                    </div>
+                    <p style="font-size: 13px; color: #64748b; line-height: 1.7; margin: 0;">
+                        عنوان، دسته‌بندی، مهارت‌ها و بودجه را خودتان وارد می‌کنید.
+                    </p>
                 </div>
-                <p style="font-size: 13px; color: #64748b; line-height: 1.7; margin: 0;">
-                    دستیار با چند سؤال، شرح پروژه را آماده می‌کند.
-                </p>
+
+                <!-- کارت دوم: با دستیار هوشمند -->
+                <div class="project-method-card" id="method-card-ai" onclick="selectProjectMethod('ai')" style="border-radius: 14px; padding: 24px 22px; cursor: pointer; transition: all 0.25s ease;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin: 0;">
+                            با دستیار هوشمند
+                        </h3>
+                        <span class="method-radio-indicator" id="radio-ai" style="display: none;">✔</span>
+                    </div>
+                    <p style="font-size: 13px; color: #64748b; line-height: 1.7; margin: 0;">
+                        دستیار با چند سؤال، شرح پروژه را آماده می‌کند.
+                    </p>
+                </div>
             </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-start;">
+            <button type="button" class="btn-submit-proposal" id="btn-continue-step1" onclick="goToStep2()" style="padding: 13px 36px; font-size: 14.5px; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px;">
+                <span id="btn-continue-text">ادامه به فرم ثبت دستی</span>
+                <span>←</span>
+            </button>
         </div>
     </div>
 
-    <!-- دکمه اقدام پایین صفحه مطابق تصویر ۴۶ با استایل تم پاستلی سایت -->
-    <div style="display: flex; justify-content: flex-start;">
-        <button type="button" class="btn-submit-proposal" id="btn-continue-step" onclick="handleContinueStep()" style="padding: 13px 36px; font-size: 14.5px; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px;">
-            <span id="btn-continue-text">ادامه به فرم ثبت دستی</span>
-            <span>←</span>
-        </button>
+
+    <!-- =====================================================================
+         مرحله ۲: تنظیمات و جزئیات پروژه (مطابق تصاویر ۵۱ تا ۵۶ پونیشا)
+         ===================================================================== -->
+    <div id="section-step-2" style="display: {% if step == '2' %}block{% else %}none{% endif %};">
+
+        <!-- کادر اعلان سبز/پاستلی فعال بودن فرم ثبت دستی مطابق تصویر ۵۱ -->
+        <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px; padding: 14px 20px; font-size: 13.5px; color: #15803d; font-weight: 600; display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
+            <span>✏️</span>
+            <span>فرم ثبت دستی فعال است؛ عنوان و جزئیات پروژه را خودتان وارد کنید.</span>
+        </div>
+
+        <form method="post" action="{% url 'project_create' %}?step=2" enctype="multipart/form-data" id="project-form-step2">
+            {% csrf_token %}
+
+            <!-- کارت ۱: شرح پروژه (مطابق تصویر ۵۱) -->
+            <div class="ponisha-card" style="padding: 30px 34px; border-radius: 18px; background: #ffffff; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1.5px solid var(--border-card);">
+                    <div>
+                        <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">شرح پروژه</span>
+                        <h2 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0;" id="preview-project-title-header">
+                            عنوان و شرح پروژه
+                        </h2>
+                    </div>
+                    <button type="button" onclick="toggleDetailsBox()" id="btn-toggle-details" style="background: none; border: none; font-size: 13px; font-weight: 700; color: var(--accent-teal); cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                        <span>بستن جزئیات</span>
+                        <span>⌃</span>
+                    </button>
+                </div>
+
+                <div id="details-box-content">
+                    <!-- عنوان پروژه -->
+                    <div class="form-group" style="margin-bottom: 22px;">
+                        <label class="form-label" for="proj_title_input" style="font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
+                            عنوان پروژه <span style="color: #e11d48;">*</span>
+                        </label>
+                        <input type="text" name="title" id="proj_title_input" class="form-input" placeholder="مثال: طراحی پلتفرم کتابداری آنلاین" required style="width: 100%; height: 46px; font-size: 14px;" oninput="updateHeaderPreview(this.value)">
+                    </div>
+
+                    <!-- توضیحات کامل پروژه -->
+                    <div class="form-group" style="margin-bottom: 22px;">
+                        <label class="form-label" for="proj_desc_input" style="font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
+                            توضیحات کامل پروژه <span style="color: #e11d48;">*</span>
+                        </label>
+                        <textarea name="description" id="proj_desc_input" class="form-input" rows="5" placeholder="هدف این پروژه، طراحی و پیاده‌سازی یک سامانه تحت وب است. این سامانه شامل دسته‌بندی، مدیریت، جستجو و دسترسی به منابع خواهد بود..." required style="width: 100%; font-size: 13.5px; line-height: 1.8; resize: vertical;"></textarea>
+                    </div>
+
+                    <!-- دسته‌بندی پروژه مطابق تصویر ۵۱ و ۵۳ -->
+                    <div class="form-group" style="margin-bottom: 22px;">
+                        <label class="form-label" for="category_select" style="font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
+                            دسته‌بندی پروژه <span style="color: #e11d48;">*</span>
+                        </label>
+                        <select name="category_id" id="category_select" class="form-input custom-select" required style="width: 100%; height: 46px; font-size: 14px;">
+                            <option value="" disabled selected>-- انتخاب دسته‌بندی پروژه --</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                            {% empty %}
+                                <option value="1">برنامه نویسی و توسعه نرم افزار</option>
+                                <option value="2">طراحی اپلیکیشن موبایل</option>
+                                <option value="3">طراحی وب سایت</option>
+                            {% endfor %}
+                            <option value="4">اسکریپت نویسی، اتوماسیون و تست نویسی</option>
+                            <option value="5">طراحی و توسعه بازی</option>
+                            <option value="6">توسعه شبکه، سرور و امنیت وب</option>
+                            <option value="7">طراحی فروشگاه آنلاین</option>
+                            <option value="8">طراحی قالب وردپرس</option>
+                            <option value="9">طراحی رابط کاربری UI/UX</option>
+                        </select>
+                    </div>
+
+                    <!-- مهارت‌های مورد نیاز (۱ تا ۵ مورد) با تگ‌های چیپ مطابق تصویر ۵۲ و ۵۴ -->
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label class="form-label" style="font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 4px; display: block;">
+                            مهارت‌های مورد نیاز (۱ تا ۵ مورد) <span style="color: #e11d48;">*</span>
+                        </label>
+                        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+                            تا ۵ مهارت انتخاب کنید. برای دقت بیشتر، نام مهارت را جست‌وجو کنید.
+                        </div>
+
+                        <!-- اینپوت جستجو و انتخاب مهارت -->
+                        <div style="position: relative; margin-bottom: 10px;">
+                            <input type="text" id="skill_search_input" class="form-input" placeholder="جستجو نام مهارت (مثلاً Python, React, تست نرم افزار)..." oninput="filterSkillsDropdown(this.value)" onfocus="showSkillsDropdown(true)" style="width: 100%; height: 46px; font-size: 13.5px;">
+
+                            <!-- منوی دراپ‌داون مهارت‌ها مطابق تصویر ۵۴ -->
+                            <div id="skills-dropdown-list" style="display: none; position: absolute; top: 100%; right: 0; left: 0; z-index: 100; background: #ffffff; border: 1.5px solid var(--border-card); border-radius: 10px; max-height: 220px; overflow-y: auto; box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-top: 4px;">
+                                <div class="skill-dropdown-option" onclick="addSkillChip('برنامه نویسی')">برنامه نویسی</div>
+                                <div class="skill-dropdown-option" onclick="addSkillChip('تست نرم افزار')">تست نرم افزار</div>
+                                <div class="skill-dropdown-option" onclick="addSkillChip('Database Programming')">Database Programming</div>
+                                <div class="skill-dropdown-option" onclick="addSkillChip('Python')">Python</div>
+                                <div class="skill-dropdown-option" onclick="addSkillChip('Django')">Django</div>
+                                <div class="skill-dropdown-option" onclick="addSkillChip('React')">React</div>
+                                <div class="skill-dropdown-option" onclick="addSkillChip('UI/UX')">UI/UX</div>
+                                <div class="skill-dropdown-option" onclick="addSkillChip('3D Modeling')">3D Modeling</div>
+                                <div class="skill-dropdown-option" onclick="addSkillChip('WordPress')">WordPress</div>
+                                <div class="skill-dropdown-option" onclick="addSkillChip('SEO')">SEO</div>
+                                {% for s in skills %}
+                                    <div class="skill-dropdown-option" onclick="addSkillChip('{{ s.name }}')">{{ s.name }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- کادر نمایش چیپ‌های مهارت‌های انتخاب‌شده مطابق تصویر ۵۲ -->
+                        <div id="selected-skills-chips" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; background: #fdfafc; border: 1px solid var(--border-card); border-radius: 10px; min-height: 48px; align-items: center;">
+                            <span class="skill-chip-tag" id="chip-demo-1">
+                                <span>برنامه نویسی</span>
+                                <span class="chip-remove-btn" onclick="removeSkillChip(this, 'برنامه نویسی')">✕</span>
+                                <input type="hidden" name="skills" value="برنامه نویسی">
+                            </span>
+                            <span class="skill-chip-tag" id="chip-demo-2">
+                                <span>تست نرم افزار</span>
+                                <span class="chip-remove-btn" onclick="removeSkillChip(this, 'تست نرم افزار')">✕</span>
+                                <input type="hidden" name="skills" value="تست نرم افزار">
+                            </span>
+                            <span class="skill-chip-tag" id="chip-demo-3">
+                                <span>Database Programming</span>
+                                <span class="chip-remove-btn" onclick="removeSkillChip(this, 'Database Programming')">✕</span>
+                                <input type="hidden" name="skills" value="Database Programming">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- کارت ۲: فایل‌های پروژه مطابق تصویر ۵۲ -->
+            <div class="ponisha-card" style="padding: 28px 34px; border-radius: 18px; background: #ffffff; margin-bottom: 24px;">
+                <h3 style="font-size: 17px; font-weight: 800; color: var(--text-main); margin: 0 0 16px 0;">
+                    فایل‌های پروژه
+                </h3>
+
+                <div style="border: 2px dashed #cbd5e1; border-radius: 14px; background: #fdfcfd; padding: 26px 20px; text-align: center;">
+                    <input type="file" name="project_files" id="proj_files_input" multiple style="display: none;" onchange="handleProjFilesChosen(this)">
+
+                    <p style="font-size: 13.5px; color: #475569; margin: 0 0 6px 0;">
+                        فایل‌ها و تصاویر مرتبط را اینجا اضافه کنید.
+                    </p>
+                    <div style="font-size: 11.5px; color: #94a3b8; margin-bottom: 16px;">
+                        حداکثر تعداد فایل: ۵۰ &nbsp;|&nbsp; حداکثر حجم هر فایل: ۱۵ MB
+                    </div>
+
+                    <button type="button" class="btn-cancel-modal" onclick="document.getElementById('proj_files_input').click()" style="padding: 9px 22px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                        <span>📎</span>
+                        <span>آپلود فایل</span>
+                    </button>
+                    <div id="proj_files_chosen_text" style="font-size: 12px; color: #059669; margin-top: 10px; font-weight: 700;"></div>
+                </div>
+            </div>
+
+            <!-- کارت ۳: اولویت و بودجه مطابق تصاویر ۵۲، ۵۵ و ۵۶ -->
+            <div class="ponisha-card" style="padding: 28px 34px; border-radius: 18px; background: #ffffff; margin-bottom: 28px;">
+                <h3 style="font-size: 17px; font-weight: 800; color: var(--text-main); margin: 0 0 20px 0;">
+                    اولویت و بودجه
+                </h3>
+
+                <!-- اولویت پروژه مطابق تصویر ۵۵ -->
+                <div class="form-group" style="margin-bottom: 22px;">
+                    <label class="form-label" for="priority_select" style="font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
+                        اولویت پروژه
+                    </label>
+                    <select name="priority" id="priority_select" class="form-input custom-select" style="width: 100%; height: 46px; font-size: 13.5px;">
+                        <option value="balanced" selected>برای من ترکیبی از کیفیت و قیمت اهمیت دارد</option>
+                        <option value="price">برای من قیمت بالاترین درجه اهمیت را دارد</option>
+                        <option value="quality">برای من کیفیت بالاترین درجه اهمیت را دارد</option>
+                    </select>
+                </div>
+
+                <!-- انتخاب بودجه مطابق تصویر ۵۶ -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label class="form-label" for="budget_range_select" style="font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block;">
+                        انتخاب بودجه
+                    </label>
+                    <select name="preset_budget" id="budget_range_select" class="form-input custom-select" onchange="toggleBudgetInputs(this.value)" style="width: 100%; height: 46px; font-size: 13.5px;">
+                        <option value="custom" selected>بازه دلخواه</option>
+                        <option value="25000000">پروژه ساده (۱۰,۰۰۰,۰۰۰ تا ۴۰,۰۰۰,۰۰۰) تومان</option>
+                        <option value="65000000">پروژه خیلی کوچک (۴۰,۰۰۰,۰۰۰ تا ۹۰,۰۰۰,۰۰۰) تومان</option>
+                        <option value="215000000">پروژه کوچک (۹۰,۰۰۰,۰۰۰ تا ۳۴۰,۰۰۰,۰۰۰) تومان</option>
+                        <option value="505000000">پروژه متوسط (۳۴۰,۰۰۰,۰۰۰ تا ۶۷۰,۰۰۰,۰۰۰) تومان</option>
+                        <option value="835000000">پروژه بزرگ (۶۷۰,۰۰۰,۰۰۰ تا ۱,۰۰۰,۰۰۰,۰۰۰) تومان</option>
+                        <option value="1200000000">پروژه بزرگ‌تر (بیشتر از ۱,۰۰۰,۰۰۰,۰۰۰) تومان</option>
+                    </select>
+                </div>
+
+                <!-- ورودی‌های حداقل و حداکثر بودجه (بازه دلخواه) مطابق تصویر ۵۲ -->
+                <div id="custom-budget-row" style="display: block;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 6px;">
+                        <!-- حداکثر بودجه -->
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label" for="budget_max_input" style="font-size: 12.5px; color: #64748b; margin-bottom: 6px; display: block;">
+                                حداکثر بودجه (تومان)
+                            </label>
+                            <input type="number" name="budget_max" id="budget_max_input" class="form-input" placeholder="مثال: ۳۰۰۰۰۰۰۰" style="width: 100%; height: 46px; font-size: 14px;">
+                        </div>
+
+                        <!-- حداقل بودجه -->
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label" for="budget_min_input" style="font-size: 12.5px; color: #64748b; margin-bottom: 6px; display: block;">
+                                حداقل بودجه (تومان)
+                            </label>
+                            <input type="number" name="budget_min" id="budget_min_input" class="form-input" placeholder="مثال: ۱۵۰۰۰۰۰۰" style="width: 100%; height: 46px; font-size: 14px;">
+                        </div>
+                    </div>
+                    <div id="budget-val-hint" style="font-size: 11.5px; color: var(--text-muted); margin-top: 4px;">
+                        حداقل یکی از مبالغ بودجه را وارد کنید یا از لیست بالا بازه آماده را برگزینید.
+                    </div>
+                </div>
+
+                <!-- نوع قیمت‌گذاری -->
+                <div style="margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--border-card); display: flex; align-items: center; gap: 20px;">
+                    <span style="font-size: 13px; font-weight: 700; color: #334155;">نوع قرارداد:</span>
+                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
+                        <input type="radio" name="pricing_type" value="FIXED_PRICE" checked style="accent-color: var(--pastel-pink);">
+                        <span>قیمت ثابت</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
+                        <input type="radio" name="pricing_type" value="HOURLY" style="accent-color: var(--pastel-pink);">
+                        <span>نرخ ساعتی</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- نوار دکمه‌های پایین صفحه مطابق تصاویر ۵۵ و ۵۶ با تم پاستلی سایت -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; background: #ffffff; border: 1.5px solid var(--border-card); border-radius: 14px; padding: 18px 24px; box-shadow: var(--shadow-minimal);">
+                <!-- دکمه مرحله قبل در سمت راست -->
+                <button type="button" class="link-clinic-start" onclick="goToStep1()" style="background: none; border: none; font-size: 14px; font-weight: 700; color: var(--accent-teal); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <span>→</span>
+                    <span>مرحله قبل</span>
+                </button>
+
+                <!-- دکمه‌های ذخیره پیش‌نویس و انتشار مستقیم در سمت چپ -->
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" name="submit_action" value="draft" class="btn-cancel-modal" style="padding: 12px 24px; font-size: 14px; font-weight: 700;">
+                        ذخیره پیش‌نویس (Draft)
+                    </button>
+
+                    <button type="submit" name="submit_action" value="publish" class="btn-submit-proposal" style="padding: 12px 36px; font-size: 14px; font-weight: 700; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px;">
+                        <span>ادامه و انتشار پروژه</span>
+                        <span>←</span>
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 
 </div>
 
+<!-- استایل‌های چیپ‌های مهارت و المان‌های فرم مرحله ۲ -->
+<style>
+.skill-dropdown-option {
+    padding: 10px 16px;
+    font-size: 13.5px;
+    color: #334155;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.skill-dropdown-option:hover {
+    background: #fdf2f8;
+    color: var(--pastel-pink-hover);
+    font-weight: 700;
+}
+
+.skill-chip-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.chip-remove-btn {
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 800;
+    transition: color 0.15s ease;
+}
+
+.chip-remove-btn:hover {
+    color: #e11d48;
+}
+</style>
+
 <script>
 let currentMethod = 'manual';
+let selectedSkillsList = ['برنامه نویسی', 'تست نرم افزار', 'Database Programming'];
 
 function selectProjectMethod(method) {
     currentMethod = method;
@@ -199,13 +488,153 @@ function selectProjectMethod(method) {
     }
 }
 
-function handleContinueStep() {
-    if (currentMethod === 'manual') {
-        alert('مرحله ۱ انتخاب شد! در مرحله بعدی باهم فرم فیلدهای تفصیلی پروژه (عنوان، بودجه، دسته‌بندی و مهارت‌ها) را طراحی خواهیم کرد.');
-    } else {
-        alert('قابلیت دستیار هوشمند ثبت پروژه در مراحل بعدی طراحی خواهد شد.');
+function goToStep2() {
+    if (currentMethod === 'ai') {
+        alert('قابلیت دستیار هوشمند در فازهای بعدی آماده خواهد شد. لطفاً ثبت دستی را ادامه دهید.');
+        selectProjectMethod('manual');
+        return;
+    }
+
+    document.getElementById('section-step-1').style.display = 'none';
+    document.getElementById('section-step-2').style.display = 'block';
+
+    // به‌روزرسانی نوار مراحل
+    document.getElementById('stepper-step-1').classList.remove('active');
+    document.getElementById('step-1-check').style.display = 'inline-block';
+    document.getElementById('stepper-step-2').classList.add('active');
+    document.getElementById('stepper-line-2').style.background = 'linear-gradient(90deg, var(--pastel-pink, #f472b6) 0%, var(--accent-teal, #18bead) 100%)';
+    document.getElementById('stepper-label-2').style.color = 'var(--text-main)';
+    document.getElementById('stepper-label-2').style.fontWeight = '800';
+
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+}
+
+function goToStep1() {
+    document.getElementById('section-step-2').style.display = 'none';
+    document.getElementById('section-step-1').style.display = 'block';
+
+    document.getElementById('stepper-step-2').classList.remove('active');
+    document.getElementById('stepper-line-2').style.background = '#e2e8f0';
+    document.getElementById('stepper-label-2').style.color = '#94a3b8';
+    document.getElementById('stepper-label-2').style.fontWeight = '600';
+    document.getElementById('stepper-step-1').classList.add('active');
+
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+}
+
+function updateHeaderPreview(val) {
+    const el = document.getElementById('preview-project-title-header');
+    if (el) {
+        el.textContent = val.trim() ? val : 'عنوان و شرح پروژه';
     }
 }
+
+function toggleDetailsBox() {
+    const box = document.getElementById('details-box-content');
+    const btn = document.getElementById('btn-toggle-details');
+    if (!box) return;
+
+    if (box.style.display === 'none') {
+        box.style.display = 'block';
+        btn.innerHTML = '<span>بستن جزئیات</span><span>⌃</span>';
+    } else {
+        box.style.display = 'none';
+        btn.innerHTML = '<span>مشاهده جزئیات</span><span>▾</span>';
+    }
+}
+
+function toggleBudgetInputs(val) {
+    const row = document.getElementById('custom-budget-row');
+    if (val === 'custom') {
+        row.style.display = 'block';
+    } else {
+        row.style.display = 'none';
+    }
+}
+
+function showSkillsDropdown(show) {
+    const d = document.getElementById('skills-dropdown-list');
+    if (d) d.style.display = show ? 'block' : 'none';
+}
+
+function filterSkillsDropdown(query) {
+    const q = query.trim().toLowerCase();
+    const d = document.getElementById('skills-dropdown-list');
+    if (!d) return;
+    d.style.display = 'block';
+
+    const opts = d.querySelectorAll('.skill-dropdown-option');
+    opts.forEach(opt => {
+        const text = opt.textContent.toLowerCase();
+        opt.style.display = text.includes(q) ? 'block' : 'none';
+    });
+}
+
+function addSkillChip(skillName) {
+    skillName = skillName.trim();
+    if (!skillName) return;
+
+    if (selectedSkillsList.length >= 5) {
+        alert('حداکثر می‌توانید ۵ مهارت برای هر پروژه انتخاب کنید.');
+        showSkillsDropdown(false);
+        return;
+    }
+
+    if (selectedSkillsList.includes(skillName)) {
+        showSkillsDropdown(false);
+        return;
+    }
+
+    selectedSkillsList.push(skillName);
+    renderSkillsChips();
+    showSkillsDropdown(false);
+    document.getElementById('skill_search_input').value = '';
+}
+
+function removeSkillChip(btn, skillName) {
+    selectedSkillsList = selectedSkillsList.filter(s => s !== skillName);
+    renderSkillsChips();
+}
+
+function renderSkillsChips() {
+    const container = document.getElementById('selected-skills-chips');
+    if (!container) return;
+
+    container.innerHTML = '';
+    selectedSkillsList.forEach(s => {
+        const span = document.createElement('span');
+        span.className = 'skill-chip-tag';
+        span.innerHTML = `
+            <span>${s}</span>
+            <span class="chip-remove-btn" onclick="removeSkillChip(this, '${s}')">✕</span>
+            <input type="hidden" name="skills" value="${s}">
+        `;
+        container.appendChild(span);
+    });
+}
+
+function handleProjFilesChosen(input) {
+    const status = document.getElementById('proj_files_chosen_text');
+    if (input.files && input.files.length > 0) {
+        status.textContent = input.files.length + ' فایل جهت بارگذاری انتخاب شد.';
+    }
+}
+
+// بستن منوی کشویی مهارت‌ها با کلیک خارج از آن
+document.addEventListener('click', function(e) {
+    const searchInput = document.getElementById('skill_search_input');
+    const dropdown = document.getElementById('skills-dropdown-list');
+    if (dropdown && searchInput && !searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.style.display = 'none';
+    }
+});
+
+// اگر پارامتر step=2 در آدرس بود مستقیما مرحله ۲ فعال شود
+window.addEventListener('DOMContentLoaded', function() {
+    {% if step == '2' %}
+        goToStep2();
+    {% endif %}
+});
 </script>
 
 {% if user.is_authenticated %}

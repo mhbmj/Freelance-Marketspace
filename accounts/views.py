@@ -11,7 +11,10 @@ from django.contrib import messages
 from django.conf import settings
 from django.db.models import Q
 
-from .models import User, Category, Skill, UserSkill, Project, Proposal, UserProfile, Portfolio, Certificate, WorkExperience, Education
+from .models import (
+    User, Category, Skill, UserSkill, Project, Proposal, UserProfile,
+    Portfolio, Certificate, WorkExperience, Education, ProjectCategory, ProjectSkill
+)
 from .forms import LoginForm, SignupForm, ForgotPasswordForm, ResetPasswordForm, RoleSelectionForm
 from .rate_limit import (
     is_login_rate_limited,
@@ -464,19 +467,96 @@ def portfolio_create_view(request):
     })
 
 
+@login_required
 def project_create_view(request):
-    """صفحه ایجاد و ثبت پروژه جدید (مرحله ۱: انتخاب روش ثبت) مطابق تصویر ۴۶ پونیشا با تم پاستلی"""
-    if not request.user.is_authenticated:
-        messages.info(request, 'برای ثبت پروژه، لطفاً ابتدا وارد حساب کاربری خود شوید یا ثبت‌نام کنید.')
-        return redirect('login')
+    """صفحه ایجاد و ثبت پروژه جدید (مراحل ۱ و ۲) مطابق تصاویر ۴۶، ۵۱ تا ۵۶ پونیشا با تم پاستلی"""
+    user = request.user
+
+    # قاعده بیزینسی ۳: حساب Admin مجاز به ثبت پروژه نیست
+    if user.is_staff:
+        messages.error(request, 'حساب‌های مدیر سیستم (Admin) مجاز به ثبت پروژه نیستند.')
+        return redirect('dashboard')
+
+    categories = Category.objects.all().order_by('id')
+    skills = Skill.objects.all().order_by('name')
+
+    step = request.GET.get('step', '1')
+
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        description = request.POST.get('description', '').strip()
+        category_id = request.POST.get('category_id', '').strip()
+        selected_skills = request.POST.getlist('skills')
+        min_budget_str = request.POST.get('budget_min', '').strip().replace(',', '')
+        max_budget_str = request.POST.get('budget_max', '').strip().replace(',', '')
+        preset_budget = request.POST.get('preset_budget', '').strip()
+        pricing_type = request.POST.get('pricing_type', 'FIXED_PRICE').strip()
+        action = request.POST.get('submit_action', 'publish').strip()
+
+        if not title:
+            messages.error(request, 'عنوان پروژه الزامی است.')
+            return redirect(f"{reverse('project_create')}?step=2")
+
+        if not description:
+            messages.error(request, 'توضیحات کامل پروژه الزامی است.')
+            return redirect(f"{reverse('project_create')}?step=2")
+
+        # محاسبه بودجه معتبر و مثبت
+        budget = 0
+        if max_budget_str and max_budget_str.isdigit():
+            budget = float(max_budget_str)
+        elif min_budget_str and min_budget_str.isdigit():
+            budget = float(min_budget_str)
+        elif preset_budget and preset_budget.isdigit():
+            budget = float(preset_budget)
+        else:
+            budget = 25000000.0  # مقدار پیش‌فرض منطقی برای بازه‌های از پیش‌تعیین‌شده
+
+        if budget <= 0:
+            messages.error(request, 'مبلغ بودجه وارد شده نامعتبر است؛ بودجه پروژه باید یک عدد مثبت باشد.')
+            return redirect(f"{reverse('project_create')}?step=2")
+
+        status = 'DRAFT' if action == 'draft' else 'OPEN'
+
+        project = Project.objects.create(
+            employer=user,
+            title=title,
+            description=description,
+            pricing_type=pricing_type if pricing_type in ['FIXED_PRICE', 'HOURLY'] else 'FIXED_PRICE',
+            budget=budget,
+            status=status
+        )
+
+        # اتصال دسته‌بندی
+        if category_id and category_id.isdigit():
+            cat = Category.objects.filter(id=int(category_id)).first()
+            if cat:
+                ProjectCategory.objects.create(project=project, category=cat)
+
+        # اتصال مهارت‌ها
+        for s_item in selected_skills[:5]:
+            s_item = s_item.strip()
+            if s_item:
+                skill_obj, _ = Skill.objects.get_or_create(name=s_item)
+                ProjectSkill.objects.get_or_create(project=project, skill=skill_obj)
+
+        if status == 'DRAFT':
+            messages.success(request, 'پروژه شما با موفقیت به عنوان پیش‌نویس (Draft) ذخیره شد.')
+            return redirect('dashboard')
+        else:
+            messages.success(request, 'پروژه جدید شما با موفقیت ثبت و با نشان "باز" منتشر گردید!')
+            return redirect('project_detail', project_id=project.id)
 
     initials = "MA"
-    if request.user.first_name and request.user.last_name:
-        initials = (request.user.first_name[0] + request.user.last_name[0]).upper()
+    if user.first_name and user.last_name:
+        initials = (user.first_name[0] + user.last_name[0]).upper()
 
     return render(request, 'accounts/project_create.html', {
-        'user': request.user,
+        'user': user,
         'user_initials': initials,
+        'categories': categories,
+        'skills': skills,
+        'step': step,
     })
 
 

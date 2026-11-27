@@ -748,6 +748,54 @@ class AuthenticationTests(TestCase):
         self.assertContains(res_create, 'با دستیار هوشمند')
         self.assertContains(res_create, 'ادامه به فرم ثبت دستی')
 
+        # ۳. دسترسی به مرحله ۲ ثبت پروژه با فرم کامل تنظیمات (تصاویر ۵۱ تا ۵۶)
+        res_step2 = self.client.get(reverse('project_create') + '?step=2')
+        self.assertEqual(res_step2.status_code, 200)
+        self.assertContains(res_step2, 'تنظیمات پروژه')
+        self.assertContains(res_step2, 'فرم ثبت دستی فعال است')
+        self.assertContains(res_step2, 'شرح پروژه')
+        self.assertContains(res_step2, 'فایل‌های پروژه')
+        self.assertContains(res_step2, 'اولویت و بودجه')
+        self.assertContains(res_step2, 'ادامه و انتشار پروژه')
+
+        # ۴. ارسال فرم مرحله ۲ و انتشار مستقیم پروژه
+        res_publish = self.client.post(reverse('project_create'), {
+            'title': 'طراحی پلتفرم کتابداری آنلاین',
+            'description': 'هدف این پروژه، طراحی و پیاده‌سازی سامانه تحت وب کتابداری با امکان دسته‌بندی و مدیریت امانت است.',
+            'category_id': 1,
+            'skills': ['برنامه نویسی', 'تست نرم افزار', 'Database Programming'],
+            'budget_min': '15000000',
+            'budget_max': '30000000',
+            'pricing_type': 'FIXED_PRICE',
+            'submit_action': 'publish'
+        }, follow=True)
+        self.assertEqual(res_publish.status_code, 200)
+        self.assertContains(res_publish, 'پروژه جدید شما با موفقیت ثبت')
+
+        # بررسی در دیتابیس
+        from accounts.models import Project
+        p = Project.objects.filter(title='طراحی پلتفرم کتابداری آنلاین').first()
+        self.assertIsNotNone(p)
+        self.assertEqual(p.status, 'OPEN')
+        self.assertEqual(float(p.budget), 30000000.0)
+
+        # ۵. ذخیره پروژه به صورت پیش‌نویس (Draft)
+        res_draft = self.client.post(reverse('project_create'), {
+            'title': 'طراحی آزمایشی در حالت پیش‌نویس',
+            'description': 'این یک پروژه تستی پیش‌نویس است.',
+            'category_id': 1,
+            'budget_min': '10000000',
+            'budget_max': '20000000',
+            'pricing_type': 'FIXED_PRICE',
+            'submit_action': 'draft'
+        }, follow=True)
+        self.assertEqual(res_draft.status_code, 200)
+        self.assertContains(res_draft, 'پروژه شما با موفقیت به عنوان پیش‌نویس (Draft) ذخیره شد')
+
+        p_draft = Project.objects.filter(title='طراحی آزمایشی در حالت پیش‌نویس').first()
+        self.assertIsNotNone(p_draft)
+        self.assertEqual(p_draft.status, 'DRAFT')
+
     # ------------------------------------------------------------------------
     # ۱۳. آزمون‌های تغییر نقش کاربری و تطبیق سایدبار کشویی (تصاویر ۴۸، ۴۹ و ۵۰)
     # ------------------------------------------------------------------------
