@@ -450,16 +450,87 @@
                                 <input type="text" class="messages-search-input" placeholder="جست و جو...">
                             </div>
 
-                            <div class="messages-empty-state-list">
-                                شما هنوز مکالمه ای رو شروع نکردید
-                            </div>
+                            {% if user_conversations %}
+                                <div style="overflow-y: auto; flex: 1;">
+                                    {% for conv in user_conversations %}
+                                        <div class="conv-item" style="padding: 14px 16px; border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                                <strong style="font-size: 13.5px; color: var(--text-main);">
+                                                    {% if conv.sender == user %}
+                                                        به: {{ conv.receiver.full_name|default:conv.receiver.username }}
+                                                    {% else %}
+                                                        از: {{ conv.sender.full_name|default:conv.sender.username }}
+                                                    {% endif %}
+                                                </strong>
+                                                <span style="font-size: 11px; color: var(--text-muted);">
+                                                    {{ conv.created_at|to_jalali }}
+                                                </span>
+                                            </div>
+                                            {% if conv.subject %}
+                                                <div style="font-size: 12.5px; font-weight: 700; color: #1e293b; margin-bottom: 2px;">
+                                                    {{ conv.subject }}
+                                                </div>
+                                            {% endif %}
+                                            <div style="font-size: 12px; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;">
+                                                {{ conv.content }}
+                                            </div>
+                                            {% if conv.project %}
+                                                <span style="font-size: 11px; color: #0891b2; background: #ecfeff; border: 1px solid #a5f3fc; padding: 1px 8px; border-radius: 8px;">
+                                                    {{ conv.project.title|truncatechars:20 }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="messages-empty-state-list">
+                                    شما هنوز مکالمه ای رو شروع نکردید
+                                </div>
+                            {% endif %}
                         </div>
 
-                        <!-- ستون چپ: صفحه چت خالی با راهنما -->
+                        <!-- ستون چپ: صفحه چت یا نمایش جزئیات پیام -->
                         <div class="messages-chat-area-col">
-                            <div class="messages-chat-empty-text">
-                                برای شروع به گفت‌وگو لطفا یکی از مکالمه ها را انتخاب کنید
-                            </div>
+                            {% if user_conversations %}
+                                {% with first_msg=user_conversations.first %}
+                                    <div id="messages-detail-box" style="width: 100%; height: 100%; display: flex; flex-direction: column; background: #ffffff; border-radius: 12px; border: 1.5px solid var(--border-card); padding: 20px; box-sizing: border-box; text-align: right;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 1.5px solid #f1f5f9; margin-bottom: 16px;">
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #db2777; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                                                    {{ first_msg.sender.initials|default:"US" }}
+                                                </div>
+                                                <div>
+                                                    <div style="font-weight: 800; font-size: 14px; color: var(--text-main);">
+                                                        {{ first_msg.sender.full_name|default:first_msg.sender.username }}
+                                                    </div>
+                                                    <div style="font-size: 11.5px; color: var(--text-muted);">
+                                                        {{ first_msg.created_at|to_jalali }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% if first_msg.project %}
+                                                <a href="{% url 'project_detail' first_msg.project.id %}" class="btn-submit-proposal" style="padding: 5px 12px; font-size: 12px; text-decoration: none; border-radius: 6px;">
+                                                    مشاهده صفحه پروژه ←
+                                                </a>
+                                            {% endif %}
+                                        </div>
+
+                                        {% if first_msg.subject %}
+                                            <h4 style="font-size: 15px; font-weight: 800; color: var(--text-main); margin: 0 0 10px 0;">
+                                                {{ first_msg.subject }}
+                                            </h4>
+                                        {% endif %}
+
+                                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; font-size: 13.5px; color: #334155; line-height: 1.8; flex: 1;">
+                                            {{ first_msg.content|linebreaksbr }}
+                                        </div>
+                                    </div>
+                                {% endwith %}
+                            {% else %}
+                                <div class="messages-chat-empty-text">
+                                    برای شروع به گفت‌وگو لطفا یکی از مکالمه ها را انتخاب کنید
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -715,24 +786,33 @@
 
             {% else %}
                 <!-- ==================== تب پروژه‌های من (بند ۵.۲ داکیومنت) ==================== -->
-                <!-- زیرتب‌های پروژه‌های کارفرما: همه، فعال و پیش‌نویس‌ها -->
-                <div class="subtabs-nav-bar" style="margin-bottom: 20px;">
-                    <a href="?tab=my_projects&subtab=all" class="subtab-item {% if active_subtab == 'all' %}active{% endif %}">
-                        همه پروژه‌های من ({{ total_my_projects }})
-                    </a>
-                    <a href="?tab=my_projects&subtab=open" class="subtab-item {% if active_subtab == 'open' %}active{% endif %}">
-                        باز و فعال ({{ open_count }})
-                    </a>
-                    <a href="?tab=my_projects&subtab=draft" class="subtab-item {% if active_subtab == 'draft' %}active{% endif %}">
-                        پیش‌نویس‌ها ({{ drafts_count }})
-                    </a>
+                <!-- نوار ابزار جستجوی آنی و زیرتب‌های پروژه‌های کارفرما -->
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+                    <!-- زیرتب‌های پروژه‌های کارفرما: همه، فعال و پیش‌نویس‌ها -->
+                    <div class="subtabs-nav-bar" style="margin-bottom: 0;">
+                        <a href="?tab=my_projects&subtab=all" class="subtab-item {% if active_subtab == 'all' %}active{% endif %}">
+                            همه پروژه‌های من ({{ total_my_projects }})
+                        </a>
+                        <a href="?tab=my_projects&subtab=open" class="subtab-item {% if active_subtab == 'open' %}active{% endif %}">
+                            باز و فعال ({{ open_count }})
+                        </a>
+                        <a href="?tab=my_projects&subtab=draft" class="subtab-item {% if active_subtab == 'draft' %}active{% endif %}">
+                            پیش‌نویس‌ها ({{ drafts_count }})
+                        </a>
+                    </div>
+
+                    <!-- اینپوت جستجوی زنده در پروژه‌های من -->
+                    <div style="position: relative; width: 260px; max-width: 100%;">
+                        <input type="text" id="my-projects-live-search" placeholder="🔍 جستجوی آنی در پروژه‌ها..." class="form-input" style="height: 38px; font-size: 12.5px; padding-left: 28px; border-radius: 8px;">
+                        <span id="my-projects-clear-btn" onclick="clearMyProjectsSearch()" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 12px; color: #94a3b8; cursor: pointer; display: none;">✕</span>
+                    </div>
                 </div>
 
                 {% if my_projects %}
                     <!-- لیست پروژه‌های ثبت‌شده توسط کاربر -->
-                    <div class="projects-grid" style="margin-bottom: 24px;">
+                    <div class="projects-grid" id="my-projects-grid" style="margin-bottom: 24px;">
                         {% for proj in my_projects %}
-                            <div class="project-card" style="border: 1.5px solid var(--border-card); background: #ffffff;">
+                            <div class="project-card my-project-item-card" data-title="{{ proj.title|lower }}" data-desc="{{ proj.description|lower }}" style="border: 1.5px solid var(--border-card); background: #ffffff;">
                                 <div class="project-card-header">
                                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                                         <h4 class="project-title" style="margin: 0; font-size: 16px;">
@@ -794,6 +874,14 @@
                                 </div>
                             </div>
                         {% endfor %}
+
+                        <!-- وضعیت خالی جستجوی زنده در پروژه‌های من -->
+                        <div class="empty-state-card" id="my-projects-live-empty" style="display: none; grid-column: 1 / -1; width: 100%; margin-bottom: 24px; padding: 40px 20px;">
+                            <div class="empty-state-icon" style="font-size: 26px;">🔍</div>
+                            <div class="empty-state-title" style="font-size: 15px; margin-bottom: 6px;">پروژه‌ای با این عنوان یافت نشد</div>
+                            <p class="empty-state-subtitle" style="font-size: 12.5px; margin-bottom: 12px;">لطفاً کلمه کلیدی دیگری وارد کنید یا فیلتر را پاک نمایید.</p>
+                            <button type="button" onclick="clearMyProjectsSearch()" class="btn-cancel-modal" style="padding: 6px 16px; font-size: 12px; cursor: pointer;">پاک‌سازی فیلتر</button>
+                        </div>
                     </div>
                 {% else %}
                     <!-- کادر وضعیت خالی پروژه‌های کاربر -->
@@ -1003,5 +1091,57 @@ function startProfileAudit() {
     historyBox.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.12)';
     alert('بررسی هوشمند پروفایل با موفقیت انجام شد! نتایج ارزیابی در کادر بررسی‌های قبلی ثبت گردید.');
 }
+
+// جستجوی زنده و آنی در پروژه‌های من
+function filterMyProjectsRealtime() {
+    const searchInput = document.getElementById('my-projects-live-search');
+    const clearBtn = document.getElementById('my-projects-clear-btn');
+    const emptyState = document.getElementById('my-projects-live-empty');
+
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+    if (clearBtn) {
+        clearBtn.style.display = query ? 'block' : 'none';
+    }
+
+    const cards = document.querySelectorAll('.my-project-item-card');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+        const title = card.getAttribute('data-title') || '';
+        const desc = card.getAttribute('data-desc') || '';
+
+        if (!query || title.includes(query) || desc.includes(query)) {
+            card.style.display = 'flex';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    if (emptyState) {
+        if (visibleCount === 0 && cards.length > 0) {
+            emptyState.style.display = 'block';
+        } else {
+            emptyState.style.display = 'none';
+        }
+    }
+}
+
+function clearMyProjectsSearch() {
+    const searchInput = document.getElementById('my-projects-live-search');
+    if (searchInput) {
+        searchInput.value = '';
+        searchInput.focus();
+    }
+    filterMyProjectsRealtime();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('my-projects-live-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', filterMyProjectsRealtime);
+        searchInput.addEventListener('keyup', filterMyProjectsRealtime);
+    }
+});
 </script>
 {% endblock %}

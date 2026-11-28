@@ -198,19 +198,19 @@
 
     <!-- نوار افقی ساده و تمیز فیلتر و جستجو بالای لیست (Horizontal Filter Bar) -->
     <div class="ponisha-card" style="padding: 20px 24px; margin-bottom: 24px;">
-        <form method="get" action="{% url 'projects_list' %}" style="display: flex; flex-direction: column; gap: 16px;">
+        <form method="get" action="{% url 'projects_list' %}" id="projects-filter-form" style="display: flex; flex-direction: column; gap: 16px;">
 
-            <!-- ردیف اول: اینپوت جستجو + دراپ‌داون نوع قیمت -->
+            <!-- ردیف اول: اینپوت جستجو با فیلتر آنی + دراپ‌داون نوع قیمت -->
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                 <div style="flex: 1; min-width: 260px; position: relative;">
-                    <input type="text" name="q" value="{{ query }}" placeholder="🔍 جستجو در عنوان یا متن پروژه..." class="form-input" style="padding-left: 80px;">
-                    {% if query %}
-                        <a href="{% url 'projects_list' %}" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--text-muted); text-decoration: none;">پاک‌سازی ✕</a>
-                    {% endif %}
+                    <input type="text" name="q" id="live-search-input" value="{{ query }}" placeholder="🔍 جستجو در عنوان، متن یا مهارت‌های پروژه..." class="form-input" style="padding-left: 80px;" autocomplete="off">
+                    <button type="button" id="clear-search-btn" onclick="clearLiveSearch()" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--text-muted); background: none; border: none; cursor: pointer; display: {% if query %}block{% else %}none{% endif %};">
+                        پاک‌سازی ✕
+                    </button>
                 </div>
 
                 <div style="width: 185px;">
-                    <select name="pricing_type" class="form-input custom-select" onchange="this.form.submit()">
+                    <select name="pricing_type" id="pricing-type-filter" class="form-input custom-select" onchange="filterProjectsRealtime()">
                         <option value="">همه انواع قیمت</option>
                         <option value="FIXED_PRICE" {% if selected_pricing_type == 'FIXED_PRICE' %}selected{% endif %}>قیمت ثابت</option>
                         <option value="HOURLY" {% if selected_pricing_type == 'HOURLY' %}selected{% endif %}>نرخ ساعتی</option>
@@ -242,17 +242,17 @@
 
     <!-- آمار نتایج -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 13px; color: var(--text-muted);">
-        <span>تعداد پروژه‌های یافت‌شده: <strong style="color: var(--text-main);">{{ total_count }} پروژه</strong></span>
+        <span>تعداد پروژه‌های یافت‌شده: <strong style="color: var(--text-main);" id="visible-projects-count">{{ total_count }}</strong> پروژه</span>
         {% if query or selected_category or selected_pricing_type %}
             <a href="{% url 'projects_list' %}" class="link-pink" style="font-size: 12px; font-weight: 700;">حذف فیلترها و مشاهده همه</a>
         {% endif %}
     </div>
 
     <!-- لیست کارت‌های پروژه‌ها -->
-    <div class="projects-grid">
+    <div class="projects-grid" id="projects-grid-container">
         {% if projects %}
             {% for proj in projects %}
-                <div class="project-card">
+                <div class="project-card project-item-card" data-title="{{ proj.title|lower }}" data-desc="{{ proj.description|lower }}" data-pricing="{{ proj.pricing_type }}" data-employer="{{ proj.employer.full_name|default:proj.employer.username|lower }}" data-skills="{% for ps in proj.projectskill_set.all %}{{ ps.skill.name|lower }} {% endfor %}">
                     <div class="project-card-header">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <h3 class="project-title" style="margin: 0; font-size: 17px;">
@@ -310,7 +310,7 @@
                 </div>
             {% endfor %}
         {% else %}
-            <div class="empty-tab-box">
+            <div class="empty-tab-box" id="server-empty-state">
                 <div class="dots-icon-circle">
                     <span>🔍</span>
                 </div>
@@ -325,6 +325,22 @@
                 </a>
             </div>
         {% endif %}
+
+        <!-- حالت خالی بلادرنگ در صورت عدم تطابق جستجوی زنده کلاینت -->
+        <div class="empty-tab-box" id="live-empty-state" style="display: none; grid-column: 1 / -1; width: 100%;">
+            <div class="dots-icon-circle">
+                <span>🔍</span>
+            </div>
+            <h4 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">
+                هیچ پروژه‌ای با عبارت جستجو شده پیدا نشد!
+            </h4>
+            <p class="empty-tab-text" style="margin-bottom: 18px;">
+                می‌توانید عبارت دیگری را امتحان کنید یا فیلتر را پاک نمایید.
+            </p>
+            <button type="button" onclick="clearLiveSearch()" class="btn-pink" style="display: inline-block; width: auto; padding: 10px 24px; border: none; cursor: pointer;">
+                پاک‌سازی جستجو
+            </button>
+        </div>
     </div>
 
     <!-- فوتر سایت -->
@@ -387,4 +403,81 @@
 {% if user.is_authenticated %}
     {% include 'includes/user_drawer.html' %}
 {% endif %}
+
+<script>
+// جستجو و فیلتر زنده و آنی پروژه‌ها در فرانت‌اند
+function filterProjectsRealtime() {
+    const searchInput = document.getElementById('live-search-input');
+    const pricingSelect = document.getElementById('pricing-type-filter');
+    const clearBtn = document.getElementById('clear-search-btn');
+    const countDisplay = document.getElementById('visible-projects-count');
+    const emptyState = document.getElementById('live-empty-state');
+    const serverEmptyState = document.getElementById('server-empty-state');
+
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+    const selectedPricing = pricingSelect ? pricingSelect.value : '';
+
+    if (clearBtn) {
+        clearBtn.style.display = query ? 'block' : 'none';
+    }
+
+    const cards = document.querySelectorAll('.project-item-card');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+        const title = card.getAttribute('data-title') || '';
+        const desc = card.getAttribute('data-desc') || '';
+        const skills = card.getAttribute('data-skills') || '';
+        const employer = card.getAttribute('data-employer') || '';
+        const pricing = card.getAttribute('data-pricing') || '';
+
+        // تطابق با متن سرچ
+        const matchesQuery = !query ||
+            title.includes(query) ||
+            desc.includes(query) ||
+            skills.includes(query) ||
+            employer.includes(query);
+
+        // تطابق با فیلتر قیمت
+        const matchesPricing = !selectedPricing || pricing === selectedPricing;
+
+        if (matchesQuery && matchesPricing) {
+            card.style.display = 'flex';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    if (countDisplay) {
+        countDisplay.textContent = visibleCount;
+    }
+
+    if (emptyState) {
+        if (visibleCount === 0 && cards.length > 0) {
+            emptyState.style.display = 'block';
+        } else {
+            emptyState.style.display = 'none';
+        }
+    }
+}
+
+function clearLiveSearch() {
+    const searchInput = document.getElementById('live-search-input');
+    if (searchInput) {
+        searchInput.value = '';
+        searchInput.focus();
+    }
+    filterProjectsRealtime();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('live-search-input');
+    if (searchInput) {
+        // فیلتر آنی با تایپ هر کاراکتر
+        searchInput.addEventListener('input', filterProjectsRealtime);
+        searchInput.addEventListener('keyup', filterProjectsRealtime);
+    }
+});
+</script>
 {% endblock %}

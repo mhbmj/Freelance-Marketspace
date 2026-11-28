@@ -25,6 +25,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-8$zj1tgs7s@hdg26(94q@
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+]
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
