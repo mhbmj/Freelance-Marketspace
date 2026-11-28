@@ -381,3 +381,35 @@ class Proposal(models.Model):
 
     def __str__(self):
         return f"Proposal #{self.id} for {self.project.title}"
+
+
+# ============================================================================
+# ۱۳. پیام‌ها و گفت‌وگوها (Messages)
+# ============================================================================
+class Message(models.Model):
+    """مدل پیام‌های خصوصی، گفت‌وگوی پروژه و اعلان‌های قبولی پیشنهاد (FR-14)"""
+    MESSAGE_TYPES = [
+        ('DIRECT', 'پیام مستقیم'),
+        ('PROPOSAL_ACCEPTED', 'پذیرش پیشنهاد'),
+        ('PROJECT_UPDATE', 'به‌روزرسانی پروژه'),
+        ('SYSTEM', 'پیام سیستم'),
+    ]
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='messages', null=True, blank=True)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
+    subject = models.CharField('موضوع', max_length=200, blank=True, null=True)
+    content = models.TextField('متن پیام')
+    message_type = models.CharField('نوع پیام', max_length=30, choices=MESSAGE_TYPES, default='DIRECT')
+    is_read = models.BooleanField('خوانده شده', default=False)
+    created_at = models.DateTimeField('تاریخ ارسال', auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'پیام'
+        verbose_name_plural = 'پیام‌ها'
+        db_table = 'messages'
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"Message #{self.id} from {self.sender} to {self.receiver}"
+

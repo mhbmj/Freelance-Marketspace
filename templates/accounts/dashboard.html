@@ -555,10 +555,18 @@
                     </ul>
                 </div>
 
-                <!-- تب‌های پروژه‌های من / پیشنهادات / محصولات -->
+                <!-- تب‌های پروژه‌های من / پروژه‌های در حال انجام / پیشنهادات / محصولات -->
                 <div class="dashboard-tabs-bar" style="margin-bottom: 20px;">
                     <a href="?tab=my_projects" class="tab-btn {% if active_tab == 'my_projects' %}active{% endif %}">
                         پروژه‌های من
+                    </a>
+                    <a href="?tab=in_progress" class="tab-btn {% if active_tab == 'in_progress' %}active{% endif %}" style="position: relative;">
+                        پروژه‌های در حال انجام
+                        {% if in_progress_count > 0 %}
+                            <span style="background: var(--accent-teal, #18bead); color: #ffffff; border-radius: 12px; padding: 1px 7px; font-size: 11px; font-weight: 800; margin-right: 4px;">
+                                {{ in_progress_count }}
+                            </span>
+                        {% endif %}
                     </a>
                     <a href="?tab=proposals" class="tab-btn {% if active_tab == 'proposals' %}active{% endif %}">
                         پیشنهادات
@@ -568,7 +576,77 @@
                     </a>
                 </div>
 
-            {% if active_tab == 'proposals' %}
+            {% if active_tab == 'in_progress' %}
+                <!-- ==================== تب پروژه‌های در حال انجام فریلنسر ==================== -->
+                <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <h3 style="font-size: 17px; font-weight: 800; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <span>💼</span>
+                        <span>پروژه‌های در حال انجام شما ({{ in_progress_count }})</span>
+                    </h3>
+                    <span style="font-size: 12.5px; color: var(--text-muted);">
+                        پروژه‌هایی که پیشنهاد شما برای آنها توسط کارفرما تایید شده و قرارداد کاری آغاز شده است.
+                    </span>
+                </div>
+
+                {% if in_progress_projects %}
+                    <div class="projects-grid" style="margin-bottom: 24px;">
+                        {% for proj in in_progress_projects %}
+                            <div class="project-card" style="border: 1.5px solid #a5f3fc; background: #ffffff; box-shadow: 0 4px 16px rgba(8, 145, 178, 0.06);">
+                                <div class="project-card-header">
+                                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                        <h4 class="project-title" style="margin: 0; font-size: 16px;">
+                                            <a href="{% url 'project_detail' proj.id %}" style="text-decoration: none; color: inherit;">
+                                                {{ proj.title }}
+                                            </a>
+                                        </h4>
+                                        <span style="font-size: 11px; background: #ecfeff; color: #0891b2; border: 1.5px solid #a5f3fc; padding: 2px 10px; border-radius: 12px; font-weight: 800;">
+                                            ⚡ در حال انجام
+                                        </span>
+                                    </div>
+
+                                    <div class="badge-pricing">
+                                        <span>بودجه پروژه:</span>
+                                        <span class="pricing-amount">{{ proj.budget|price_en }} تومان</span>
+                                    </div>
+                                </div>
+
+                                <p class="project-desc">{{ proj.description|truncatewords:28 }}</p>
+
+                                <div class="project-card-footer" style="padding-top: 14px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                    <div style="display: flex; align-items: center; gap: 14px; font-size: 12.5px; color: var(--text-muted);">
+                                        <span>👤 کارفرما: <strong style="color: var(--text-main);">{{ proj.employer.full_name|default:proj.employer.username }}</strong></span>
+                                        <span>📅 تاریخ شروع: {{ proj.updated_at|to_jalali }}</span>
+                                    </div>
+
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <a href="{% url 'project_detail' proj.id %}" class="btn-submit-proposal" style="padding: 7px 18px; font-size: 12.5px; text-decoration: none; border-radius: 8px; font-weight: 700; background: var(--pastel-yellow, #fef08a); color: #854d0e; border: 1.5px solid var(--pastel-yellow-border, #fde047);">
+                                            ورود به صفحه پروژه ←
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <!-- کادر خالی پروژه‌های در حال انجام -->
+                    <div class="empty-state-card" style="margin-bottom: 24px; padding: 48px 24px;">
+                        <div class="empty-state-icon" style="font-size: 32px;">
+                            💼
+                        </div>
+                        <div class="empty-state-title" style="font-size: 17px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">
+                            در حال حاضر پروژه‌ای در حال انجام ندارید
+                        </div>
+                        <p class="empty-state-subtitle" style="font-size: 13.5px; color: var(--text-muted); max-width: 520px; margin: 0 auto 20px auto; line-height: 1.8;">
+                            برای شروع، پروژه‌های باز در سایت را بررسی کرده و پیشنهاد خود را ارسال کنید تا پس از پذیرش کارفرما در این بخش فعال شوند.
+                        </p>
+                        <a href="{% url 'projects_list' %}" class="btn-submit-proposal" style="padding: 10px 24px; text-decoration: none; font-size: 13.5px; display: inline-block;">
+                            <span>مشاهده پروژه‌های باز و ارسال پیشنهاد</span>
+                            <span>👁️</span>
+                        </a>
+                    </div>
+                {% endif %}
+
+            {% elif active_tab == 'proposals' %}
                 <!-- ==================== تب پیشنهادات (مطابق تصویر ۴) ==================== -->
                 <!-- زیرتب‌های پیشنهادات بدون رنگ سبز -->
                 <div class="subtabs-nav-bar">

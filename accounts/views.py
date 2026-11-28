@@ -252,6 +252,14 @@ def dashboard_view(request):
     # ۳. جدیدترین پروژه‌های عمومی برای نمایش جهت پیشنهاددهی
     explore_projects = Project.objects.filter(status='OPEN').exclude(employer=user).order_by('-created_at')[:6]
 
+    # ۴. پروژه‌های در حال انجام فریلنسر (پروژه‌هایی که پیشنهاد این کاربر در آنها پذیرفته شده است)
+    in_progress_projects = Project.objects.filter(
+        proposals__freelancer=user,
+        proposals__status='ACCEPTED',
+        status='IN_PROGRESS'
+    ).distinct().select_related('employer').prefetch_related('projectskill_set__skill').order_by('-updated_at')
+    in_progress_count = in_progress_projects.count()
+
     profile, _ = UserProfile.objects.get_or_create(user=user)
     initials = user.initials
 
@@ -277,6 +285,8 @@ def dashboard_view(request):
         'my_projects': my_projects,
         'explore_projects': explore_projects,
         'user_proposals': user_proposals,
+        'in_progress_projects': in_progress_projects,
+        'in_progress_count': in_progress_count,
         'query': query,
         'active_section': active_section,
         'active_tab': active_tab,
@@ -523,6 +533,19 @@ def profile_view(request):
     if profile.avatar:
         profile_percent += 15
 
+    # پروژه‌های کاربر در نقش فریلنسر (پروژه‌های در حال انجام و پایان‌یافته مطابق تصویر ۶۷)
+    user_in_progress_projects = Project.objects.filter(
+        proposals__freelancer=user,
+        proposals__status='ACCEPTED',
+        status='IN_PROGRESS'
+    ).distinct().select_related('employer').order_by('-updated_at')
+
+    user_completed_projects = Project.objects.filter(
+        proposals__freelancer=user,
+        proposals__status='ACCEPTED',
+        status='COMPLETED'
+    ).distinct().select_related('employer').order_by('-updated_at')
+
     return render(request, 'accounts/profile.html', {
         'user': user,
         'profile': profile,
@@ -530,6 +553,10 @@ def profile_view(request):
         'portfolios': portfolios,
         'work_experiences': work_experiences,
         'educations': educations,
+        'user_in_progress_projects': user_in_progress_projects,
+        'user_completed_projects': user_completed_projects,
+        'in_progress_count': user_in_progress_projects.count(),
+        'completed_count': user_completed_projects.count(),
         'user_initials': initials,
         'profile_percent': min(profile_percent, 100),
     })

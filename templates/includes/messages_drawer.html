@@ -248,50 +248,98 @@
             <input type="text" class="messages-drawer-search-input" placeholder="جست و جو...">
         </div>
 
-        {% if employer_received_proposals %}
-            <!-- لیست پیام‌های پیشنهادهای جدید دریافتی کارفرما -->
+        {% if freelancer_accepted_proposals or employer_received_proposals %}
+            <!-- لیست پیام‌های پیشنهادهای جدید دریافتی کارفرما و اعلان‌های پذیرش فریلنسر -->
             <div style="padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; flex: 1;" id="proposals-messages-list">
-                <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); padding: 0 4px;">
-                    پیشنهادهای جدید دریافتی شما:
-                </div>
-                {% for prop in employer_received_proposals %}
-                    <a href="{% url 'project_detail' prop.project.id %}"
-                       class="proposal-message-card"
-                       id="prop-msg-card-{{ prop.id }}"
-                       data-prop-id="{{ prop.id }}"
-                       onclick="markProposalAsRead('{{ prop.id }}')"
-                       style="background: #fff5f8; border: 1.5px solid #fbcfe8; display: flex; gap: 12px; padding: 12px 14px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.2s ease;">
-                        <div style="width: 42px; height: 42px; border-radius: 50%; background: #9ca3af; color: #fff; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
-                            {% if prop.freelancer.avatar_url %}
-                                <img src="{{ prop.freelancer.avatar_url }}" alt="آواتار" style="width: 100%; height: 100%; object-fit: cover;">
-                            {% else %}
-                                {{ prop.freelancer.initials|default:"FL" }}
-                            {% endif %}
-                        </div>
 
-                        <div style="flex: 1; min-width: 0;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                                <strong style="font-size: 13.5px; color: var(--text-main);">
-                                    {{ prop.freelancer.full_name|default:prop.freelancer.username }}
-                                </strong>
-                                <span style="font-size: 11px; color: var(--text-muted);">
-                                    {{ prop.created_at|timesince }} پیش
-                                </span>
+                {% if freelancer_accepted_proposals %}
+                    <div style="font-size: 12px; font-weight: 700; color: #059669; padding: 0 4px; display: flex; align-items: center; gap: 6px;">
+                        <span>🎉</span>
+                        <span>پیشنهادهای پذیرفته‌شده شما:</span>
+                    </div>
+                    {% for prop in freelancer_accepted_proposals %}
+                        <a href="{% url 'project_detail' prop.project.id %}"
+                           class="proposal-message-card"
+                           id="prop-msg-card-acc-{{ prop.id }}"
+                           data-prop-id="acc-{{ prop.id }}"
+                           onclick="markProposalAsRead('acc-{{ prop.id }}')"
+                           style="background: #f0fdf4; border: 1.5px solid #bbf7d0; display: flex; gap: 12px; padding: 12px 14px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.2s ease;">
+                            <div style="width: 42px; height: 42px; border-radius: 50%; background: #059669; color: #fff; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
+                                {% if prop.project.employer.avatar_url %}
+                                    <img src="{{ prop.project.employer.avatar_url }}" alt="کارفرما" style="width: 100%; height: 100%; object-fit: cover;">
+                                {% else %}
+                                    {{ prop.project.employer.initials|default:"EM" }}
+                                {% endif %}
                             </div>
-                            <div style="font-size: 12px; color: #475569; margin-bottom: 4px; line-height: 1.6;">
-                                پیشنهاد جدید برای پروژه <strong>«{{ prop.project.title|truncatechars:26 }}»</strong>
+
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                    <strong style="font-size: 13.5px; color: var(--text-main);">
+                                        کارفرما {{ prop.project.employer.full_name|default:prop.project.employer.username }}
+                                    </strong>
+                                    <span style="font-size: 11px; color: var(--text-muted);">
+                                        {{ prop.project.updated_at|timesince }} پیش
+                                    </span>
+                                </div>
+                                <div style="font-size: 12px; color: #166534; margin-bottom: 4px; line-height: 1.6;">
+                                    پیشنهاد شما برای پروژه <strong>«{{ prop.project.title|truncatechars:24 }}»</strong> پذیرفته شد! پروژه در حال انجام است.
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px;">
+                                    <span style="color: #047857; font-weight: 700;">
+                                        مبلغ: {{ prop.bid_amount|price_en }} تومان
+                                    </span>
+                                    <span class="badge-new-tag" id="prop-new-badge-acc-{{ prop.id }}" style="background: #059669; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800;">
+                                        پذیرفته شد
+                                    </span>
+                                </div>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px;">
-                                <span style="color: var(--pastel-pink-hover); font-weight: 700;">
-                                    مبلغ: {{ prop.bid_amount|price_en }} تومان
-                                </span>
-                                <span class="badge-new-tag" id="prop-new-badge-{{ prop.id }}" style="background: #e11d48; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800;">
-                                    جدید
-                                </span>
+                        </a>
+                    {% endfor %}
+                {% endif %}
+
+                {% if employer_received_proposals %}
+                    <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); padding: 0 4px; margin-top: 4px;">
+                        پیشنهادهای جدید دریافتی شما:
+                    </div>
+                    {% for prop in employer_received_proposals %}
+                        <a href="{% url 'project_detail' prop.project.id %}"
+                           class="proposal-message-card"
+                           id="prop-msg-card-{{ prop.id }}"
+                           data-prop-id="{{ prop.id }}"
+                           onclick="markProposalAsRead('{{ prop.id }}')"
+                           style="background: #fff5f8; border: 1.5px solid #fbcfe8; display: flex; gap: 12px; padding: 12px 14px; border-radius: 12px; text-decoration: none; color: inherit; transition: all 0.2s ease;">
+                            <div style="width: 42px; height: 42px; border-radius: 50%; background: #9ca3af; color: #fff; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
+                                {% if prop.freelancer.avatar_url %}
+                                    <img src="{{ prop.freelancer.avatar_url }}" alt="آواتار" style="width: 100%; height: 100%; object-fit: cover;">
+                                {% else %}
+                                    {{ prop.freelancer.initials|default:"FL" }}
+                                {% endif %}
                             </div>
-                        </div>
-                    </a>
-                {% endfor %}
+
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                    <strong style="font-size: 13.5px; color: var(--text-main);">
+                                        {{ prop.freelancer.full_name|default:prop.freelancer.username }}
+                                    </strong>
+                                    <span style="font-size: 11px; color: var(--text-muted);">
+                                        {{ prop.created_at|timesince }} پیش
+                                    </span>
+                                </div>
+                                <div style="font-size: 12px; color: #475569; margin-bottom: 4px; line-height: 1.6;">
+                                    پیشنهاد جدید برای پروژه <strong>«{{ prop.project.title|truncatechars:26 }}»</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px;">
+                                    <span style="color: var(--pastel-pink-hover); font-weight: 700;">
+                                        مبلغ: {{ prop.bid_amount|price_en }} تومان
+                                    </span>
+                                    <span class="badge-new-tag" id="prop-new-badge-{{ prop.id }}" style="background: #e11d48; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800;">
+                                        جدید
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                {% endif %}
             </div>
         {% else %}
             <!-- حالت خالی تمیز مطابق تصویر ۳۷ -->

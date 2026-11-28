@@ -313,27 +313,111 @@
                 {% endif %}
             </div>
 
-            <!-- بخش ۶: پروژه‌ها -->
+            <!-- بخش ۶: پروژه‌ها (مطابق با تصویر ۶۷ پونیشا با تب‌های پایان‌یافته و در حال انجام) -->
             <div class="profile-section-card">
                 <div class="profile-section-header">
                     <h2 class="profile-section-title">پروژه‌ها</h2>
                     <div style="display: flex; gap: 14px; font-size: 13px;">
-                        <span style="font-weight: 700; color: #be185d; border-bottom: 2px solid var(--pastel-pink); padding-bottom: 4px;">پایان‌یافته (۰)</span>
-                        <span style="color: var(--text-muted);">در حال انجام (۰)</span>
+                        <button type="button" id="profile-tab-inprogress" onclick="switchProfileProjectsTab('inprogress')" style="background: none; border: none; font-size: 13px; font-family: inherit; font-weight: 700; color: #be185d; border-bottom: 2px solid var(--pastel-pink, #f472b6); padding-bottom: 4px; cursor: pointer;">
+                            در حال انجام ({{ in_progress_count }})
+                        </button>
+                        <button type="button" id="profile-tab-completed" onclick="switchProfileProjectsTab('completed')" style="background: none; border: none; font-size: 13px; font-family: inherit; font-weight: 600; color: var(--text-muted, #64748b); border-bottom: 2px solid transparent; padding-bottom: 4px; cursor: pointer;">
+                            پایان‌یافته ({{ completed_count }})
+                        </button>
                     </div>
                 </div>
 
-                <div class="empty-tab-box" style="padding: 36px 20px;">
-                    <div class="dots-icon-circle" style="font-size: 22px;">
-                        💼
-                    </div>
-                    <p class="empty-tab-text" style="margin-bottom: 14px;">
-                        هنوز پروژه‌ای انجام ندادی؟ همین حالا شروع کن!
-                    </p>
-                    <a href="{% url 'projects_list' %}" class="btn-view-projects">
-                        <span>مشاهده پروژه‌ها</span>
-                        <span>👁️</span>
-                    </a>
+                <!-- ۱. محتوای پروژه‌های در حال انجام -->
+                <div id="profile-projects-inprogress" style="display: block;">
+                    {% if user_in_progress_projects %}
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            {% for proj in user_in_progress_projects %}
+                                <div class="ponisha-card" style="padding: 16px 20px; border: 1.5px solid #a5f3fc; background: #ffffff; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                    <div>
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                            <h4 style="font-size: 15px; font-weight: 800; color: var(--text-main); margin: 0;">
+                                                <a href="{% url 'project_detail' proj.id %}" style="text-decoration: none; color: inherit;">
+                                                    {{ proj.title }}
+                                                </a>
+                                            </h4>
+                                            <span style="font-size: 11px; background: #ecfeff; color: #0891b2; border: 1px solid #a5f3fc; padding: 2px 8px; border-radius: 10px; font-weight: 700;">
+                                                ⚡ در حال انجام
+                                            </span>
+                                        </div>
+                                        <div style="font-size: 12px; color: var(--text-muted);">
+                                            کارفرما: <strong style="color: var(--text-main);">{{ proj.employer.full_name|default:proj.employer.username }}</strong>
+                                            • بودجه: <strong style="color: #047857;">{{ proj.budget|price_en }} تومان</strong>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'project_detail' proj.id %}" class="btn-submit-proposal" style="padding: 6px 14px; font-size: 12px; text-decoration: none; border-radius: 8px;">
+                                            مشاهده پروژه ←
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <!-- کادر خالی مطابق تصویر ۶۷ -->
+                        <div class="empty-tab-box" style="padding: 36px 20px;">
+                            <div class="dots-icon-circle" style="font-size: 22px;">
+                                💼
+                            </div>
+                            <p class="empty-tab-text" style="margin-bottom: 14px;">
+                                هنوز پروژه‌ای در حال انجام نداری؟ همین حالا شروع کن!
+                            </p>
+                            <a href="{% url 'projects_list' %}" class="btn-view-projects">
+                                <span>مشاهده پروژه‌ها</span>
+                                <span>👁️</span>
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- ۲. محتوای پروژه‌های پایان‌یافته -->
+                <div id="profile-projects-completed" style="display: none;">
+                    {% if user_completed_projects %}
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            {% for proj in user_completed_projects %}
+                                <div class="ponisha-card" style="padding: 16px 20px; border: 1.5px solid var(--border-card); background: #ffffff; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                    <div>
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                            <h4 style="font-size: 15px; font-weight: 800; color: var(--text-main); margin: 0;">
+                                                <a href="{% url 'project_detail' proj.id %}" style="text-decoration: none; color: inherit;">
+                                                    {{ proj.title }}
+                                                </a>
+                                            </h4>
+                                            <span style="font-size: 11px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; padding: 2px 8px; border-radius: 10px; font-weight: 700;">
+                                                ✓ پایان‌یافته
+                                            </span>
+                                        </div>
+                                        <div style="font-size: 12px; color: var(--text-muted);">
+                                            کارفرما: <strong style="color: var(--text-main);">{{ proj.employer.full_name|default:proj.employer.username }}</strong>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'project_detail' proj.id %}" class="link-pink" style="font-size: 12.5px; font-weight: 700; text-decoration: none;">
+                                            مشاهده جزئیات ←
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <!-- کادر خالی پروژه‌های پایان‌یافته -->
+                        <div class="empty-tab-box" style="padding: 36px 20px;">
+                            <div class="dots-icon-circle" style="font-size: 22px;">
+                                💼
+                            </div>
+                            <p class="empty-tab-text" style="margin-bottom: 14px;">
+                                هنوز پروژه‌ای انجام ندادی؟ همین حالا شروع کن!
+                            </p>
+                            <a href="{% url 'projects_list' %}" class="btn-view-projects">
+                                <span>مشاهده پروژه‌ها</span>
+                                <span>👁️</span>
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -703,6 +787,41 @@
 </div>
 
 <script>
+function switchProfileProjectsTab(tab) {
+    const inProgressBtn = document.getElementById('profile-tab-inprogress');
+    const completedBtn = document.getElementById('profile-tab-completed');
+    const inProgressContent = document.getElementById('profile-projects-inprogress');
+    const completedContent = document.getElementById('profile-projects-completed');
+
+    if (tab === 'inprogress') {
+        if (inProgressBtn) {
+            inProgressBtn.style.color = '#be185d';
+            inProgressBtn.style.borderBottomColor = 'var(--pastel-pink, #f472b6)';
+            inProgressBtn.style.fontWeight = '700';
+        }
+        if (completedBtn) {
+            completedBtn.style.color = 'var(--text-muted, #64748b)';
+            completedBtn.style.borderBottomColor = 'transparent';
+            completedBtn.style.fontWeight = '600';
+        }
+        if (inProgressContent) inProgressContent.style.display = 'block';
+        if (completedContent) completedContent.style.display = 'none';
+    } else {
+        if (completedBtn) {
+            completedBtn.style.color = '#be185d';
+            completedBtn.style.borderBottomColor = 'var(--pastel-pink, #f472b6)';
+            completedBtn.style.fontWeight = '700';
+        }
+        if (inProgressBtn) {
+            inProgressBtn.style.color = 'var(--text-muted, #64748b)';
+            inProgressBtn.style.borderBottomColor = 'transparent';
+            inProgressBtn.style.fontWeight = '600';
+        }
+        if (inProgressContent) inProgressContent.style.display = 'none';
+        if (completedContent) completedContent.style.display = 'block';
+    }
+}
+
 function openModal(id) {
     const m = document.getElementById(id);
     if (m) { m.style.display = 'flex'; m.classList.add('open'); }
